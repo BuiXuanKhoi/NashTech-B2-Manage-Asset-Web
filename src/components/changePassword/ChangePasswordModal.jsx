@@ -5,7 +5,7 @@ import axios from "axios";
 import "antd/dist/antd.css";
 import { DownOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Modal, Form, Input, Button } from "antd";
-import "./ChangePasswordForm";
+import "../changePassword/ChangePasswordForm.css";
 export default function ChangePasswordModal() {
     
     const formItemLayout = {

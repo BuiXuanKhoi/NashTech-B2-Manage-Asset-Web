@@ -1,7 +1,7 @@
 import {Row, Col, Form, Input, Select, Button, DatePicker, Radio} from "antd";
 import React, {useState} from "react";
 import "antd/dist/antd.css";
-import "../user/CreateUser.css";
+import "./CreateUser.css";
 
 export default function CreateUser() {
     const [isLoading, setLoading] = useState({isLoading: false});

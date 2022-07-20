@@ -8,7 +8,6 @@ import {Input, Spin, Button} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 import {EyeInvisibleOutlined, EyeOutlined} from "@ant-design/icons";
 import "antd/dist/antd.css";
-import "../../src/styles/Styles.css";
 
 const styles = makeStyles({
     form: {
