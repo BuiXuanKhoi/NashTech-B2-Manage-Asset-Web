@@ -63,7 +63,7 @@ function App() {
         <BrowserRouter>
           {loginState.isLogin === false ? (
             <Login />
-          ) : loginState.role === "Admin" ? (
+          ) : loginState.role === "admin" ? (
             <div>
               <HeaderComponent username={loginState.username} />
               <GridComponent
@@ -99,7 +99,7 @@ function App() {
                
               }
 
-              rightComp={<RouteComponent routes={AppRoutes} />}
+              rightComp={<RouteComponent routes={UserRoute} />}
               
               />
 

@@ -8,7 +8,7 @@ import { Input, Spin, Button } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
-import "../../src/styles/Styles.css";
+// import "../../src/styles/Styles.css";
 import Header from "../components/Header";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -45,7 +45,7 @@ const Login = () => {
             setLoging(LOGING.LOADING)
 
             axios
-                .post(`${process.env.REACT_APP_UNSPLASH_USERURL}/Authenticate`, {
+                .post(`https://asset-assignment-be.azurewebsites.net/api/login`, {
                     username: formik.values.username,
                     password: formik.values.password,
                 })
@@ -54,9 +54,9 @@ const Login = () => {
                         ...loginState,
                         token: response.data.token,
                         isLogin: true,
-                        role: response.data.role,
+                        role: response.data.roles,
                         username: response.data.username,
-                        isfirstlogin: response.data.isFirstLogin,
+                        isfirstlogin: response.data.first_login,
                         id: response.data.id,
                     });
                     localStorage.setItem(
@@ -64,9 +64,9 @@ const Login = () => {
                         JSON.stringify({
                             token: response.data.token,
                             isLogin: true,
-                            role: response.data.role,
+                            role: response.data.roles,
                             username: response.data.username,
-                            isfirstlogin: response.data.isFirstLogin,
+                            isfirstlogin: response.data.first_login,
                             id: response.data.id,
                         })
                     );
@@ -76,10 +76,10 @@ const Login = () => {
                 })
 
                 .catch((error) => {
-                    toast.error("Error");
+                    toast.error(error.response.data.message);
                     setLoging(LOGING.FAIL);
                     axios.defaults.headers.common["Authorization"] = "";
-                    setError(error.response.data.message);
+                    // setError(error.response.data.message);
                     console.log(error.response.data);
 
 
@@ -180,7 +180,7 @@ const Login = () => {
                         border: '1px solid #713200',
                         padding: '36px',
                         color: '#713200',
-                        
+
                     },
                 }}
             />
