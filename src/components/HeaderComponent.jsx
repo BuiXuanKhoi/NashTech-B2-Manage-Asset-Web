@@ -63,7 +63,7 @@ export default function HeaderComponent({ username }) {
                     localStorage.removeItem("loginState");
                     //axios.get(`${process.env.REACT_APP_UNSPLASH_LOGOUT}`);
                     //window.location.href = `${process.env.REACT_APP_UNSPLASH_BASEFEURL}`;
-                    window.location.href = "http://localhost:3000/";
+                    window.location.href = "https://happy-hill-07f55ef10.1.azurestaticapps.net/";
                 })
             },
             onCancel() {
