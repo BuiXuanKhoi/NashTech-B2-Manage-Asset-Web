@@ -58,6 +58,7 @@ export default function ChangePasswordFirstLogin(props) {
     return (
         <>
             <Modal
+                centered
                 title="Change Password"
                 visible={isModalVisible}
                 maskClosable={false}
