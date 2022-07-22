@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useState } from "react";
 import "antd/dist/antd.css";
 import { DownOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Modal, Form, Input, Button } from "antd";
@@ -8,24 +8,29 @@ import "antd/dist/antd.css";
 import { useLocation } from "react-router-dom";
 import { AppRoutes } from "../routes/AppRoutes";
 import "../styles/Styles.css";
+import ChangePasswordModal from './changePassword/ChangePasswordModal';
+import ChangePasswordFirstLogin from "./changePassword/ChangePasswordFirstLogin";
 
-export default function HeaderComponent({ username }) {
+export default function HeaderComponent(props) {
     
-    const [isModal, setModal] = React.useState({
+    const [isModal, setModal] = useState({
         isOpen: false,
         isLoading: false,
     });
-    const [password, setPassword] = React.useState({
+    const setIsOpen = () => {
+        setModal({...isModal, isOpen: !isModal.isOpen})
+    }
+    const [password, setPassword] = useState({
         oldPassword: "",
         newPassword: "",
     });
-    const [changeSuccess, setChangeSuccess] = React.useState(false);
-    const [Footer, setFooter] = React.useState({});
-    const [error, setError] = React.useState("");
-    const [navTitle,setNavTitle] = React.useState('Home');
+    const [changeSuccess, setChangeSuccess] = useState(false);
+    const [Footer, setFooter] = useState({});
+    const [error, setError] = useState("");
+    const [navTitle,setNavTitle] = useState('Home');
     let {pathname} = useLocation()
      
-    
+    const [firstLogin,setFirstLogin] = useState(false);
 
     React.useEffect(() => {
         AppRoutes.forEach(
@@ -35,8 +40,10 @@ export default function HeaderComponent({ username }) {
                  }
             }
         )
+        // const loginState = JSON.parse(localStorage.getItem("loginState"));
+        // setFirstLogin(loginState.isfirtlogin)
     })
-
+// console.log(firstLogin);
     const formItemLayout = {
         labelCol: {
             span: 6,
@@ -63,7 +70,7 @@ export default function HeaderComponent({ username }) {
                     localStorage.removeItem("loginState");
                     //axios.get(`${process.env.REACT_APP_UNSPLASH_LOGOUT}`);
                     //window.location.href = `${process.env.REACT_APP_UNSPLASH_BASEFEURL}`;
-                    window.location.href = "https://happy-hill-07f55ef10.1.azurestaticapps.net/";
+                    window.location.href = "https://asset-assignment-fe.azurewebsites.net/";
                 })
             },
             onCancel() {
@@ -92,160 +99,11 @@ export default function HeaderComponent({ username }) {
         </Menu>
     );
 
+   
+
     return (
         <>
         
-            <Modal
-                afterClose={() => {
-                    setError("");
-                }}
-                closable={false}
-                cancelText='Cancel'
-                okText='Save'
-               okButtonProps={{style:{ background: "#e30c18", color: "white"}}}
-
-                visible={isModal.isOpen}
-                footer={[
-                    <Button
-                        className = "buttonSave"
-                        loading={isModal.isLoading} key="save" onClick={() => {
-                        setModal({ ...isModal, isLoading: true })
-                        setTimeout(() => {
-                            setModal({ ...isModal, isLoading: false })
-                        }, 3000)
-                        axios
-                            .put(`${process.env.REACT_APP_UNSPLASH_CHANGEPW_USER}`, password)
-                            .then(() => {
-
-                                setChangeSuccess(true);
-
-                                setFooter({
-                                    footer: (
-                                        <Button
-                                            className = "buttonSave"
-                                            onClick={() => {
-                                                setFooter({});
-                                                setChangeSuccess(false);
-                                                setModal({ ...isModal, isOpen: false });
-                                            }}
-                                        >
-                                            Close
-                                        </Button>
-                                    ),
-                                });
-                            })
-                            .catch((error) => {
-
-                                if (!error.response.data.title) {
-
-                                    setModal({ ...isModal, isOpen: true });
-                                    setError(error.response.data.message);
-                                } else {
-                                    setModal({ ...isModal, isOpen: true });
-                                    setError(error.response.data.title);
-                                }
-                            })
-                    }
-                    }>Save</Button>,
-                    <Button
-                        className = "buttonCancel"
-                        disabled={isModal.isLoading === true} key="cancel" onClick={() => {
-                        setModal({ ...isModal, isOpen: false });
-                        setError("");
-                    }
-                    }>Cancel</Button>
-                ]}
-                onOk={() => {
-                    axios
-                        .put(`${process.env.REACT_APP_UNSPLASH_CHANGEPW_USER}`, password)
-                        .then((response) => {
-
-                            setChangeSuccess(true);
-
-                            setFooter({
-                                footer: (
-                                    <Button
-                                        className = "buttonCancel"
-                                        onClick={() => {
-                                            setFooter({});
-                                            setChangeSuccess(false);
-                                            setModal(false);
-                                        }}
-                                    >
-                                        Close
-                                    </Button>
-                                ),
-                            });
-                        })
-                        .catch((error) => {
-
-                            if (!error.response.data.title) {
-
-                                setModal(true);
-                                setError(error.response.data.message);
-                            } else {
-                                setModal(true);
-                                setError(error.response.data.title);
-                            }
-                        });
-                }}
-                onCancel={() => {
-                    setModal(false);
-                    setError("");
-                }}
-                destroyOnClose={true}
-                title="Change Password"
-                {...Footer}
-            >
-                {changeSuccess === false ? (
-                    <Form {...formItemLayout}>
-                        <Form.Item
-                            name="Old Password"
-                            style={{ marginTop: "20px" }}
-                            label="Old Password"
-                            rules={[{ required: true, max: 50, }
-                                , { pattern: new RegExp("^[a-zA-Z0-9]+$"), message: `Password can't have white space or special characters` }
-                            ]}
-                            hasFeedback
-
-                        >
-                            <Input.Password
-                                disabled={isModal.isLoading === true}
-                                className="inputForm"
-                                onChange={(old) => {
-                                    setPassword({ ...password, oldPassword: old.target.value });
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name="New Password"
-                            label="New Password"
-                            rules={[{ required: true, max: 50, whitespace: true },
-                            { pattern: new RegExp("^[a-zA-Z0-9]+$"), message: `New password can't have white space or special characters` }
-                            ]}
-                            hasFeedback
-
-                        >
-                            <Input.Password
-                                disabled={isModal.isLoading === true}
-                                className="inputForm"
-                                onChange={(newPass) => {
-                                    setPassword({
-                                        ...password,
-                                        newPassword: newPass.target.value,
-
-                                    });
-                                }}
-                            />
-                        </Form.Item>
-                        <p style={{ color: "red" }}>{error}</p>
-                    </Form>
-                ) : (
-                    <p>Your password has been changed successfully!</p>
-                )}
-
-
-            </Modal>
             <PageHeader
                 className="site-page-header"
                 
@@ -263,10 +121,13 @@ export default function HeaderComponent({ username }) {
                         onClick={(e) => e.preventDefault()}
                         href="/#"
                     >
-                        {username} <DownOutlined />
+                        {props.username} <DownOutlined />
                     </a>
                 </Dropdown>
             </PageHeader>
+            {console.log(props.isLogin)}
+            <ChangePasswordFirstLogin isOpen={props.isLogin} idAccount={props.idAccount} token={props.token}/>
+            {isModal.isOpen ? <ChangePasswordModal setIsOpen={setIsOpen}/> : ""}
         </>
     );
 }

@@ -8,7 +8,7 @@ import { Input, Spin, Button } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
-// import "../../src/styles/Styles.css";
+import "../../src/styles/Styles.css";
 import Header from "../components/Header";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -45,7 +45,8 @@ const Login = () => {
             setLoging(LOGING.LOADING)
 
             axios
-                .post(`https://asset-assignment-be.azurewebsites.net/api/login`, {
+                .post("https://asset-assignment-be.azurewebsites.net/api/login", {
+                // .post("http://localhost:8080/api/login", {
                     username: formik.values.username,
                     password: formik.values.password,
                 })
@@ -71,16 +72,16 @@ const Login = () => {
                         })
                     );
 
-                    axios.defaults.headers.common["Authorization"] =
-                        "Bearer " + response.data.token;
+                    // axios.defaults.headers.common["Authorization"] =
+                    //     "Bearer " + response.data.token;
                 })
 
                 .catch((error) => {
                     toast.error(error.response.data.message);
                     setLoging(LOGING.FAIL);
-                    axios.defaults.headers.common["Authorization"] = "";
+                    // axios.defaults.headers.common["Authorization"] = "";
                     // setError(error.response.data.message);
-                    console.log(error.response.data);
+                    // console.log(error.response.data);
 
 
                 });
@@ -180,7 +181,7 @@ const Login = () => {
                         border: '1px solid #713200',
                         padding: '36px',
                         color: '#713200',
-
+                        
                     },
                 }}
             />

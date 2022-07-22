@@ -64,15 +64,15 @@ function App() {
           {loginState.isLogin === false ? (
             <Login />
           ) : loginState.role === "admin" ? (
-            <div>
-              <HeaderComponent username={loginState.username} />
+            <div id="container">
+              <HeaderComponent username={loginState.username} isLogin={loginState.isfirstlogin} idAccount={loginState.id} token={loginState.token}/>
               <GridComponent
                 leftComp={
                   <div>
-                    <ChangePasswordModal
+                    {/* <ChangePasswordModal
                       isOpen={loginState.isfirstlogin}
                       userid={loginState.id}
-                    />
+                    /> */}
                     <MenuComponent routes={NavRoutes} />
                   </div>
                 }
@@ -81,16 +81,16 @@ function App() {
             </div>
           ) : (
             <>
-              <HeaderComponent username={loginState.username}  />
+              <HeaderComponent username={loginState.username} isLogin={loginState.isfirstlogin} idAccount={loginState.id} token={loginState.token}/>
              
               <GridComponent
               leftComp={
                 (
                   <>
-                  <ChangePasswordModal
+                  {/* <ChangePasswordModal
                   isOpen={loginState.isfirstlogin}
                   userid={loginState.id}
-                />
+                /> */}
                  <MenuComponent routes={UserRoute} />
                  
                 </>
@@ -99,7 +99,7 @@ function App() {
                
               }
 
-              rightComp={<RouteComponent routes={UserRoute} />}
+              rightComp={<RouteComponent routes={AppRoutes} />}
               
               />
 
