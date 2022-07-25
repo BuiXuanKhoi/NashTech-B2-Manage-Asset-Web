@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.ant-menu-item-selected::after {
+  border-right: 3px solid #cf2338 !important;
+
+}
+.ant-menu-title-content:hover {
+  color: #cf2338 !important;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+

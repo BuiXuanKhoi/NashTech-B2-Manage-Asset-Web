@@ -10,8 +10,7 @@ import GridComponent from "./components/GridComponet";
 
 import "antd/dist/antd.css";
 import { UserRoute } from "./routes/UserRoute";
-import Login from "./components/Login";
-import ChangePasswordModal from "./components/changePassword/ChangePasswordModal";
+import Login from "./components/login/Login"; 
 export const Context = createContext();
 
 function App() {
@@ -58,6 +57,7 @@ function App() {
     }
   }, [loginState.token]);
   return (
+  
     <div className="App">
       <Context.Provider value={[loginState, setLoginState]}>
         <BrowserRouter>
@@ -111,5 +111,7 @@ function App() {
     </div>
   );
 }
+
+
 
 export default App;
