@@ -14,7 +14,7 @@ export const AppRoutes = [
         title: "Home",
     },
     {
-        path: "/createUser",
+        path: "/createuser",
         element: <CreateUser/>,
         title: "Manage User > Create User",
     },

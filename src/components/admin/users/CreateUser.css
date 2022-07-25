@@ -2,9 +2,13 @@
     text-align: initial;
 }
 .fontHeaderContent{
-    font: 1em Sans-serif;
-    font-weight: bold;
-    color: #cf2338;
+    margin-top: 10px;
+   
+}
+.formCreateUser{
+    margin-top: "10px";
+    margin-left: "5px";
+    display: "block";
 }
 .buttonSave{
     background-color: #cf2338 !important;
@@ -21,4 +25,15 @@
 .inputForm{
     border-radius: 4px !important;
     border: 2px solid #a3a8ad !important;
+}
+.ant-form-item{
+    margin-bottom: 15px;
+}
+.formCreate{
+    margin-top: 10px;
+    margin-left: 5px;
+    display: block;
+}
+.ant-picker{
+    display: block;
 }

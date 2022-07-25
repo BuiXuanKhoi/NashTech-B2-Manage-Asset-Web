@@ -1,13 +1,19 @@
-import {Row, Col, Form, Input, Select, Button, DatePicker, Radio} from "antd";
+import {Row, Col, Form, Input, Select, Button, DatePicker, Radio, Cascader} from "antd";
 import React, {useState} from "react";
 import "antd/dist/antd.css";
 import "./CreateUser.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateUser() {
     const [isLoading, setLoading] = useState({isLoading: false});
-    //const navigate = useNavigate();
+    const loginState = JSON.parse(localStorage.getItem("loginState"));
+    const navigate = useNavigate();
     const {Option} = Select;
     const [form] = Form.useForm();
+    const config = {
+        headers: { Authorization: `Bearer ${loginState.token}` }
+    };
     const formItemLayout = {
         labelCol: {
             span: 6,
@@ -17,48 +23,79 @@ export default function CreateUser() {
             offset: 1,
         },
     };
-
     const onFinish = (fieldsValue) => {
+        console.log(fieldsValue);
         const values = {
             ...fieldsValue,
-            DateOfBirth: fieldsValue["DateOfBirth"].format("YYYY-MM-DD"),
-            JoinedDate: fieldsValue["JoinedDate"].format("YYYY-MM-DD"),
+            DateOfBirth: fieldsValue["DateOfBirth"].format("DD/MM/YYYY"),
+            JoinedDate: fieldsValue["JoinedDate"].format("DD/MM/YYYY"),
         };
 
-        // axios
-        //     .post(`${process.env.REACT_APP_UNSPLASH_USERURL}`, {
-        //         firstname: values.Firstname,
-        //         lastname: values.Lastname,
-        //         joinDate: values.JoinedDate,
-        //         type: values.Type,
-        //         doB: values.DateOfBirth,
-        //         gender: values.Gender,
-        //     })
-        //     .then(() => {
-        //         setTimeout(() => {
-        //             setLoading({isLoading: false});
-        //         }, 3000)
+        axios
+            .post(`https://asset-assignment-be.azurewebsites.net/api/account`, {
+                firstName: values.Firstname,
+                lastName: values.Lastname,
+                join: values.JoinedDate,
+                role: values.Type[0],
+                birth: values.DateOfBirth,
+                gender: values.Gender,
+                prefix: values.Part,
+                locations: values.Type[1]
+            }, config)
+            .then((response) => {
+                setTimeout(() => {
+                    setLoading({isLoading: false});
+                }, 2000)
 
+                console.log(response.data);
 
-        //         //navigate("/user");
+                navigate("/user");
 
-        //     })
-        //     .catch(() => {
+            })
+            .catch((error) => {
+                console.log(error)
+                console.log(error.response.data.message);
+            });
+     };
 
-
-        //     });
-    };
-
-
+    const options = [
+        {
+          value: 'admin',
+          label: 'Admin',
+          children: [
+            {
+              value: 'HCM',
+              label: 'Ho Chi Minh',
+              
+            },
+            {
+                value: 'DN',
+                label: 'Da Nang',
+            },
+            {
+                value: 'HN',
+                label: 'Ha Noi',
+            },
+          ],
+        },
+        {
+          value: 'staff',
+          label: 'Staff',
+        },
+      ];
+      
+      const onChange = (value) => {
+        console.log(value);
+      };
     return (
         <Row>
             <Col span={12} offset={6}>
                 <div className="content">
-                    <Row style={{marginBottom: "10px"}} className="fontHeaderContent">
+                    <Row  className="fontHeaderContent">
                         Create New User
                     </Row>
-                    <Row
-                        style={{marginTop: "10px", marginLeft: "5px", display: "block"}}
+                    <Row className="formCreate"
+                        
                     >
                         <Form
                             form={form}
@@ -68,7 +105,7 @@ export default function CreateUser() {
                             {...formItemLayout}
                             labelAlign="left"
                         >
-                            <Form.Item label="First name" style={{marginBottom: 0}}>
+                            <Form.Item label="First name" >
                                 <Form.Item
                                     name="Firstname"
                                     rules={[{required: true, message: 'First name must be required'},
@@ -78,7 +115,6 @@ export default function CreateUser() {
                                         }
                                         , {max: 50, message: "First name must less than 50 characters"}
                                     ]}
-                                    style={{display: "block"}}
                                     hasFeedback
                                 >
                                     <Input disabled={isLoading.isLoading === true} maxLength={51}
@@ -86,7 +122,7 @@ export default function CreateUser() {
                                 </Form.Item>
                             </Form.Item>
 
-                            <Form.Item label="Last name" style={{marginBottom: 0}}>
+                            <Form.Item label="Last name" >
                                 <Form.Item
                                     name="Lastname"
                                     rules={[{required: true, message: 'Last name must be required'},
@@ -96,14 +132,13 @@ export default function CreateUser() {
                                         }
                                         , {max: 50, message: "Last name must less than 50 characters"}
                                     ]}
-                                    style={{display: "block"}}
                                     hasFeedback
                                 >
                                     <Input disabled={isLoading.isLoading === true} maxLength={51}
                                            className="inputForm"/>
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item label="Date of Birth" style={{marginBottom: 0}}>
+                            <Form.Item label="Date of Birth" >
                                 <Form.Item
                                     name="DateOfBirth"
                                     rules={[{required: true, message: 'Date of birth must be required'},
@@ -116,20 +151,18 @@ export default function CreateUser() {
                                             }
                                         })
                                     ]}
-                                    style={{display: "block"}}
                                     hasFeedback
                                 >
                                     <DatePicker
                                         disabled={isLoading.isLoading === true}
-                                        style={{display: "block"}}
-                                        format="DD-MM-YYYY"
+                                        format="DD/MM/YYYY"
 
                                         className="inputForm"
                                     />
 
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item disabled={isLoading.isLoading === true} label="Gender" style={{marginBottom: 0}}>
+                            <Form.Item disabled={isLoading.isLoading === true} label="Gender" >
                                 <Form.Item name="Gender" rules={[{required: true, message: 'Gender must be required'}]}>
                                     <Radio.Group disabled={isLoading.isLoading === true}>
                                         <Radio value="Female">Female</Radio>
@@ -137,7 +170,7 @@ export default function CreateUser() {
                                     </Radio.Group>
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item label="Joined Date" style={{marginBottom: 0}}>
+                            <Form.Item label="Joined Date" >
                                 <Form.Item
                                     name="JoinedDate"
                                     rules={[{required: true, message: 'Joined date must be required',},
@@ -160,14 +193,12 @@ export default function CreateUser() {
                                             }
                                         })
                                     ]}
-                                    style={{display: "block", marginLeft: ""}}
                                     hasFeedback
                                 >
 
                                     <DatePicker
                                         disabled={isLoading.isLoading === true}
-                                        style={{display: "block"}}
-                                        format="DD-MM-YYYY"
+                                        format="DD/MM/YYYY"
 
                                         className="inputForm"
 
@@ -175,9 +206,9 @@ export default function CreateUser() {
 
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item label="Type">
+                            <Form.Item label="Part">
                                 <Form.Item
-                                    name="Type"
+                                    name="Part"
                                     rules={[{required: true, message: 'Type must be required'}]}
                                     style={{display: "block"}}
                                     hasFeedback
@@ -199,11 +230,39 @@ export default function CreateUser() {
                                                 .localeCompare(optionB.children.toLowerCase())
                                         }
                                     >
-                                        <Option value="Staff">Staff</Option>
-                                        <Option value="Admin">Admin</Option>
+                                        <Option value="BPS">Business Process Solution</Option>
+                                        <Option value="SD">Software Development</Option>
                                     </Select>
                                 </Form.Item>
                             </Form.Item>
+                            <Form.Item label="Type">
+                                <Form.Item
+                                    name="Type"
+                                    rules={[{required: true, message: 'Type must be required'}]}
+                                    hasFeedback
+                                >
+                                    <Cascader
+                                        disabled={isLoading.isLoading === true}
+                                        showSearch
+                                        className="inputForm"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children
+                                                .toLowerCase()
+                                                .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        filterSort={(optionA, optionB) =>
+                                            optionA.children
+                                                .toLowerCase()
+                                                .localeCompare(optionB.children.toLowerCase())
+                                        }
+                                        options={options} onChange={onChange}
+                                    
+                                        
+                                    />
+                                </Form.Item>
+                            </Form.Item>
+                            
 
                             <Form.Item shouldUpdate >
                                 {() => (
@@ -221,7 +280,6 @@ export default function CreateUser() {
                                                     setLoading({isLoading: false})
                                                 }, 2000
                                             )
-                                            onFinish()
                                         }}
                                         >
                                             Save
@@ -229,7 +287,7 @@ export default function CreateUser() {
                                     <Button
                                         className="buttonCancel"
                                         disabled={isLoading.isLoading === true} onClick={() => {
-                                        //navigate("/user");
+                                        navigate("/user");
                                     }}>
                                         Cancel
                                     </Button>
