@@ -1,3 +1,5 @@
 export default function EditUser(){
-    return (<h1>Edit User</h1>);
+    return (
+    <h1>Edit User</h1>
+    );
 }

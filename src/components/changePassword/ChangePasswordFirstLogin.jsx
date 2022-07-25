@@ -22,6 +22,7 @@ export default function ChangePasswordFirstLogin(props) {
     };
     const [isPaswordVisible, setIsPaswordVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(props.isOpen);
+    const [isNotEmpty,setNotEmpty] = useState(true);
     const [Loading, setLoading] = useState({
         isLoading: false
     })
@@ -58,13 +59,14 @@ export default function ChangePasswordFirstLogin(props) {
     return (
         <>
             <Modal
-                centered
+                style={{positon: 'absolute', top: 200, right: -170}}
                 title="Change Password"
                 visible={isModalVisible}
                 maskClosable={false}
                 onOk={handleOk}
                 footer={[
                     <Button
+                        disabled={isNotEmpty}
                         className="buttonSave"
                          loading={Loading.isLoading} key="submit"
                         onClick={() => {
@@ -85,10 +87,10 @@ export default function ChangePasswordFirstLogin(props) {
                 </p>
                 <Form {...formItemLayout}>
                 <Form.Item 
-                            name="newPassword"
-                            label="New Password"
-                            rules={[{ required: true, min: 8, max: 15 },
-                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$"), message: `Password invalid` }
+                            name="newPassword1st"
+                            label="New password"
+                            rules={[
+                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"), message: `Password must have uppercase,number,special character, length between 8 and 15` }
                             ]}
                         >
                     <Input.Password
@@ -100,6 +102,7 @@ export default function ChangePasswordFirstLogin(props) {
                                         new_password: newPass.target.value,
 
                                     });
+                                    setNotEmpty(false);
                                 }}
                         suffix={
                             isPaswordVisible ? (

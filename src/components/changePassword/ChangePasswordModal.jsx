@@ -8,6 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function ChangePasswordModal(props) {
 
     const loginState = JSON.parse(localStorage.getItem("loginState"));
+    const [error, setError] = useState("");
     const formItemLayout = {
         labelCol: {
             span: 6,
@@ -36,6 +37,7 @@ export default function ChangePasswordModal(props) {
     return (
         <>
             <Modal
+                style={{positon: 'absolute', top: 200, right: -170}}
                 closable={false}
                 cancelText='Cancel'
                 okText='Save'
@@ -78,7 +80,7 @@ export default function ChangePasswordModal(props) {
                             .catch((error) => {
                                 console.log(error.response.data.message);
                                 setModal({ ...modal, isOpen: true });
-                                    toast.error(error.response.data.message);
+                                    setError(error.response.data.message);
                             })
                     }
                     }>Save</Button>,
@@ -121,10 +123,10 @@ export default function ChangePasswordModal(props) {
                             if (!error.response.data.title) {
 
                                 setModal(true);
-                                toast.error(error.response.data.message);
+                                setError(error.response.data.message);
                             } else {
                                 setModal(true);
-                                toast.error(error.response.data.title);
+                                setError(error.response.data.title);
                             }
                         });
                 }}
@@ -138,10 +140,10 @@ export default function ChangePasswordModal(props) {
                 {changeSuccess === false ? (
                     <Form {...formItemLayout}>
                         <Form.Item
-                            name="OldPassword"
-                            label="Old Password"
-                            rules={[{ required: true, min: 8, max: 15 },
-                                { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$"), message: `Password invalid` }
+                            name="oldPassword"
+                            label="Old password"
+                            rules={[
+                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"), message: `Password must have uppercase,number,special character, length between 8 and 15` }
                             ]}
                         >
                             <Input.Password
@@ -152,13 +154,14 @@ export default function ChangePasswordModal(props) {
                                     setOldEmpty(old.target.value !== "" ? true : false);
                                 }}
                             />
+                            
                         </Form.Item>
-
+                        <p id="errorOldPassword">{error}</p>
                         <Form.Item
-                            name="New"
-                            label="New Password"
-                            rules={[{ required: true, min: 8, max: 15 },
-                                { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$"), message: `Password invalid` }
+                            name="newPassword"
+                            label="New password"
+                            rules={[
+                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"), message: `Password must have uppercase,number,special character, length between 8 and 15` }
                             ]}
                         >
                             <Input.Password
@@ -179,7 +182,7 @@ export default function ChangePasswordModal(props) {
                     <p>Your password has been changed successfully!</p>
                 )}
             </Modal>
-            <Toaster
+            {/* <Toaster
                 toastOptions={{
                     className: 'toast',
                     style: {
@@ -189,7 +192,7 @@ export default function ChangePasswordModal(props) {
 
                     },
                 }}
-            />
+            /> */}
         </>
     );
 }

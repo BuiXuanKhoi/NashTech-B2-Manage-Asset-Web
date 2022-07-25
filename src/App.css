@@ -95,7 +95,7 @@
 }
 
 .ant-radio-checked .ant-radio-inner:focus {
-    border-color: red !important;
+    border-color: #e30c18 !important;
 }
 
 .ant-modal-title {
@@ -132,7 +132,7 @@
 
 .ant-modal-body p {
     margin-bottom: 0;
-    font-size: 18px !important;
+    font-size: 14px !important;
 }
 
 .ant-modal-body ant-form-item-label {
@@ -144,7 +144,7 @@
 }
 
 .ant-input:hover {
-    border-color: #e30c18 !important;
+    border-color: #0c7be3 !important;
 }
 
 .ant-input:focus,
@@ -161,17 +161,17 @@
 }
 
 .ant-input-affix-wrapper:hover {
-    border-color: #e30c18 !important;
+    border-color: #0c7be3 !important;
 }
 
 .ant-input-affix-wrapper:focus {
-    border-color: #e30c18 !important;
+    border-color: #0c7be3 !important;
 }
 
 .ant-select,
 .ant-select-single,
 .ant-select-show-arrow:hover {
-    border-color: #e30c18 !important;
+    border-color: #0c7be3 !important;
 }
 
 .ant-select-focused,
@@ -180,7 +180,7 @@
 .ant-select-single,
 .ant-select-show-arrow,
 .ant-select:focus {
-    border-color: #e30c18 !important;
+    border-color: #0c7be3 !important;
 }
 
 .ant-picker-focused {
@@ -206,4 +206,13 @@
 }
 .ant-col-18{
     max-width: 100% !important;
+}
+
+.ant-form-item-label label{
+    font-size: 17px !important;
+    font-family: sans-serif !important;
+}
+
+.ant-form-item-label label::after{
+    content: none !important;
 }
