@@ -59,7 +59,7 @@ export default function HeaderComponent(props) {
         localStorage.removeItem("loginState");
                     //axios.get(`${process.env.REACT_APP_UNSPLASH_LOGOUT}`);
                     //window.location.href = `${process.env.REACT_APP_UNSPLASH_BASEFEURL}`;
-        window.location.href = "https://asset-assignment-fe.azurewebsites.net/";
+        window.location.href = "https://happy-hill-07f55ef10.1.azurestaticapps.net/";
       };
     const dropdownuser = (
         <Menu>
