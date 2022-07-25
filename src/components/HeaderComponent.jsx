@@ -3,7 +3,6 @@ import "antd/dist/antd.css";
 import { DownOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Modal, Form, Input, Button } from "antd";
 import { PageHeader } from "antd";
-import axios from "axios";
 import "antd/dist/antd.css";
 import { useLocation } from "react-router-dom";
 import { AppRoutes } from "../routes/AppRoutes";
@@ -12,7 +11,7 @@ import ChangePasswordModal from './changePassword/ChangePasswordModal';
 import ChangePasswordFirstLogin from "./changePassword/ChangePasswordFirstLogin";
 
 export default function HeaderComponent(props) {
-    
+    const [visibleConfirm, setVisibleConfirm] = useState(false);
     const [isModal, setModal] = useState({
         isOpen: false,
         isLoading: false,
@@ -54,31 +53,14 @@ export default function HeaderComponent(props) {
         },
     };
 
-    const handleConfirmLogout = () => {
-        Modal.confirm({
-           
-            title: "Are you sure?",
-            icon: <LogoutOutlined style={{ color: 'red' }} />,
-            content: "Do you want to log out?",
-            okText: "Logout",
-            cancelText: "Cancel",
-            okButtonProps:{style:{ background: "#e30c18", color: "white"}},
-            
-            onOk() {
-                return new Promise((resolve, reject) => {
-                    setTimeout(Math.random() > 0.5 ? resolve : reject, 5000);
-                    localStorage.removeItem("loginState");
+    
+    const handleOk = () => {
+        //setTimeout(Math.random() > 0.5 ? resolve : reject, 5000);
+        localStorage.removeItem("loginState");
                     //axios.get(`${process.env.REACT_APP_UNSPLASH_LOGOUT}`);
                     //window.location.href = `${process.env.REACT_APP_UNSPLASH_BASEFEURL}`;
-                    window.location.href = "https://happy-hill-07f55ef10.1.azurestaticapps.net/";
-                })
-            },
-            onCancel() {
-            },
-            
-        });
-    };
-
+        window.location.href = "https://asset-assignment-fe.azurewebsites.net/";
+      };
     const dropdownuser = (
         <Menu>
 
@@ -93,7 +75,7 @@ export default function HeaderComponent(props) {
                 <UserOutlined style={{color: 'red', fontWeight:"bold"}}/> Change Password
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item onClick={handleConfirmLogout} key="3">
+            <Menu.Item onClick={()=>setVisibleConfirm(true)} key="3">
                <LogoutOutlined style={{color: 'red', fontWeight: "bold"}} /> Logout
             </Menu.Item>
         </Menu>
@@ -125,7 +107,28 @@ export default function HeaderComponent(props) {
                     </a>
                 </Dropdown>
             </PageHeader>
-            {console.log(props.isLogin)}
+            <Modal
+            
+                title="Are you sure?"
+                visible={visibleConfirm}
+                width={400}
+                closable={false}
+                onOk={handleOk}
+                onCancel = {()=> setVisibleConfirm(false)}
+                
+                footer={[
+                    <Button key="submit" className="buttonSave" onClick={handleOk}>
+                     Log out 
+                    </Button>,
+                    <Button key="cancel" className = "buttonCancel" onClick={()=> setVisibleConfirm(false)}>
+                      Cancel
+                    </Button>
+                  ]}
+                
+            >
+                <p>Do you want to log out?</p>
+                <br/>
+            </Modal>
             <ChangePasswordFirstLogin isOpen={props.isLogin} idAccount={props.idAccount} token={props.token}/>
             {isModal.isOpen ? <ChangePasswordModal setIsOpen={setIsOpen}/> : ""}
         </>

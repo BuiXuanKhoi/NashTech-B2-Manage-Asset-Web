@@ -41,3 +41,9 @@
     background: transparent !important;
     padding: 0 !important;
 }
+.ant-modal-content{
+    border: 2px solid rgb(102, 102, 102);
+}
+.ant-modal-header{
+    border-bottom: 1.75px solid rgb(102, 102, 102);
+}
