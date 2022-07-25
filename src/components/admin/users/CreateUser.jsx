@@ -184,7 +184,11 @@ export default function CreateUser() {
 
                                                     return Promise.reject(`Joined date is Saturday or Sunday. Please select a different date `);
 
-                                                } else if (value - getFieldValue('DateOfBirth') < 568080000000) {
+                                                } else if (value - getFieldValue('DateOfBirth') < 0) {
+
+                                                    return Promise.reject("Joined date is not later than Date of Birth. Please select a different date");
+                                                }  
+                                                else if (value - getFieldValue('DateOfBirth') < 568080000000) {
 
                                                     return Promise.reject("Only accept staff from 18 years old");
                                                 } else {
