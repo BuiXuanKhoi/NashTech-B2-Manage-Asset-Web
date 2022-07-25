@@ -39,7 +39,7 @@ export default function CreateUser() {
                 role: values.Type[0],
                 birth: values.DateOfBirth,
                 gender: values.Gender,
-                prefix: values.Part,
+                prefix: values.Department,
                 locations: values.Type[1]
             }, config)
             .then((response) => {
@@ -210,9 +210,9 @@ export default function CreateUser() {
 
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item label="Part">
+                            <Form.Item label="Department">
                                 <Form.Item
-                                    name="Part"
+                                    name="Department"
                                     rules={[{required: true, message: 'Type must be required'}]}
                                     style={{display: "block"}}
                                     hasFeedback
