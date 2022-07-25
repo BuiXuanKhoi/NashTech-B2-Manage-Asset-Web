@@ -208,11 +208,3 @@
     max-width: 100% !important;
 }
 
-.ant-form-item-label label{
-    font-size: 17px !important;
-    font-family: sans-serif !important;
-}
-
-.ant-form-item-label label::after{
-    content: none !important;
-}

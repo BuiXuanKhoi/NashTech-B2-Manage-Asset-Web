@@ -158,6 +158,7 @@ export default function ChangePasswordModal(props) {
                         </Form.Item>
                         <p id="errorOldPassword">{error}</p>
                         <Form.Item
+                        style={{marginTop: 30}}
                             name="newPassword"
                             label="New password"
                             rules={[
