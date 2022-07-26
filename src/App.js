@@ -99,7 +99,7 @@ function App() {
                
               }
 
-              rightComp={<RouteComponent routes={AppRoutes} />}
+              rightComp={<RouteComponent routes={UserRoute} />}
               
               />
 

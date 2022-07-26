@@ -17,18 +17,17 @@ code {
 
 }
 .ant-menu-title-content:hover {
-  color: #cf2338 !important;
+  color: black !important;
 
 }
 
+.ant-menu-inline {
+  width: 85% !important;
 
+}
 
-
-
-
-
-
-
-
-
-
+.ant-menu-item {
+  
+  margin-left: 18px !important;
+  width: 89% !important;
+}
