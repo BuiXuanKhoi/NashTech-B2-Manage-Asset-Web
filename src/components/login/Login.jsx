@@ -168,11 +168,7 @@ const Login = () => {
                 </form>
             </div>
             
-            <lord-icon
-    src="https://cdn.lordicon.com/mrjuyheh.json"
-    trigger="hover"
-    style={{width:"250px",height:"250px"}}>
-</lord-icon>
+            
 
             <Toaster
                 toastOptions={{
