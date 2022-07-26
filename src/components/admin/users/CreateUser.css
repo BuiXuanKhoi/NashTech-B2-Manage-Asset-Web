@@ -24,7 +24,7 @@
 }
 .inputForm{
     border-radius: 4px !important;
-    border: 2px solid #a3a8ad !important;
+    /* border: 2px solid #a3a8ad !important; */
 }
 .ant-form-item{
     margin-bottom: 15px;

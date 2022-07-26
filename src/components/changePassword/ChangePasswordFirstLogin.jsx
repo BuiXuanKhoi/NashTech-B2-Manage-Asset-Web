@@ -67,7 +67,7 @@ export default function ChangePasswordFirstLogin(props) {
                 footer={[
                     <Button
                         disabled={isNotEmpty}
-                        className="buttonSave"
+                        className="buttonSaveChangePassword1st"
                          loading={Loading.isLoading} key="submit"
                         onClick={() => {
                             setLoading({...Loading, isLoading: true});
@@ -87,6 +87,7 @@ export default function ChangePasswordFirstLogin(props) {
                 </p>
                 <Form {...formItemLayout}>
                 <Form.Item 
+                    
                             name="newPassword1st"
                             label="New password"
                             rules={[
@@ -94,7 +95,6 @@ export default function ChangePasswordFirstLogin(props) {
                             ]}
                         >
                     <Input.Password
-
                         type={isPaswordVisible ? "text" : "password"}
                         onChange={(newPass) => {
                                     setPassword({

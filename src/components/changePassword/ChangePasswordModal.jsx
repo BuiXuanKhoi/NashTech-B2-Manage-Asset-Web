@@ -34,6 +34,13 @@ export default function ChangePasswordModal(props) {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
 
+    const checkPassword = (callback) => {
+        if(error == ""){
+            callback();
+            return;
+        }
+        callback("Password is incorrect");
+    }
     return (
         <>
             <Modal
@@ -48,7 +55,7 @@ export default function ChangePasswordModal(props) {
                 footer={[
                     <Button
                         disabled={(oldEmpty && newEmpty) ? false : true}
-                        className = "buttonSave"
+                        className = "buttonSaveChangePassword"
                         loading={modal.isLoading} key="save" onClick={() => {
                         setModal({ ...modal, isLoading: true })
                         setTimeout(() => {
@@ -64,7 +71,7 @@ export default function ChangePasswordModal(props) {
                                 setFooter({
                                     footer: (
                                         <Button
-                                            className = "buttonSave"
+                                            className = "buttonSaveChangePassword"
                                             onClick={() => {
                                                 setFooter({});
                                                 setChangeSuccess(false);
@@ -85,7 +92,7 @@ export default function ChangePasswordModal(props) {
                     }
                     }>Save</Button>,
                     <Button
-                        className = "buttonCancel"
+                        className = "buttonCancelChangePassword"
                         disabled={modal.isLoading === true} key="cancel" onClick={() => {
                         setModal({ ...modal, isOpen: false });
                         props.setIsOpen();
@@ -104,7 +111,7 @@ export default function ChangePasswordModal(props) {
                             setFooter({
                                 footer: (
                                     <Button
-                                        className = "buttonCancel"
+                                        className = "buttonCancelChangePassword"
                                         onClick={() => {
                                             setFooter({});
                                             setChangeSuccess(false);
@@ -138,7 +145,7 @@ export default function ChangePasswordModal(props) {
                 {...Footer}
             >
                 {changeSuccess === false ? (
-                    <Form {...formItemLayout}>
+                    <Form {...formItemLayout} className="formChangePassword">
                         <Form.Item
                             name="oldPassword"
                             label="Old password"
@@ -147,18 +154,26 @@ export default function ChangePasswordModal(props) {
                             ]}
                         >
                             <Input.Password
+                                status={(error != "") ? "error" : ""}
                                 disabled={modal.isLoading === true}
                                 className="inputForm"
                                 onChange={(old) => {
                                     setPassword({ ...password, old_password: old.target.value });
                                     setOldEmpty(old.target.value !== "" ? true : false);
+                                    setError("");
                                 }}
                             />
                             
                         </Form.Item>
-                        <p id="errorOldPassword">{error}</p>
                         <Form.Item
-                        style={{marginTop: 30}}
+                        style={{marginLeft: 125,color: "red"}}
+                         name="errorIncorrectPassword">
+                        {/* <p id="errorOldPassword"> */}
+                        {error}
+                        {/* </p> */}
+                        </Form.Item>
+                        <Form.Item
+                        style={{marginBottom: 20 }}
                             name="newPassword"
                             label="New password"
                             rules={[
@@ -175,6 +190,7 @@ export default function ChangePasswordModal(props) {
 
                                     });
                                     setNewEmpty(newPass.target.value !== "" ? true : false);
+                                    setError("");
                                 }}
                             />
                         </Form.Item>

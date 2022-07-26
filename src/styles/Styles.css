@@ -34,7 +34,7 @@
 
 .inputForm {
     border-radius: 4px !important;
-    border: 2px solid #a3a8ad !important;
+    /* border: 2px solid #a3a8ad !important; */
 }
 .buttonState {
     border: none ! important;
