@@ -5,6 +5,7 @@ import "./CreateUser.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import toast from 'react-hot-toast';
 export default function CreateUser() {
     const [isLoading, setLoading] = useState({isLoading: false});
     const loginState = JSON.parse(localStorage.getItem("loginState"));
@@ -48,15 +49,16 @@ export default function CreateUser() {
                 }, 2000)
 
                 console.log(response.data);
-
+                toast.success("Create new user successfully");
                 navigate("/user");
 
             })
             .catch((error) => {
+                toast.error("Create new user failed");
                 console.log(error)
                 console.log(error.response.data.message);
                 localStorage.removeItem("loginState");
-                window.location.href = "https://happy-hill-07f55ef10.1.azurestaticapps.net/";
+                window.location.href = "https://mango-tree-0d1b58810.1.azurestaticapps.net/";
             });
      };
 

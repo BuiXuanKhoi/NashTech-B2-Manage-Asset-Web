@@ -22,7 +22,7 @@ export default function DisableUserModal(props){
            (response) => {
             setModal({ ...modal, isOpen: false })
             toast.success(response.data.message);
-                window.location.reload();
+            window.location.reload();
             }).catch((error) => {
                 toast.error(error.response.data.message);
             })
