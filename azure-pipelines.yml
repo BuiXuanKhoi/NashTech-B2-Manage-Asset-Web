@@ -11,15 +11,13 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: AzureStaticWebApp@0
-  inputs:
-    app_location: '/'
-    api_location: 'api'
-    azure_static_web_apps_api_token: '5c5334bc19c330ccd4232ae39e5ab3570c44ce5ea5b84a3911e69295e2f1f5c61-52582547-ba1c-4bd7-b844-5c5c8d4ce3b5010111862'
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - checkout: self
+    submodules: true
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: '/'
+      output_location: 'build'
+      api_location: 'api'
+      verbose: true
+      azure_static_web_apps_api_token: '5c5334bc19c330ccd4232ae39e5ab3570c44ce5ea5b84a3911e69295e2f1f5c61-52582547-ba1c-4bd7-b844-5c5c8d4ce3b5010111862'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
