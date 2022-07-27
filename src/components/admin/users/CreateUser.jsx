@@ -33,8 +33,8 @@ export default function CreateUser() {
 
         axios
             .post(`https://asset-assignment-be.azurewebsites.net/api/account`, {
-                firstName: values.Firstname,
-                lastName: values.Lastname,
+                firstName: values.Firstname.trim(),
+                lastName: values.Lastname.trim(),
                 join: values.JoinedDate,
                 role: values.Type[0],
                 birth: values.DateOfBirth,
@@ -55,6 +55,8 @@ export default function CreateUser() {
             .catch((error) => {
                 console.log(error)
                 console.log(error.response.data.message);
+                localStorage.removeItem("loginState");
+                window.location.href = "https://happy-hill-07f55ef10.1.azurestaticapps.net/";
             });
      };
 
@@ -84,9 +86,6 @@ export default function CreateUser() {
         },
       ];
       
-      const onChange = (value) => {
-        console.log(value);
-      };
     return (
         <Row>
             <Col span={12} offset={6}>
@@ -108,16 +107,24 @@ export default function CreateUser() {
                             <Form.Item label="First name" >
                                 <Form.Item
                                     name="Firstname"
-                                    rules={[{required: true, message: 'First name must be required'},
+                                    rules={[
                                         {
                                             pattern: new RegExp("^[a-zA-Z'. ]+$"),
-                                            message: 'First name can not have number'
+                                            message: 'First name can not have number or special characters'
                                         }
-                                        , {max: 50, message: "First name must less than 50 characters"}
+                                        , {max: 128, message: "First name must less than 128 characters"},
+                                        () => ({
+                                            validator(_, value) {
+                                                if ((value.trim())==='') {
+                                                    return Promise.reject("First name must be required")
+                                                }
+                                                return Promise.resolve();
+                                            }
+                                        })
                                     ]}
                                     hasFeedback
                                 >
-                                    <Input disabled={isLoading.isLoading === true} maxLength={51}
+                                    <Input disabled={isLoading.isLoading === true} maxLength={129}
                                            className="inputForm"/>
                                 </Form.Item>
                             </Form.Item>
@@ -125,16 +132,23 @@ export default function CreateUser() {
                             <Form.Item label="Last name" >
                                 <Form.Item
                                     name="Lastname"
-                                    rules={[{required: true, message: 'Last name must be required'},
+                                    rules={[() => ({
+                                        validator(_, value) {
+                                            if ((value.trim())==='') {
+                                                return Promise.reject("Last name must be required")
+                                            }
+                                            return Promise.resolve();
+                                        }
+                                    }),
                                         {
                                             pattern: new RegExp("^[a-zA-Z'. ]+$"),
-                                            message: 'Last name can not have number'
+                                            message: 'Last name can not have number or special characters'
                                         }
-                                        , {max: 50, message: "Last name must less than 50 characters"}
+                                        , {max: 128, message: "Last name must less than 128 characters"}
                                     ]}
                                     hasFeedback
                                 >
-                                    <Input disabled={isLoading.isLoading === true} maxLength={51}
+                                    <Input disabled={isLoading.isLoading === true} maxLength={129}
                                            className="inputForm"/>
                                 </Form.Item>
                             </Form.Item>
@@ -142,9 +156,18 @@ export default function CreateUser() {
                                 <Form.Item
                                     name="DateOfBirth"
                                     rules={[{required: true, message: 'Date of birth must be required'},
+                                    () => ({
+                                        validator(_, value) {
+                                            if ((new Date() - value._d) < 0) {
+                                                return Promise.reject("User not born yet. Please select a different date")
+                                            }
+                                            return Promise.resolve();
+                                        }
+                                    }),
                                         () => ({
                                             validator(_, value) {
-                                                if ((new Date().getFullYear() - value._d.getFullYear()) < 18) {
+                                                if ((new Date().getFullYear() - value._d.getFullYear()) < 18
+                                                & (new Date() - value._d) >= 0) {
                                                     return Promise.reject("User is under 18. Please select a different date")
                                                 }
                                                 return Promise.resolve();
@@ -188,12 +211,21 @@ export default function CreateUser() {
 
                                                     return Promise.reject("Joined date is not later than Date of Birth. Please select a different date");
                                                 }  
-                                                else if (value - getFieldValue('DateOfBirth') < 568080000000) {
+                                                else if (value - getFieldValue('DateOfBirth') <= 568080000000) {
 
-                                                    return Promise.reject("Only accept staff from 18 years old");
+                                                    return Promise.reject("User is under 18 when join. Please select a different date");
                                                 } else {
                                                     return Promise.resolve()
                                                 }
+                                            }
+                                        })
+                                        ,
+                                        () => ({
+                                            validator(_, value) {
+                                                if ((new Date() - value._d) < 0) {
+                                                    return Promise.reject("User has not joined. Please select a different date")
+                                                }
+                                                return Promise.resolve();
                                             }
                                         })
                                     ]}
@@ -260,7 +292,7 @@ export default function CreateUser() {
                                                 .toLowerCase()
                                                 .localeCompare(optionB.children.toLowerCase())
                                         }
-                                        options={options} onChange={onChange}
+                                        options={options}
                                     
                                         
                                     />
