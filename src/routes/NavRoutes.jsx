@@ -4,6 +4,7 @@ import HomeAdmin from "../components/admin/HomeAdmin";
 import CreateUser from "../components/admin/users/CreateUser";
 import RequestForReturning from "../components/admin/request/RequestForReturning";
 import Report from "../components/admin/report/report";
+import ManageUser from "../components/admin/users/ManageUser";
 
 
 export const NavRoutes = [
@@ -13,10 +14,11 @@ export const NavRoutes = [
         title: "Home",
       },
       {
-        path: "/createuser",
-        element: <CreateUser />,
+        path: "/user",
+        element: <ManageUser />,
         title: "Manage User",
       },
+
       {
         path: "/asset",
         element: <ManageAsset />,

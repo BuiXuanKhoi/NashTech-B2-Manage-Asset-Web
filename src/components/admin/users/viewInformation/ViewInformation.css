@@ -1,0 +1,23 @@
+.view-information .ant-modal-close-x{
+    font-weight: bold;
+    font-size: 20px;
+    color: #cf2338;
+    margin-left: 40px;
+}
+
+
+
+.text-view-information {
+    vertical-align: middle;
+    display: inline-block;
+}
+.satff-code{
+    color: #8c8989;
+}
+.full-name,.username,.day-of-birth,.gender,.join-date,.type,.location{
+    padding-top: 10px;
+    color: #8c8989;
+}
+#data-staff,#data-fullname,#data-username,#data-dayofbirth,#data-gender,#data-joindate,#data-type,#data-location{
+    padding-left: 60px;
+}
