@@ -9,9 +9,11 @@ import {
     LoadingOutlined,
     CloseSquareOutlined
 } from "@ant-design/icons";
-import {Table} from "antd";
+import axios from 'axios';
 import ViewInformation from "../viewInformation/ViewInformation";
-import ChangePasswordModal from "../../../changePassword/ChangePasswordModal";
+import DisableUserModal from '../DisableUserModal';
+import Modal from 'antd/lib/modal/Modal';
+
 
 function TableUser(props) {
     const [displayList, setDisplayList] = useState(props.listUser);
@@ -22,15 +24,24 @@ function TableUser(props) {
 
     const [loading, setLoading] = useState(false);
     const[dataUser, setDataUser] = useState(false)
-
+    const [idAccount, setId] = useState(0);
     const [isModal, setModal] = useState({
+        isOpen: false,
+        isLoading: false,
+    });
+    const [modalCanNotDisable, setModalNotDisable] = useState(false);
+    const [modalConfirmDisable, setModalConfirmDisable] = useState({
         isOpen: false,
         isLoading: false,
     });
     const setIsOpen = () => {
         setModal({...isModal, isOpen: !isModal.isOpen})
     }
-
+    const setIsOpenConfirm = () => {
+        setModalConfirmDisable({...modalConfirmDisable, isOpen: !modalConfirmDisable.isOpen})
+    }
+    const loginState = JSON.parse(localStorage.getItem("loginState"));
+    
     useEffect(() => {
         if(props.listFilter === null) {
             setDisplayList([])
@@ -162,7 +173,25 @@ function TableUser(props) {
         }
     }
     console.log("display" + isModal.isOpen)
-
+    const onDisable = (id) => {
+        setId(id);
+        console.log(idAccount)
+        axios.get(`https://asset-assignment-be.azurewebsites.net/api/assignment/`,{ headers: { Authorization: `Bearer ${loginState.token}` },
+        params: { account: id }})
+            .then(
+           (response) => {
+            console.log(response.data.message)
+            setModalConfirmDisable({ ...modalConfirmDisable, isOpen: true });
+            }).catch((error) => {
+                if(error.response.data.message === "User not detected"){
+                    //toast.error(error.response.data.message);
+                }
+                else{
+                    console.log(error)
+                    setModalNotDisable({ ...modalCanNotDisable, isOpen: true })
+                }
+            })
+    }
 
 
 
@@ -277,7 +306,7 @@ function TableUser(props) {
                                             </td>
                                             <td className="btn_col delete">
                                                 <FontAwesomeIcon icon={faTimesCircle}
-                                                                 style={{color: "red"}}></FontAwesomeIcon>
+                                                                 style={{color: "red"}} onClick = {()=>onDisable(item.accountId)}></FontAwesomeIcon>
                                             </td>
                                         </tr>
                                     })
@@ -302,7 +331,20 @@ function TableUser(props) {
                 :
                 ""
             }
-
+            <Modal
+                className = "modalInformation"
+                title="Can not disable user"
+                visible={modalCanNotDisable.isOpen}
+                width={400}
+                closable={true}
+                onCancel = {()=> {setModalNotDisable({ ...modalCanNotDisable, isOpen: false });
+                                    }}
+                footer={[]}
+            >
+                <p>There are valid assignments belonging to this user. Please close all assignments before disabling user.</p>
+                <br/>
+            </Modal>
+            {modalConfirmDisable.isOpen ? <DisableUserModal setIsOpen={setIsOpenConfirm} id = {idAccount}/> : ""}
             {/*<ViewInformation isVisible ={viewInformation}/>*/}
         </>
     )

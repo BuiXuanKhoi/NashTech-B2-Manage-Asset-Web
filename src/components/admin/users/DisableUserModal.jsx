@@ -3,6 +3,8 @@ import React from "react";
 import { useState } from "react";
 import "../Modal.css"
 import axios from "axios";
+
+import toast, { Toaster } from 'react-hot-toast';
 export default function DisableUserModal(props){
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const [modal, setModal] = useState({
@@ -15,30 +17,22 @@ export default function DisableUserModal(props){
     const [id, setId] = useState(props.id);
     const handleDisable = () => {
         console.log(props.id);
-        axios.delete(`http://localhost:8080/api/account/`+id, config)
+        axios.delete(`https://asset-assignment-be.azurewebsites.net/api/account/`+id, config)
             .then(
-           () => {
-                setModal({ ...modal, isOpen: false })
+           (response) => {
+            setModal({ ...modal, isOpen: false })
+            toast.success(response.data.message);
                 window.location.reload();
-            }).catch(() => {
-
-                // setDeleteModal({
-                //     ...deleteModal, isOpen: true
-                //     , footer: null
-                //     , title: 'Can not disable user'
-                //     , content: (<p>
-                //         There are valid assignments belonging to this user. Please Close all assignments before disabling user.
-                //     </p>),
-    
-                // })
+            }).catch((error) => {
+                toast.error(error.response.data.message);
             })
         }
     
     
     return (
+        <>
         <Modal
         className = "modalConfirm"
-            
                 title="Are you sure?"
                 visible={modal.isOpen}
                 width={400}
@@ -47,7 +41,6 @@ export default function DisableUserModal(props){
                 onCancel = {()=> {setModal({ ...modal, isOpen: false });
                                         props.setIsOpen();
             }}
-                
                 footer={[
                     <Button key="submit" className="buttonSave" onClick={handleDisable}>
                      Disable
@@ -62,5 +55,17 @@ export default function DisableUserModal(props){
                 <p>Do you want to disable this user?</p>
                 <br/>
             </Modal>
+            <Toaster
+            toastOptions={{
+                className: 'toast',
+                style: {
+                    border: '1px solid #713200',
+                    padding: '36px',
+                    color: '#713200',
+                    
+                },
+            }}
+        />
+        </>
     );
 }

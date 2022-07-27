@@ -10,6 +10,7 @@ import "./ManagerUser.css"
 import axios from "axios";
 import toast, {Toaster} from "react-hot-toast";
 import 'antd/dist/antd.css';
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -24,7 +25,8 @@ export default function ManageUser() {
     const [state, setState] = useState({
         current: 0,
     });
-
+    
+    const navigate = useNavigate();
     const [nameSearch, setNameSearch] = useState({
         name: '',
     })
@@ -35,7 +37,7 @@ export default function ManageUser() {
 
     const getListUser = () => {
         axios
-            .get("http://localhost:8080/api/account?page="+ state.current, config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/account?page="+ state.current, config)
             .then(function (response) {
                 setListUser(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -58,7 +60,7 @@ export default function ManageUser() {
     };
     function getListUserFilter(name , page){
         axios
-            .get("http://localhost:8080/api/account?filter="+name+"&page="+page, config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&page="+page, config)
             .then(function (response) {
                 if(page===0){
                     setListUserFilter(response.data.content)
@@ -77,9 +79,9 @@ export default function ManageUser() {
     function getListUserSearch(name , code,page){
         let link="";
         if(name === "all")
-            link = "http://localhost:8080/api/account?"+"code="+code+"&page=0"
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?"+"code="+code+"&page=0"
         else
-            link = "http://localhost:8080/api/account?filter="+name+"&code="+code+"&page=0"
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&code="+code+"&page=0"
         axios
             .get(link, config)
             .then(function (response) {
@@ -94,7 +96,7 @@ export default function ManageUser() {
     }
     function getListUserPage(page){
         axios
-            .get("http://localhost:8080/api/account?page=" + page, config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + page, config)
             .then(function (response) {
                 setListUser(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -239,7 +241,7 @@ export default function ManageUser() {
                         </div>
                         <div id="create-btn-section">
                             <button className="btn-createUser" onClick={() => {
-                                window.location.reload();
+                                navigate("/createuser");
                             }}>
                                 <p className="btn_create_text"> Create new user</p>
                             </button>

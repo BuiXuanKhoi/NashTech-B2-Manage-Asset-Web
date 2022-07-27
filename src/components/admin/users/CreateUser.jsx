@@ -99,18 +99,19 @@ export default function CreateUser() {
                         <Form
                             form={form}
                             // initialValues={{Gender: 'Female'}}
+                            
                             name="complex-form"
                             onFinish={onFinish}
                             {...formItemLayout}
                             labelAlign="left"
                         >
-                            <Form.Item label="First name" >
+                            <Form.Item className="labelCreate" label="First name" >
                                 <Form.Item
                                     name="Firstname"
                                     rules={[
                                         {
                                             pattern: new RegExp("^[a-zA-Z'. ]+$"),
-                                            message: 'First name can not have number or special characters'
+                                            message: 'First name is not allowed to contain number or special characters'
                                         }
                                         , {max: 128, message: "First name must less than 128 characters"},
                                         () => ({
@@ -142,7 +143,7 @@ export default function CreateUser() {
                                     }),
                                         {
                                             pattern: new RegExp("^[a-zA-Z'. ]+$"),
-                                            message: 'Last name can not have number or special characters'
+                                            message: 'Last name is not allowed to contain number or special characters'
                                         }
                                         , {max: 128, message: "Last name must less than 128 characters"}
                                     ]}
@@ -246,14 +247,12 @@ export default function CreateUser() {
                                 <Form.Item
                                     name="Department"
                                     rules={[{required: true, message: 'Type must be required'}]}
-                                    style={{display: "block"}}
                                     hasFeedback
                                 >
                                     <Select
                                         disabled={isLoading.isLoading === true}
                                         showSearch
                                         className="inputForm"
-                                        style={{display: "block"}}
                                         optionFilterProp="children"
                                         filterOption={(input, option) =>
                                             option.children
