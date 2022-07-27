@@ -9,6 +9,8 @@ import { AppRoutes } from "../routes/AppRoutes";
 import "../styles/Styles.css";
 import ChangePasswordModal from './changePassword/ChangePasswordModal';
 import ChangePasswordFirstLogin from "./changePassword/ChangePasswordFirstLogin";
+import DisableUserModal from "./admin/users/DisableUserModal";
+import CannotDisableUserModal from "./admin/users/CannotDisableUserModal";
 
 export default function HeaderComponent(props) {
     const [visibleConfirm, setVisibleConfirm] = useState(false);
@@ -108,7 +110,7 @@ export default function HeaderComponent(props) {
                 </Dropdown>
             </PageHeader>
             <Modal
-            
+                className = "modalLogout"
                 title="Are you sure?"
                 visible={visibleConfirm}
                 width={400}
