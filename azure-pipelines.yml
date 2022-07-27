@@ -19,5 +19,5 @@ steps:
       output_location: 'build'
       api_location: 'api'
       verbose: true
-      azure_static_web_apps_api_token: '5c5334bc19c330ccd4232ae39e5ab3570c44ce5ea5b84a3911e69295e2f1f5c61-52582547-ba1c-4bd7-b844-5c5c8d4ce3b5010111862'
+      azure_static_web_apps_api_token: 'c8479728f4a07a6876c30386f86229d5bbc1241b40e0cc564c4a41e2b57189ff1-27b2c8ad-9daa-44c9-820a-02cf86a567e9010111862'
 
