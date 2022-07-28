@@ -3,6 +3,7 @@ import ManageAsset from "../components/admin/assets/ManageAsset";
 import ManageAssignment from "../components/admin/assignments/ManageAssignment";
 import HomeAdmin from "../components/admin/HomeAdmin";
 import CreateUser from "../components/admin/users/CreateUser";
+import EditUser from "../components/admin/users/EditUser";
 import ManageUser from "../components/admin/users/ManageUser";
 
 
@@ -61,11 +62,11 @@ export const AppRoutes = [
     // },
 
     
-    // {
-    //     path: "/editUser/:id",
-    //     element: <EditUserPage/>,
-    //     title: "Manage User > Edit User",
-    // },
+    {
+        path: "/editUser/:id",
+        element: <EditUser/>,
+        title: "Manage User > Edit User",
+    },
     // {
     //     path: "/createAsset",
     //     element: <CreateAssetPage/>,

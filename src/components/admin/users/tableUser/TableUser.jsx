@@ -13,9 +13,11 @@ import axios from 'axios';
 import ViewInformation from "../viewInformation/ViewInformation";
 import DisableUserModal from '../DisableUserModal';
 import Modal from 'antd/lib/modal/Modal';
+import { useNavigate } from "react-router-dom";
 
 
 function TableUser(props) {
+    const navigate = useNavigate();
     const [displayList, setDisplayList] = useState(props.listUser);
     const[oder,setOder] = useState("ASC")
     const[oder1,setOder1] = useState("ASC")
@@ -300,7 +302,9 @@ function TableUser(props) {
                                             <td className="col type_col">
                                                 <p className="col type_col">{item.roleName}</p>
                                             </td>
-                                            <td className="btn_col pencil">
+                                            <td className="btn_col pencil" onClick={() => {
+                                                navigate("/editUser/"+ item.accountId);
+                                            }}>
                                                 <i className="fas fa-pencil-alt"></i>
                                                 <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                             </td>

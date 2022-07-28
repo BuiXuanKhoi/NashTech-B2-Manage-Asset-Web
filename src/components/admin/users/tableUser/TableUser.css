@@ -37,3 +37,14 @@ td.btn_col {
     border-right: 10px solid white;
     width: 10%;
 }
+
+/* format for hover icon cursor */
+.pencil:hover{
+    cursor: pointer;
+}
+.delete:hover{
+    cursor: pointer;
+}
+.btn-createUser:hover{
+    cursor: pointer;
+}

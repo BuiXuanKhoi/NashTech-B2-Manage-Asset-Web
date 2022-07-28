@@ -149,9 +149,6 @@ export default function ChangePasswordModal(props) {
                         <Form.Item
                             name="oldPassword"
                             label="Old password"
-                            rules={[
-                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"), message: `Password must have uppercase,number,special character, length between 8 and 15` }
-                            ]}
                         >
                             <Input.Password
                                 status={(error != "") ? "error" : ""}
@@ -176,9 +173,6 @@ export default function ChangePasswordModal(props) {
                         style={{marginBottom: 20 }}
                             name="newPassword"
                             label="New password"
-                            rules={[
-                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"), message: `Password must have uppercase,number,special character, length between 8 and 15` }
-                            ]}
                         >
                             <Input.Password
                                 disabled={modal.isLoading === true}

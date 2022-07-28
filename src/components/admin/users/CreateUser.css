@@ -2,7 +2,8 @@
     text-align: initial;
 }
 .fontHeaderContent{
-    margin-top: 12px;
+    margin: 50px 5px;
+    font-size: 1.3rem !important;
    
 }
 .labelCreate{
@@ -33,4 +34,18 @@
 }
 .ant-picker{
     display: block;
+}
+
+/* Edit user */
+
+#EditUserForm .ant-select-selection-item{
+    display: block;
+    color: rgba(0, 0, 0, 1) !important;
+}
+
+#EditUserForm_Firstname{
+    color: rgba(0, 0, 0, 1) !important;
+}
+#EditUserForm_Lastname{
+    color: rgba(0, 0, 0, 1) !important;
 }

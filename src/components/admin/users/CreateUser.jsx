@@ -214,7 +214,8 @@ export default function CreateUser() {
 
                                                     return Promise.reject("Joined date is not later than Date of Birth. Please select a different date");
                                                 }  
-                                                else if (value - getFieldValue('DateOfBirth') <= 568080000000) {
+                                                else if (value - getFieldValue('DateOfBirth') <= 568080000000
+                                                & value - getFieldValue('DateOfBirth') >= 0) {
 
                                                     return Promise.reject("User is under 18 when join. Please select a different date");
                                                 } else {

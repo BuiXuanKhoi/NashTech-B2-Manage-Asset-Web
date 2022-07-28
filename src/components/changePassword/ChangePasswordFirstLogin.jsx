@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Modal, Input, Button, Form} from "antd";
 import {EyeOutlined, EyeInvisibleOutlined} from "@ant-design/icons";
 import axios from "axios";
@@ -23,6 +23,8 @@ export default function ChangePasswordFirstLogin(props) {
     const [isPaswordVisible, setIsPaswordVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(props.isOpen);
     const [isNotEmpty,setNotEmpty] = useState(true);
+    const [changeSuccess, setChangeSuccess] = useState(false);
+    const [Footer, setFooter] = useState({});
     const [Loading, setLoading] = useState({
         isLoading: false
     })
@@ -35,7 +37,7 @@ export default function ChangePasswordFirstLogin(props) {
             // .put(`${process.env.CHANGEPASSWORD_USERURL}`+ props.idAccount, password,config)
             .put("https://asset-assignment-be.azurewebsites.net/api/account/"+  props.idAccount, password,config)
             .then(function (response) {
-                setIsModalVisible(false);
+                
                 let loginState = JSON.parse(localStorage.getItem('loginState'));
                 localStorage.setItem(
                     "loginState",
@@ -48,6 +50,21 @@ export default function ChangePasswordFirstLogin(props) {
                         id: loginState.id,
                     })
                 );
+                setChangeSuccess(true);
+                setFooter({
+                    footer: (
+                        <Button
+                            className = "buttonSaveChangePassword"
+                            onClick={() => {
+                                setFooter({});
+                                setChangeSuccess(false);
+                                setIsModalVisible(false);
+                            }}
+                        >
+                            Close
+                        </Button>
+                    ),
+                });
             })
             .catch((error) => {
                 toast.error(error.response.data.message);
@@ -56,6 +73,25 @@ export default function ChangePasswordFirstLogin(props) {
 
             });
     };
+    useEffect(() => {
+        setFooter({
+            footer: (
+                <Button
+                    disabled={isNotEmpty}
+                    className="buttonSaveChangePassword1st"
+                     loading={Loading.isLoading} key="submit"
+                    onClick={() => {
+                        setLoading({...Loading, isLoading: true});
+                        setTimeout(() => {
+                            setLoading({...Loading, isLoading: false})
+                        }, 2000)
+                        handleOk();
+                    }}>
+                    Save
+                </Button>
+            )
+        });
+    },[])
     return (
         <>
             <Modal
@@ -64,24 +100,12 @@ export default function ChangePasswordFirstLogin(props) {
                 visible={isModalVisible}
                 maskClosable={false}
                 onOk={handleOk}
-                footer={[
-                    <Button
-                        disabled={isNotEmpty}
-                        className="buttonSaveChangePassword1st"
-                         loading={Loading.isLoading} key="submit"
-                        onClick={() => {
-                            setLoading({...Loading, isLoading: true});
-                            setTimeout(() => {
-                                setLoading({...Loading, isLoading: false})
-                            }, 2000)
-                            handleOk();
-                        }}>
-                        Save
-                    </Button>,
-                ]}
+                
                 closable={false}
+                {...Footer}
             >
-                <p id="titleChangePassword" style={{fontFamily: "bold", fontSize: "16px"}}>
+            {changeSuccess === false ? (<>
+                <p id="titleChangePassword1st">
                     This is first time you logged in <br />
                     You have to change your password to continue.
                 </p>
@@ -91,7 +115,8 @@ export default function ChangePasswordFirstLogin(props) {
                             name="newPassword1st"
                             label="New password"
                             rules={[
-                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"), message: `Password must have uppercase,number,special character, length between 8 and 15` }
+                            { pattern: new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,15}$"),
+                             message: `Password must have uppercase, number, no blank, special character, length between 8 and 15` }
                             ]}
                         >
                     <Input.Password
@@ -102,7 +127,7 @@ export default function ChangePasswordFirstLogin(props) {
                                         new_password: newPass.target.value,
 
                                     });
-                                    setNotEmpty(false);
+                                    setNotEmpty(newPass.target.value != "" ? false : true);
                                 }}
                         suffix={
                             isPaswordVisible ? (
@@ -122,9 +147,12 @@ export default function ChangePasswordFirstLogin(props) {
                     />
                 </Form.Item>
                 </Form>
+                </>) : (
+                    <p>Your password has been changed successfully!</p>
+                )}
             </Modal>
 
-            <Toaster
+            {/* <Toaster
                 toastOptions={{
                     className: 'toast',
                     style: {
@@ -134,7 +162,7 @@ export default function ChangePasswordFirstLogin(props) {
 
                     },
                 }}
-            />
+            /> */}
         </>
     )
  }
