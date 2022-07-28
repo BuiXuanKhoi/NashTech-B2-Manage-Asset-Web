@@ -10,7 +10,6 @@ import ViewInformation from "../viewInformation/ViewInformation";
 import DisableUserModal from '../DisableUserModal';
 import Modal from 'antd/lib/modal/Modal';
 import {useNavigate} from "react-router-dom";
-import moment from "moment";
 
 
 function TableUser(props) {
@@ -21,7 +20,6 @@ function TableUser(props) {
     const [oder2, setOder2] = useState("ASC")
     const [sortDay, setSortDay] = useState("ASC")
 
-    const [loading, setLoading] = useState(false);
     const [dataUser, setDataUser] = useState(false)
     const [idAccount, setId] = useState(0);
     const [isModal, setModal] = useState({
@@ -322,7 +320,7 @@ function TableUser(props) {
                                 </tbody>
                             </table>
 
-                            }
+                            
 
                         </div>
 
