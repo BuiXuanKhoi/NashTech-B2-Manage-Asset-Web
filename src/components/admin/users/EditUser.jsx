@@ -150,21 +150,19 @@ export default function EditUser() {
                                     rules={[{required: true, message: 'Date of birth must be required'},
                                     () => ({
                                         validator(_, value) {
+                                            if (value === null || value === "") {
+                                                return Promise.resolve()
+                                            }
                                             if ((new Date() - value._d) < 0) {
                                                 return Promise.reject("User not born yet. Please select a different date")
                                             }
-                                            return Promise.resolve();
-                                        }
-                                    }),
-                                        () => ({
-                                            validator(_, value) {
-                                                if ((new Date().getFullYear() - value._d.getFullYear()) < 18
+                                            else if ((new Date().getFullYear() - value._d.getFullYear()) < 18
                                                 & (new Date() - value._d) >= 0) {
                                                     return Promise.reject("User is under 18. Please select a different date")
                                                 }
-                                                return Promise.resolve();
-                                            }
-                                        })
+                                            else return Promise.resolve();
+                                        }
+                                    })
                                     ]}
                                     
                                 >
@@ -202,20 +200,16 @@ export default function EditUser() {
                                                 & value - getFieldValue('DateOfBirth') >= 0) {
 
                                                     return Promise.reject("User is under 18 when join. Please select a different date");
-                                                } else {
+                                                } 
+                                                else if ((new Date() - value._d) < 0) {
+                                                    return Promise.reject("User has not joined. Please select a different date")
+                                                }
+                                                 else {
                                                     return Promise.resolve()
                                                 }
                                             }
                                         })
-                                        ,
-                                        () => ({
-                                            validator(_, value) {
-                                                if ((new Date() - value._d) < 0) {
-                                                    return Promise.reject("User has not joined. Please select a different date")
-                                                }
-                                                return Promise.resolve();
-                                            }
-                                        })
+                                       
                                     ]}
                                 >
 
