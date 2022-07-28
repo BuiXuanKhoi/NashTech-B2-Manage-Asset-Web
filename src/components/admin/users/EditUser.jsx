@@ -5,7 +5,7 @@ import "./CreateUser.css";
 import axios from "axios";
 import moment from 'moment';
 import { useNavigate, useParams } from "react-router-dom";
-
+import toast from 'react-hot-toast';
 export default function EditUser() {
     const [isLoading, setLoading] = useState({isLoading: false});
     const idInformation = useParams();
@@ -36,12 +36,10 @@ export default function EditUser() {
                     Type: response.data.roleId == 1 ? "Admin" : "Staff" 
 
                 });
-                
-                // navigate("/user");
 
             })
             .catch((error) => {
-                // console.log(error);
+                toast.error("Load information failed");
             });
     },[])
     // console.log(information);
@@ -90,11 +88,12 @@ export default function EditUser() {
                 }, 2000)
 
                 console.log(response.data);
-
+                toast.success("Edit user successfully");
                 navigate("/user");
 
             })
             .catch((error) => {
+                toast.error("Edit user failed");
                 console.log(error)
                 console.log(error.response.data.message);
             });
