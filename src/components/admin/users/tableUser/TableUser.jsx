@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimesCircle, faSortDown, faPencilAlt ,faSortUp} from '@fortawesome/free-solid-svg-icons'
+import React, {useState, useEffect} from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimesCircle, faSortDown, faPencilAlt, faSortUp} from '@fortawesome/free-solid-svg-icons'
 import "./TableUser.css"
 import {
-    FilterOutlined,
-    EditFilled,
-    CloseCircleOutlined,
-    LoadingOutlined,
-    CloseSquareOutlined
+    LoadingOutlined
 } from "@ant-design/icons";
 import axios from 'axios';
 import ViewInformation from "../viewInformation/ViewInformation";
 import DisableUserModal from '../DisableUserModal';
 import Modal from 'antd/lib/modal/Modal';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import moment from "moment";
 
 
 function TableUser(props) {
     const navigate = useNavigate();
     const [displayList, setDisplayList] = useState(props.listUser);
-    const[oder,setOder] = useState("ASC")
-    const[oder1,setOder1] = useState("ASC")
-    const[oder2,setOder2] = useState("ASC")
-    const[sortDay,setSortDay] = useState("ASC")
+    const [oder, setOder] = useState("ASC")
+    const [oder1, setOder1] = useState("DSC")
+    const [oder2, setOder2] = useState("ASC")
+    const [sortDay, setSortDay] = useState("ASC")
 
     const [loading, setLoading] = useState(false);
-    const[dataUser, setDataUser] = useState(false)
+    const [dataUser, setDataUser] = useState(false)
     const [idAccount, setId] = useState(0);
     const [isModal, setModal] = useState({
         isOpen: false,
@@ -43,131 +40,123 @@ function TableUser(props) {
         setModalConfirmDisable({...modalConfirmDisable, isOpen: !modalConfirmDisable.isOpen})
     }
     const loginState = JSON.parse(localStorage.getItem("loginState"));
-    
+
     useEffect(() => {
-        if(props.listFilter === null) {
+        if (props.listFilter === null) {
             setDisplayList([])
+        } else {
+            const sorted = [...props.listUser].sort((a, b) =>
+                a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
+            )
+            setDisplayList(sorted);
         }
-        else
-            setDisplayList(props.listUser);
-
-
-    },[props.listUser]  )
+    }, [props.listUser])
     useEffect(() => {
-        if(props.listFilter !== null)
-            setDisplayList(props.listFilter);
-        else
+        if (props.listFilter !== null) {
+            const sorted = [...props.listFilter].sort((a, b) =>
+                a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
+            )
+            setDisplayList(sorted);
+        } else
             setDisplayList([])
 
-    },[props.listFilter]  )
-
-
-
-
-    useEffect(() => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 2500);
-    }, []);
+    }, [props.listFilter])
 
 
     function formatDate(joinedDate) {
         let date = new Date(joinedDate);
-        return date.toLocaleDateString("vi-Vi");
+        console.log(date + "   " + joinedDate);
+        return date;
     }
 
 
     function sort(rule) {
         switch (rule) {
-            case 'id':
-            {
+            case 'id': {
                 console.log("id")
                 break;
             }
-            case 'firstName':
-            {
+            case 'firstName': {
                 console.log("firstName")
 
                 break;
             }
-            case 'joinDate':
-            {
+            case 'joinDate': {
                 console.log("joinDate")
 
                 break;
             }
-            case 'role':
-            {
-               console.log("role")
+            case 'role': {
+                console.log("role")
                 break;
             }
             default:
                 break;
         }
     }
-    const sorting_staff = (col) =>{
-        if(oder ==="ASC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].toLowerCase() > b[col].toLowerCase() ?1:-1
+
+    const sorting_staff = (col) => {
+        if (oder === "ASC") {
+            const sorted = [...displayList].sort((a, b) =>
+                a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
             setOder("DSC")
         }
-        if(oder ==="DSC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].toLowerCase() < b[col].toLowerCase() ?1:-1
+        if (oder === "DSC") {
+            const sorted = [...displayList].sort((a, b) =>
+                a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
             setOder("ASC")
 
         }
     }
-    const sorting_fullname = (col) =>{
-        if(oder1 ==="ASC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].toLowerCase() > b[col].toLowerCase() ?1:-1
+    const sorting_fullname = (col) => {
+        if (oder1 === "ASC") {
+            const sorted = [...displayList].sort((a, b) =>
+                a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
             setOder1("DSC")
         }
-        if(oder1 ==="DSC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].toLowerCase() < b[col].toLowerCase() ?1:-1
+        if (oder1 === "DSC") {
+            const sorted = [...displayList].sort((a, b) =>
+                a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
             setOder1("ASC")
 
         }
     }
-    const sorting_type = (col) =>{
-        if(oder2 ==="ASC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].toLowerCase() > b[col].toLowerCase() ?1:-1
+    const sorting_type = (col) => {
+        if (oder2 === "ASC") {
+            const sorted = [...displayList].sort((a, b) =>
+                a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
             setOder2("DSC")
         }
-        if(oder2 ==="DSC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].toLowerCase() < b[col].toLowerCase() ?1:-1
+        if (oder2 === "DSC") {
+            const sorted = [...displayList].sort((a, b) =>
+                a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
             setOder2("ASC")
 
         }
     }
-    const sorting_day = (col) =>{
-        if(sortDay ==="ASC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].getTime() > b[col].getTime() ?1:-1
+    const sorting_day = (col) => {
+        if (sortDay === "ASC") {
+            const sorted = [...displayList].sort((a, b) =>
+                formatDate(a[col]) > formatDate(b[col]) ? 1 : -1
             )
             setDisplayList(sorted);
             setSortDay("DSC")
         }
-        if(sortDay ==="DSC"){
-            const sorted =[...displayList].sort((a,b)=>
-                a[col].getTime() < b[col].getTime() ?1:-1
+        if (sortDay === "DSC") {
+            const sorted = [...displayList].sort((a, b) =>
+                formatDate(a[col]) < formatDate(b[col]) ? 1 : -1
             )
             setDisplayList(sorted);
             setSortDay("ASC")
@@ -178,36 +167,50 @@ function TableUser(props) {
     const onDisable = (id) => {
         setId(id);
         console.log(idAccount)
-        axios.get(`https://asset-assignment-be.azurewebsites.net/api/assignment/`,{ headers: { Authorization: `Bearer ${loginState.token}` },
-        params: { account: id }})
+        axios.get(`https://asset-assignment-be.azurewebsites.net/api/assignment/`, {
+            headers: {Authorization: `Bearer ${loginState.token}`},
+            params: {account: id}
+        })
             .then(
-           (response) => {
-            console.log(response.data.message)
-            setModalConfirmDisable({ ...modalConfirmDisable, isOpen: true });
-            }).catch((error) => {
-                if(error.response.data.message === "User not detected"){
-                    //toast.error(error.response.data.message);
-                }
-                else{
-                    console.log(error)
-                    setModalNotDisable({ ...modalCanNotDisable, isOpen: true })
-                }
-            })
+                (response) => {
+                    console.log(response.data.message)
+                    setModalConfirmDisable({...modalConfirmDisable, isOpen: true});
+                }).catch((error) => {
+            if (error.response.data.message === "User not detected") {
+                //toast.error(error.response.data.message);
+            } else {
+                console.log(error)
+                setModalNotDisable({...modalCanNotDisable, isOpen: true})
+            }
+        })
     }
-
 
 
     return (
         <>
-        {
-            displayList.length === 0 ?
-                <>
-                    <h2>No data</h2>
-                </>
-                :
-                <div className="results-section">
-                    <div className="user_table">
-                        {!loading ?
+            {
+                displayList.length === 0 ?
+                    props.checkSearch ?
+                        <>
+                            <div className="data-notfound">
+                                <img style={{height: "260px", width: "260px"}}
+                                     src={process.env.PUBLIC_URL + '/nodataload.png'}/>
+                                <p className="name-notfound">No Result Found</p>
+                                <p className="name-notfound-child">Please try again with another</p>
+                                <p className="name-notfound-child">keywords or maybe use generic term</p>
+                            </div>
+
+                        </>
+
+                        :
+                        <>
+                            <LoadingOutlined
+                                style={{fontSize: "60px", color: "red", textAlign: "center", marginTop: "70px"}}/>
+                        </>
+
+                    :
+                    <div className="results-section">
+                        <div className="user_table">
                             <table>
                                 <thead>
                                 <tr>
@@ -251,11 +254,11 @@ function TableUser(props) {
 
                                             {sortDay === "ASC" ?
                                                 <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_fullname("firstName")}
+                                                                 onClick={() => sorting_day("joinedDate")}
                                                                  icon={faSortDown}></FontAwesomeIcon>
                                                 :
                                                 <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_fullname("firstName")}
+                                                                 onClick={() => sorting_day("joinedDate")}
                                                                  icon={faSortDown}></FontAwesomeIcon>
                                             }
                                         </p>
@@ -281,13 +284,13 @@ function TableUser(props) {
                                 <tbody>
                                 {
                                     displayList.map((item, index) => {
-                                        return <tr key={index} >
+                                        return <tr key={index}>
                                             <td className="col staff_code_col"
                                                 onClick={() => {
-                                                    setModal({ ...isModal, isOpen: true });
+                                                    setModal({...isModal, isOpen: true});
                                                     setDataUser(item)
 
-                                                }}                                            >
+                                                }}>
                                                 <p className="col staff_code_col">{item.staffCode}</p>
                                             </td>
                                             <td className="col full_name_col">
@@ -297,36 +300,34 @@ function TableUser(props) {
                                                 <p className="col username_col">{item.userName}</p>
                                             </td>
                                             <td className="col joined_day_col">
-                                                <p className="col joined_day_col">{formatDate(item.joinedDate)}</p>
+                                                <p className="col joined_day_col">{item.joinedDate}</p>
                                             </td>
                                             <td className="col type_col">
                                                 <p className="col type_col">{item.roleName}</p>
                                             </td>
                                             <td className="btn_col pencil" onClick={() => {
-                                                navigate("/editUser/"+ item.accountId);
+                                                navigate("/editUser/" + item.accountId);
                                             }}>
                                                 <i className="fas fa-pencil-alt"></i>
                                                 <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                             </td>
                                             <td className="btn_col delete">
                                                 <FontAwesomeIcon icon={faTimesCircle}
-                                                                 style={{color: "red"}} onClick = {()=>onDisable(item.accountId)}></FontAwesomeIcon>
+                                                                 style={{color: "red"}}
+                                                                 onClick={() => onDisable(item.accountId)}></FontAwesomeIcon>
                                             </td>
                                         </tr>
                                     })
                                 }
                                 </tbody>
                             </table>
-                            :
-                            <LoadingOutlined
-                                style={{fontSize: "60px", color: "red", textAlign: "center"}}/>
 
-                        }
+                            }
+
+                        </div>
 
                     </div>
-
-                </div>
-        }
+            }
             {isModal.isOpen ?
                 <div>
                     <ViewInformation isVisible={setIsOpen} dataUser={dataUser}/>
@@ -336,24 +337,25 @@ function TableUser(props) {
                 ""
             }
             <Modal
-                className = "modalInformation"
+                className="modalInformation"
                 title="Can not disable user"
                 visible={modalCanNotDisable.isOpen}
                 width={400}
                 closable={true}
-                onCancel = {()=> {setModalNotDisable({ ...modalCanNotDisable, isOpen: false });
-                                    }}
+                onCancel={() => {
+                    setModalNotDisable({...modalCanNotDisable, isOpen: false});
+                }}
                 footer={[]}
             >
-                <p>There are valid assignments belonging to this user. Please close all assignments before disabling user.</p>
+                <p>There are valid assignments belonging to this user. Please close all assignments before disabling
+                    user.</p>
                 <br/>
             </Modal>
-            {modalConfirmDisable.isOpen ? <DisableUserModal setIsOpen={setIsOpenConfirm} id = {idAccount}/> : ""}
+            {modalConfirmDisable.isOpen ? <DisableUserModal setIsOpen={setIsOpenConfirm} id={idAccount}/> : ""}
             {/*<ViewInformation isVisible ={viewInformation}/>*/}
         </>
     )
 }
-
 
 
 export default (TableUser)

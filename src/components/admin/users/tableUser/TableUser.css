@@ -37,6 +37,21 @@ td.btn_col {
     border-right: 10px solid white;
     width: 10%;
 }
+.name-notfound{
+    color: black;
+    size: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+.name-notfound-child{
+    padding-bottom: 0px;
+    font-weight: bold;
+    color: #B5B5B5;
+}
+.data-notfound{
+    margin-top: 70px;
+}
 
 /* format for hover icon cursor */
 .pencil:hover{

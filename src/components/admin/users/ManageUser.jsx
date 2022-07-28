@@ -21,19 +21,22 @@ export default function ManageUser() {
     const [checked, setChecked] = useState([]);
     const checkList = ["All", "Admin", "Staff"];
     const [listUserFilter, setListUserFilter] = useState([]);
+    const [checkFilter, setCheckFilter] = useState(false);
+
     const [totalPage, setTotalPage] = useState(0);
     const [state, setState] = useState({
         current: 0,
     });
-    
+    const [nameSearch, setNameSearch] = useState("");
+
+
     const navigate = useNavigate();
-    const [nameSearch, setNameSearch] = useState({
-        name: '',
-    })
 
     const config = {
         headers: {Authorization: `Bearer ${user.token}`}
     };
+    //get list User location admin and display list  user to page 1
+
 
     const getListUser = () => {
         axios
@@ -53,11 +56,8 @@ export default function ManageUser() {
         getListUser();
     }, []);
 
-    const handlenameChange = event => {
-        nameSearch.name = event.target.value
-        console.log(event.target.value)
-        setNameSearch(nameSearch)
-    };
+    // get list user when admin click type filter
+
     function getListUserFilter(name , page){
         axios
             .get("https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&page="+page, config)
@@ -76,21 +76,60 @@ export default function ManageUser() {
 
             });
     }
+    // check find list user when admin perform 3 operations at the same time ( search , type , page )
+    function findListUserToSearch(page) {
+        if (checked.length !== 0) {
+            if (checked.length === 1) {
+                if (checked[0] === "Admin") {
+                    getListUserSearch("admin", nameSearch, page)
+                } else if (checked[0] === "Staff") {
+                    getListUserSearch("staff", nameSearch, page)
+                } else if (checked[0] === "All") {
+                    getListUserSearch("all", nameSearch, page)
+                }
+            } else {
+                getListUserSearch("all", nameSearch, page)
+            }
+        } else {
+            getListUserSearch("all", nameSearch, page)
+        }
+    }
+    // check find list user when admin perform 2 operations at the same time ( type , page )
+    function getListUserToPage(page) {
+        setNameSearch("")
+        if (checked.length !== 0) {
+            if (checked.length === 1) {
+                if (checked[0] === "Admin") {
+                    getListUserFilter("admin", page)
+                } else if (checked[0] === "Staff") {
+                    getListUserFilter("staff", page)
+                } else
+                    getListUserPage(page);
+            } else
+                getListUserPage(page);
+        } else {
+            getListUserPage(page);
+        }
+    }
+    // get list user when admin search
+
     function getListUserSearch(name , code,page){
         let link="";
         if(name === "all")
-            link = "https://asset-assignment-be.azurewebsites.net/api/account?"+"code="+code+"&page=0"
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?" + "code=" + code + "&page=" + page
         else
-            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&code="+code+"&page=0"
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter="+ name + "&code=" + code + "&page=" + page
         axios
             .get(link, config)
             .then(function (response) {
                 setListUserFilter(response.data.content)
+                setCheckFilter(true)
                 setTotalPage(response.data.totalPages)
 
             })
             .catch((error) => {
                 setListUserFilter([])
+                setCheckFilter(true)
                 setTotalPage(0)
             });
     }
@@ -117,46 +156,22 @@ export default function ManageUser() {
         } else {
             checked.splice(checked.indexOf(event.target.value), 1);
             updatedList = [...checked]
-
         }
         setChecked(updatedList);
-        if (checked.length !== 0) {
-            setState({
-                current: 0,
-            });
-            if (checked.length === 1) {
-                if (checked[0] === "Admin") {
-                    getListUserFilter("admin",0)
-                } else if (checked[0] === "Staff") {
-                    getListUserFilter("staff",0)
-                } else
-                    getListUserPage(0);
-            } else
-                getListUserPage(0);
-        } else {
-            setState({
-                current: 0,
-            });
-            getListUserPage(0);
-        }
+        setState({
+            current: 0,
+        });
+        getListUserToPage(0)
     };
     const findListUserSearch = () => {
-        if (nameSearch.name.length > 20)
+        if (nameSearch.length > 20)
             toast.error("Invalid input ");
         else {
-            if (checked.length !== 0) {
-                if (checked.length === 1) {
-                    if (checked[0] === "Admin") {
-                        getListUserSearch("admin",nameSearch.name)
-                    }
-                    else if (checked[0] ==="Staff")
-                        getListUserSearch("staff",nameSearch.name)
-                    else if (checked[0] ==="ALL")
-                        getListUserSearch("all",nameSearch.name)
-                }
-            }
-            else
-                getListUserSearch("all",nameSearch.name)
+            setState({
+                current: 0,
+            });
+            findListUserToSearch(0)
+
         }
     }
 
@@ -167,32 +182,18 @@ export default function ManageUser() {
         setState({
             current: page,
         });
-        let checkpage =0;
-        if(page>0){
-            checkpage=page-1;
+        let checkpage = 0;
+        if (page > 0) {
+            checkpage = page - 1;
         }
-        if (checked.length !== 0) {
-            if (checked.length === 1) {
-                if (checked[0] === "Admin") {
-                    getListUserFilter("admin",checkpage)
-
-                } else if (checked[0] === "Staff") {
-                    getListUserFilter("staff",checkpage)
-                } else
-                    getListUserPage(checkpage)
-            } else
-                getListUserPage(checkpage)
+        if (nameSearch !== "") {
+            findListUserToSearch(checkpage)
+        } else {
+            getListUserToPage(checkpage)
         }
-        else {
-            getListUserPage(checkpage)
-
-        }
-
-        console.log("is page: " + listUser.length)
     };
 
 
-    console.log("state current is: " + state.current)
 
 
 
@@ -230,15 +231,20 @@ export default function ManageUser() {
                         </div>
                     </div>
                     <div className="search-bar_create-btn_component search_bar-create_btn-wrapper">
-                        <div id="search-section">
-                            <input
-                                maxLength="50"
-                                name="keyword"
-                                id="search-query"
-                                onChange={handlenameChange}
-                            />
-                            <button type="button" className="button-search" onClick={findListUserSearch}><FontAwesomeIcon icon={faSearch}/></button>
-                        </div>
+                        {
+                            <div id="search-section">
+                                <input
+                                    maxLength="50"
+                                    name="keyword"
+                                    value={nameSearch || ""}
+                                    id="search-query"
+                                    onChange={e => setNameSearch(e.target.value)}
+                                />
+
+                                <button type="button" className="button-search" onClick={findListUserSearch}>
+                                    <FontAwesomeIcon icon={faSearch}/></button>
+                            </div>
+                        }
                         <div id="create-btn-section">
                             <button className="btn-createUser" onClick={() => {
                                 navigate("/createuser");
@@ -250,31 +256,31 @@ export default function ManageUser() {
                 </div>
                 {
                     <div>
-                        <TableUser listUser={listUser} listFilter={listUserFilter}/>
+                        <TableUser listUser={listUser} listFilter={listUserFilter} checkSearch ={checkFilter}/>
                         {
                             totalPage === 0 ?
                                 ""
                                 :
                                 <>
                                     {
-                                        state.current ===0 ?
+                                        state.current === 0 ?
                                             <Pagination
-                                                style={{marginTop: "20px", marginLeft: "75%"}}
+                                                style={{marginTop: "20px", marginLeft: "70%"}}
                                                 nextIcon={"Next"}
                                                 prevIcon={"Previous"}
-                                                current={state.current+1}
+                                                current={state.current + 1}
                                                 onChange={handleChange}
-                                                total={totalPage*10}
+                                                total={totalPage * 10}
                                             />
                                             :
-                                        <Pagination
-                                            style={{marginTop: "20px", marginLeft: "75%"}}
-                                            nextIcon={"Next"}
-                                            prevIcon={"Previous"}
-                                            current={state.current}
-                                            onChange={handleChange}
-                                            total={totalPage * 10}
-                                        />
+                                            <Pagination
+                                                style={{marginTop: "20px", marginLeft: "70%"}}
+                                                nextIcon={"Next"}
+                                                prevIcon={"Previous"}
+                                                current={state.current}
+                                                onChange={handleChange}
+                                                total={totalPage * 10}
+                                            />
                                     }
                                 </>
                         }
