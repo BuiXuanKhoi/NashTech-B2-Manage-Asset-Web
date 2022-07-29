@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTimesCircle, faSortDown, faPencilAlt, faSortUp} from '@fortawesome/free-solid-svg-icons'
 import "./TableUser.css"
+
+import Modal from 'antd/lib/modal/Modal';
+import DisableUserModal from "../DisableUserModal"
 import {
     FilterOutlined,
     EditFilled,
@@ -9,10 +12,9 @@ import {
     LoadingOutlined,
     CloseSquareOutlined
 } from "@ant-design/icons";
-import {Table} from "antd";
 import ViewInformation from "../viewInformation/ViewInformation";
-import moment from "moment"
-
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 function TableUser(props) {
     const [displayList, setDisplayList] = useState(props.listUser);
     // const [oder, setOder] = useState("ASC")
@@ -20,7 +22,8 @@ function TableUser(props) {
         name:"ASC",
         ischecked:false
     })
-
+    const [idAccount, setId] = useState(0);
+    const navigate = useNavigate();
     const [oder1, setOder1] = useState({
         name1:"DSC",
         ischecked1:false
@@ -35,8 +38,38 @@ function TableUser(props) {
         isOpen: false,
         isLoading: false,
     });
+    const [modalCanNotDisable, setModalNotDisable] = useState(false);
+    const [modalConfirmDisable, setModalConfirmDisable] = useState({
+        isOpen: false,
+        isLoading: false,
+    });
     const setIsOpen = () => {
         setModal({...isModal, isOpen: !isModal.isOpen})
+    }
+    const setIsOpenConfirm = () => {
+        setModalConfirmDisable({...modalConfirmDisable, isOpen: !modalConfirmDisable.isOpen})
+    }
+    const loginState = JSON.parse(localStorage.getItem("loginState"));
+
+    const onDisable = (id) => {
+        setId(id);
+        console.log(idAccount)
+        axios.get(`https://asset-assignment-be.azurewebsites.net/api/assignment/`, {
+            headers: {Authorization: `Bearer ${loginState.token}`},
+            params: {account: id}
+        })
+            .then(
+                (response) => {
+                    console.log(response.data.message)
+                    setModalConfirmDisable({...modalConfirmDisable, isOpen: true});
+                }).catch((error) => {
+            if (error.response.data.message === "User not detected") {
+                //toast.error(error.response.data.message);
+            } else {
+                console.log(error)
+                setModalNotDisable({...modalCanNotDisable, isOpen: true})
+            }
+        })
     }
 
     useEffect(() => {
@@ -360,13 +393,16 @@ function TableUser(props) {
                                                         <td className="col type_col">
                                                             <p className="col type_col">{item.roleName}</p>
                                                         </td>
-                                                        <td className="btn_col pencil">
+                                                        <td className="btn_col pencil" onClick={() => {
+                                                            navigate("/editUser/" + item.accountId);
+                                                        }}>
                                                             <i className="fas fa-pencil-alt"></i>
                                                             <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                         </td>
                                                         <td className="btn_col delete">
                                                             <FontAwesomeIcon icon={faTimesCircle}
-                                                                             style={{color: "red"}}></FontAwesomeIcon>
+                                                                            style={{color: "red"}}
+                                                                            onClick={() => onDisable(item.accountId)}></FontAwesomeIcon>
                                                         </td>
                                                     </tr>
                                                 })
@@ -394,7 +430,22 @@ function TableUser(props) {
                 :
                 ""
             }
-
+            <Modal
+                className="modalInformation"
+                title="Can not disable user"
+                visible={modalCanNotDisable.isOpen}
+                width={400}
+                closable={true}
+                onCancel={() => {
+                    setModalNotDisable({...modalCanNotDisable, isOpen: false});
+                }}
+                footer={[]}
+            >
+                <p>There are valid assignments belonging to this user. Please close all assignments before disabling
+                    user.</p>
+                <br/>
+            </Modal>
+            {modalConfirmDisable.isOpen ? <DisableUserModal setIsOpen={setIsOpenConfirm} id={idAccount}/> : ""}
             {/*<ViewInformation isVisible ={viewInformation}/>*/}
         </>
     )
