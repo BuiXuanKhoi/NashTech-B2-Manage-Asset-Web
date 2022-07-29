@@ -25,8 +25,8 @@ const Login = () => {
 
 
 
-
-
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [loginState, setLoginState] = useContext(Context);
     const [isLoging, setLoging] = useState(LOGING.NONE);
     const [error, setError] = useState("");
@@ -37,20 +37,19 @@ const Login = () => {
             password: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string().required("Required !"),
+            username: Yup.string(),
             password: Yup.string()
-                .min(8, "Must be at least 8 characters !")
-                .required("Required !"),
         }),
 
         onSubmit: () => {
+            
             setLoging(LOGING.LOADING)
 
             axios
                 .post("https://asset-assignment-be.azurewebsites.net/api/login", {
                 
-                    username: formik.values.username,
-                    password: formik.values.password,
+                    username: username,
+                    password: password,
                 })
                 .then((response) => {
                     setLoginState({
@@ -108,9 +107,10 @@ const Login = () => {
                             
                             className="formInput"
                             name="username"
-                            onChange={formik.handleChange}
+                            onChange={(e)=>{//formik.handleChange
+                                setUsername(e.target.value)
+                            }}
                             onBlur={formik.handleBlur}
-                            value={formik.values.username}
                         />
                     </div>
 
@@ -128,9 +128,11 @@ const Login = () => {
                            
                             className="formInput"
                             name="password"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.password}
+                            onChange={(e)=>{
+                                //formik.handleChange
+                                setPassword(e.target.value)}}
+                            // onBlur={formik.handleBlur}
+                            
                             suffix={
                                 isPasswordVisible ? (
                                     <EyeOutlined
@@ -157,7 +159,7 @@ const Login = () => {
                         ) : null}
                     </div>
 
-                    <Button disabled={isLoging === LOGING.LOADING} htmlType="submit" style={{ width: "100px", height: "40px", background: "#e30c18", color: "white", left: "90px", }}>
+                    <Button disabled={(username.length===0 || password.length===0)} htmlType="submit" style={{ width: "100px", height: "40px", background: "#e30c18", color: "white", left: "90px", }}>
                         <span>
                             {isLoging === LOGING.LOADING ? <Spin indicator={antIcon} /> :
                                 isLoging === LOGING.FAIL ? <div className="text-danger">Login</div> :
@@ -190,5 +192,4 @@ const Login = () => {
 
 
 export default Login;
-
 
