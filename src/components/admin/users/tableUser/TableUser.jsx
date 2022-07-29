@@ -3,70 +3,131 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTimesCircle, faSortDown, faPencilAlt, faSortUp} from '@fortawesome/free-solid-svg-icons'
 import "./TableUser.css"
 import {
-    LoadingOutlined
+    FilterOutlined,
+    EditFilled,
+    CloseCircleOutlined,
+    LoadingOutlined,
+    CloseSquareOutlined
 } from "@ant-design/icons";
-import axios from 'axios';
+import {Table} from "antd";
 import ViewInformation from "../viewInformation/ViewInformation";
-import DisableUserModal from '../DisableUserModal';
-import Modal from 'antd/lib/modal/Modal';
-import {useNavigate} from "react-router-dom";
-
+import moment from "moment"
 
 function TableUser(props) {
-    const navigate = useNavigate();
     const [displayList, setDisplayList] = useState(props.listUser);
-    const [oder, setOder] = useState("ASC")
-    const [oder1, setOder1] = useState("DSC")
+    // const [oder, setOder] = useState("ASC")
+    const [oder, setOder] = useState({
+        name:"ASC",
+        ischecked:false
+    })
+
+    const [oder1, setOder1] = useState({
+        name1:"DSC",
+        ischecked1:false
+    })
     const [oder2, setOder2] = useState("ASC")
     const [sortDay, setSortDay] = useState("ASC")
 
+    const [loading, setLoading] = useState(false);
     const [dataUser, setDataUser] = useState(false)
-    const [idAccount, setId] = useState(0);
+
     const [isModal, setModal] = useState({
-        isOpen: false,
-        isLoading: false,
-    });
-    const [modalCanNotDisable, setModalNotDisable] = useState(false);
-    const [modalConfirmDisable, setModalConfirmDisable] = useState({
         isOpen: false,
         isLoading: false,
     });
     const setIsOpen = () => {
         setModal({...isModal, isOpen: !isModal.isOpen})
     }
-    const setIsOpenConfirm = () => {
-        setModalConfirmDisable({...modalConfirmDisable, isOpen: !modalConfirmDisable.isOpen})
-    }
-    const loginState = JSON.parse(localStorage.getItem("loginState"));
 
     useEffect(() => {
         if (props.listFilter === null) {
             setDisplayList([])
         } else {
-            const sorted = [...props.listUser].sort((a, b) =>
-                a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
-            )
-            setDisplayList(sorted);
+            if (oder.ischecked) {
+                if (oder.name === "ASC") {
+                    const sorted = [...props.listUser].sort((a, b) =>
+                        a["staffCode"].toLowerCase() < b["staffCode"].toLowerCase() ? 1 : -1
+                    )
+                    setDisplayList(sorted);
+                }
+                if (oder.name === "DSC") {
+                    const sorted = [...props.listUser].sort((a, b) =>
+                        a["staffCode"].toLowerCase() > b["staffCode"].toLowerCase() ? 1 : -1
+                    )
+                    setDisplayList(sorted);
+                }
+            }
+            else if (!oder.ischecked && oder1.ischecked) {
+                if (oder1.name1 === "ASC") {
+                    const sorted = [...props.listUser].sort((a, b) =>
+                        a["firstName"].toLowerCase() < b["firstName"].toLowerCase() ? 1 : -1
+                    )
+                    setDisplayList(sorted);
+                }
+                if (oder1.name1 === "DSC") {
+                    const sorted = [...props.listUser].sort((a, b) =>
+                        a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
+                    )
+                    setDisplayList(sorted);
+                }
+            } else {
+                const sorted = [...props.listUser].sort((a, b) =>
+                    a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
+                )
+                setDisplayList(sorted);
+
+            }
+
         }
+
+
     }, [props.listUser])
     useEffect(() => {
         if (props.listFilter !== null) {
-            const sorted = [...props.listFilter].sort((a, b) =>
-                a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
-            )
-            setDisplayList(sorted);
+            if(oder.ischecked){
+                if (oder.name === "ASC" ) {
+                    const sorted = [...props.listFilter].sort((a, b) =>
+                        a["staffCode"].toLowerCase() < b["staffCode"].toLowerCase() ? 1 : -1
+                    )
+                    setDisplayList(sorted);
+                }
+                if (oder.name === "DSC") {
+                    const sorted = [...props.listFilter].sort((a, b) =>
+                        a["staffCode"].toLowerCase() > b["staffCode"].toLowerCase() ? 1 : -1
+                    )
+                    setDisplayList(sorted);
+                }
+            }
+            else{
+                const sorted = [...props.listFilter].sort((a, b) =>
+                    a["firstName"].toLowerCase() > b["firstName"].toLowerCase() ? 1 : -1
+                )
+                setDisplayList(sorted);
+            }
+
+
         } else
             setDisplayList([])
 
     }, [props.listFilter])
 
 
-    function formatDate(joinedDate) {
-        let date = new Date(joinedDate);
-        console.log(date + "   " + joinedDate);
-        return date;
-    }
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2500);
+    }, []);
 
+    function formatDate(joinedDate) {
+        let myArray = joinedDate.split("/");
+        let DAYMMYYY = [0, 0, 0]
+        for (let i = 0; i < 3; i++) {
+            DAYMMYYY[i] = parseInt(myArray[i]);
+        }
+        let datecheck = (new Date(DAYMMYYY[2], DAYMMYYY[1], DAYMMYYY[0]))
+        return datecheck;
+    }
 
     function sort(rule) {
         switch (rule) {
@@ -94,39 +155,41 @@ function TableUser(props) {
     }
 
     const sorting_staff = (col) => {
-        if (oder === "ASC") {
+        if (oder.name === "ASC" ) {
             const sorted = [...displayList].sort((a, b) =>
                 a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
-            setOder("DSC")
+            setOder({...oder, name: "DSC",ischecked: true})
+
         }
-        if (oder === "DSC") {
+        if (oder.name === "DSC") {
             const sorted = [...displayList].sort((a, b) =>
                 a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
-            setOder("ASC")
+            setOder({...oder, name: "ASC",ischecked: true})
 
         }
     }
     const sorting_fullname = (col) => {
-        if (oder1 === "ASC") {
+        if (oder1.name1 === "ASC") {
             const sorted = [...displayList].sort((a, b) =>
                 a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
-            setOder1("DSC")
+            setOder1({...oder1, name1: "DSC",ischecked1: true})
         }
-        if (oder1 === "DSC") {
+        if (oder1.name1 === "DSC") {
             const sorted = [...displayList].sort((a, b) =>
                 a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
             )
             setDisplayList(sorted);
-            setOder1("ASC")
+            setOder1({...oder1, name1: "ASC",ischecked1: true})
 
         }
     }
+
     const sorting_type = (col) => {
         if (oder2 === "ASC") {
             const sorted = [...displayList].sort((a, b) =>
@@ -161,32 +224,23 @@ function TableUser(props) {
 
         }
     }
-    console.log("display" + isModal.isOpen)
-    const onDisable = (id) => {
-        setId(id);
-        console.log(idAccount)
-        axios.get(`https://asset-assignment-be.azurewebsites.net/api/assignment/`, {
-            headers: {Authorization: `Bearer ${loginState.token}`},
-            params: {account: id}
-        })
-            .then(
-                (response) => {
-                    console.log(response.data.message)
-                    setModalConfirmDisable({...modalConfirmDisable, isOpen: true});
-                }).catch((error) => {
-            if (error.response.data.message === "User not detected") {
-                //toast.error(error.response.data.message);
-            } else {
-                console.log(error)
-                setModalNotDisable({...modalCanNotDisable, isOpen: true})
-            }
-        })
+    function checkSortPage(){
+        if(oder.ischecked){
+            sorting_staff("staffCode")
+        }
     }
+
+    console.log("display" + isModal.isOpen)
+
+    console.log("check search" + props.checkSearch)
+
+    console.log("order search" + oder.ischecked +" name " + oder.name)
 
 
     return (
         <>
             {
+
                 displayList.length === 0 ?
                     props.checkSearch ?
                         <>
@@ -203,128 +257,134 @@ function TableUser(props) {
                         :
                         <>
                             <LoadingOutlined
-                                style={{fontSize: "60px", color: "red", textAlign: "center", marginTop: "70px"}}/>
+                                style={{fontSize: "60px", color: "red", textAlign: "center", marginTop:"70px"}}/>
                         </>
 
                     :
-                    <div className="results-section">
-                        <div className="user_table">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th className="col" onClick={() => {
-                                        sort('id')
-                                    }}>
-                                        <p className="col_1 staff_code_col">Staff Code
-                                            {oder === "ASC" ?
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_staff("staffCode")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                                :
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_staff("staffCode")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                            }
-                                        </p>
-                                    </th>
-                                    <th className="col" onClick={() => {
-                                        sort('firstName')
-                                    }}>
-                                        <p className=" col_1 full_name_col">Full Name
-                                            {oder1 === "ASC" ?
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_fullname("firstName")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                                :
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_fullname("firstName")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                            }
-                                        </p>
-                                    </th>
-                                    <th className="col">
-                                        <p className="col_1 username_col">Username</p>
-                                    </th>
-                                    <th className="col" onClick={() => {
-                                        sort('joinDate')
-                                    }}>
-                                        <p className="col_1 joined_day_col">Joined Date
-
-                                            {sortDay === "ASC" ?
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_day("joinedDate")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                                :
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_day("joinedDate")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                            }
-                                        </p>
-                                    </th>
-                                    <th className="col" onClick={() => {
-                                        sort('role')
-                                    }}>
-                                        <p className="col_1 type_col">Type
-                                            {oder2 === "ASC" ?
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_type("roleName")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                                :
-                                                <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
-                                                                 onClick={() => sorting_type("roleName")}
-                                                                 icon={faSortDown}></FontAwesomeIcon>
-                                            }
-                                        </p>
-                                    </th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                {
-                                    displayList.map((item, index) => {
-                                        return <tr key={index}>
-                                            <td className="col staff_code_col"
-                                                onClick={() => {
-                                                    setModal({...isModal, isOpen: true});
-                                                    setDataUser(item)
-
+                    <>
+                        <div className="results-section">
+                            <div className="user_table">
+                                {!loading ?
+                                    <>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th style={{width:"200px"}} className="col" onClick={() => {
+                                                    sort('id')
                                                 }}>
-                                                <p className="col staff_code_col">{item.staffCode}</p>
-                                            </td>
-                                            <td className="col full_name_col">
-                                                <p className="col full_name_col">{item.firstName + " " + item.lastName}</p>
-                                            </td>
-                                            <td className="col username_col">
-                                                <p className="col username_col">{item.userName}</p>
-                                            </td>
-                                            <td className="col joined_day_col">
-                                                <p className="col joined_day_col">{item.joinedDate}</p>
-                                            </td>
-                                            <td className="col type_col">
-                                                <p className="col type_col">{item.roleName}</p>
-                                            </td>
-                                            <td className="btn_col pencil" onClick={() => {
-                                                navigate("/editUser/" + item.accountId);
-                                            }}>
-                                                <i className="fas fa-pencil-alt"></i>
-                                                <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
-                                            </td>
-                                            <td className="btn_col delete">
-                                                <FontAwesomeIcon icon={faTimesCircle}
-                                                                 style={{color: "red"}}
-                                                                 onClick={() => onDisable(item.accountId)}></FontAwesomeIcon>
-                                            </td>
-                                        </tr>
-                                    })
-                                }
-                                </tbody>
-                            </table>
+                                                    <p className="col_1 staff_code_col">Staff Code
+                                                        {oder.name === "ASC" ?
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_staff("staffCode")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                            :
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_staff("staffCode")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                        }
+                                                    </p>
+                                                </th>
+                                                <th className="col" onClick={() => {
+                                                    sort('firstName')
+                                                }}>
+                                                    <p className=" col_1 full_name_col">Full Name
+                                                        {oder1.name === "ASC" ?
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_fullname("firstName")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                            :
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_fullname("firstName")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                        }
+                                                    </p>
+                                                </th>
+                                                <th className="col">
+                                                    <p className="col_1 username_col">Username</p>
+                                                </th>
+                                                <th className="col" onClick={() => {
+                                                    sort('joinDate')
+                                                }}>
+                                                    <p className="col_1 joined_day_col">Joined Date
 
-                            
+                                                        {sortDay === "ASC" ?
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_day("joinedDate")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                            :
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_day("joinedDate")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                        }
+                                                    </p>
+                                                </th>
+                                                <th className="col" onClick={() => {
+                                                    sort('role')
+                                                }}>
+                                                    <p className="col_1 type_col">Type
+                                                        {oder2 === "ASC" ?
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_type("roleName")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                            :
+                                                            <FontAwesomeIcon style={{marginLeft: "0.3rem"}}
+                                                                             onClick={() => sorting_type("roleName")}
+                                                                             icon={faSortDown}></FontAwesomeIcon>
+                                                        }
+                                                    </p>
+                                                </th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            {
+                                                displayList.map((item, index) => {
+                                                    return <tr key={index}>
+                                                        <td className="col staff_code_col"
+                                                            onClick={() => {
+                                                                setModal({...isModal, isOpen: true});
+                                                                setDataUser(item)
+
+                                                            }}>
+                                                            <p className="col staff_code_col">{item.staffCode}</p>
+                                                        </td>
+                                                        <td className="col full_name_col">
+                                                            <p className="col full_name_col">{item.firstName + " " + item.lastName}</p>
+                                                        </td>
+                                                        <td className="col username_col">
+                                                            <p className="col username_col">{item.userName}</p>
+                                                        </td>
+                                                        <td className="col joined_day_col">
+                                                            <p className="col joined_day_col">{(item.joinedDate)}</p>
+                                                        </td>
+                                                        <td className="col type_col">
+                                                            <p className="col type_col">{item.roleName}</p>
+                                                        </td>
+                                                        <td className="btn_col pencil">
+                                                            <i className="fas fa-pencil-alt"></i>
+                                                            <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                        </td>
+                                                        <td className="btn_col delete">
+                                                            <FontAwesomeIcon icon={faTimesCircle}
+                                                                             style={{color: "red"}}></FontAwesomeIcon>
+                                                        </td>
+                                                    </tr>
+                                                })
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </>
+
+                                    :
+                                    <LoadingOutlined
+                                        style={{fontSize: "60px", color: "red", textAlign: "center"}}/>
+
+                                }
+
+                            </div>
 
                         </div>
-
-                    </div>
+                    </>
             }
             {isModal.isOpen ?
                 <div>
@@ -334,22 +394,7 @@ function TableUser(props) {
                 :
                 ""
             }
-            <Modal
-                className="modalInformation"
-                title="Can not disable user"
-                visible={modalCanNotDisable.isOpen}
-                width={400}
-                closable={true}
-                onCancel={() => {
-                    setModalNotDisable({...modalCanNotDisable, isOpen: false});
-                }}
-                footer={[]}
-            >
-                <p>There are valid assignments belonging to this user. Please close all assignments before disabling
-                    user.</p>
-                <br/>
-            </Modal>
-            {modalConfirmDisable.isOpen ? <DisableUserModal setIsOpen={setIsOpenConfirm} id={idAccount}/> : ""}
+
             {/*<ViewInformation isVisible ={viewInformation}/>*/}
         </>
     )

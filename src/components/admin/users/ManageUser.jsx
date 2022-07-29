@@ -220,9 +220,13 @@ export default function ManageUser() {
                                     <ul style={{listStyleType: "none"}}>
                                         {checkList.map((item, index) => (
                                             <li key={index}>
-                                                <input value={item} type="checkbox" name="role" id="role"
-                                                       onChange={handleCheck}/><span className="checkmark"
-                                                                                     style={{paddingLeft: "10px"}}> {item}</span>
+                                                <input value={item} type="checkbox" name="role" id={index}
+                                                       style={{marginTop: "12px"}}
+                                                       onChange={handleCheck}/><label htmlFor={index}
+                                                                                      style={{
+                                                                                          paddingLeft: "10px",
+                                                                                          display: "flex"
+                                                                                      }}> {item}</label>
                                             </li>
                                         ))}
                                     </ul>

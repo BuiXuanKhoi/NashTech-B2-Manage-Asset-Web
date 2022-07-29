@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import { Button, Modal } from 'antd';
+import axios from "axios";
+import toast from "react-hot-toast";
 import "./ViewInformation.css"
 import {CloseSquareOutlined} from "@ant-design/icons";
+import TableUser from "../tableUser/TableUser";
 
+function CloseOutlined() {
+    return null;
+}
 
 export default function ViewInformation(props){
     const [isModalVisible, setIsModalVisible] = useState(true);
@@ -51,8 +57,8 @@ export default function ViewInformation(props){
                     <p className="text-view-information" id="data-gender" style={{paddingLeft:"78px"}}>{props.dataUser.gender}</p>
                 </div>
                 <div className="join-date">
-                    <p className="text-view-information">Joint Date</p>
-                    <p className="text-view-information" id="data-joindate">{props.dataUser.joinedDate}</p>
+                    <p className="text-view-information">Joined Date</p>
+                    <p className="text-view-information" id="data-joindate" style={{paddingLeft:"50px"}}>{props.dataUser.joinedDate}</p>
                 </div>
                 <div className="type">
                     <p className="text-view-information">Type</p>

@@ -9,11 +9,17 @@ p.col {
     margin-bottom: 0;
 }
 
+
 th.col {
+    width: 22.5%;
     text-align: left;
     border-right: 10px solid white;
     margin-right: 2rem;
 }
+/*th.col:first-child{*/
+/*    width: 10% !important;*/
+/*}*/
+
 
 td.col {
     text-align: left;
@@ -51,15 +57,4 @@ td.btn_col {
 }
 .data-notfound{
     margin-top: 70px;
-}
-
-/* format for hover icon cursor */
-.pencil:hover{
-    cursor: pointer;
-}
-.delete:hover{
-    cursor: pointer;
-}
-.btn-createUser:hover{
-    cursor: pointer;
 }

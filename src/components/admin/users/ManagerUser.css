@@ -20,6 +20,7 @@
     margin-right: 0px;
     color: red;
 }
+
 .ant-pagination-item {
 
     margin-right: 0 !important;
@@ -59,20 +60,69 @@
 
 }
 
-input[type="checkbox"] {
-    text-align: left;
-    margin-top: 0.3rem;
-    margin-bottom: 0rem;
-    accent-color: white;
-    caret-color: #CF2338;
-    transform: scale(1.25);
 
+/*input[type="checkbox"] {*/
+/*    text-align: left;*/
+/*    margin-top: 0.3rem;*/
+/*    margin-bottom: 0rem;*/
+/*    accent-color: white;*/
+/*    caret-color: #CF2338;*/
+/*    transform: scale(1.25);*/
+
+/*}*/
+input[type="checkbox"]:checked + label::after {
+    content: '';
+    position: absolute;
+    width: 1.5ex;
+    height: 1.5ex;
+    background: rgba(0, 0, 0, 0);
+    top: 0.5ex;
+    left: 1.7ex;
+    border: 3px solid red;
+    border-top: none;
+    border-right: none;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
 }
-input[type="checkbox"]:checked {
-    /*CSS after CHECKED*/
-    color: #CF2338 !important;
-    border-color: red !important;
+
+input[type="checkbox"] {
+    line-height: 2.1ex;
 }
+
+input[type="radio"],
+input[type="checkbox"] {
+    position: absolute;
+    left: -999em;
+}
+
+input[type="checkbox"] + label {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+input[type="checkbox"] + label::before {
+    content: "";
+    display: inline-block;
+    vertical-align: -25%;
+    padding-top: 10px;
+    margin-top: 5px;
+    height: 2ex;
+    width: 2ex;
+    background-color: white;
+    border: 1px solid rgb(166, 166, 166);
+    border-radius: 4px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
+    margin-right: 0.5em;
+}
+/*input[type="checkbox"]:checked {*/
+/*    !*CSS after CHECKED*!*/
+/*    color: #CF2338 !important;*/
+/*    border-color: red !important;*/
+/*}*/
 .role{
     color: red !important;
 }
@@ -181,7 +231,10 @@ input:focus {
     border-top: none;
     border-right: none;
 }
-
+.btn_create_text{
+    text-align: center;
+    margin-top: 3px;
+}
 
 #create-btn-section {
     width: 10rem;
@@ -196,7 +249,7 @@ input:focus {
     border-radius: 0.3rem;
     background-color: #E30C18;
     color: #FDE8E9;
-    text-align: center;
+    text-align: center !important;
 }
 
 div.pagination {
