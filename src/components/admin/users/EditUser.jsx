@@ -6,6 +6,7 @@ import axios from "axios";
 import moment from 'moment';
 import { useNavigate, useParams } from "react-router-dom";
 import toast from 'react-hot-toast';
+import * as formatDate from "../shared/formatdate"
 export default function EditUser() {
     const [isLoading, setLoading] = useState({isLoading: false});
     const idInformation = useParams();
@@ -19,30 +20,6 @@ export default function EditUser() {
         locations: " ",
         staffCode: " ",
     });
-    useEffect(() => {
-        axios
-            // .get(`http://localhost:8080/api/information?accountid=` + idInformation.id, config)
-            .get(`https://asset-assignment-be.azurewebsites.net/api/information?accountid=` + idInformation.id, config)
-            .then((response) => {
-                // console.log(response.data);
-                setInformation(response.data);
-                form.setFieldsValue({
-                    Firstname: response.data.firstName,
-                    Lastname: response.data.lastName,
-                    DateOfBirth: moment(response.data.dateOfBirth,'DD/MM/YYYY'),
-                    Gender: response.data.gender,
-                    JoinedDate: moment(response.data.joinDate,'DD/MM/YYYY'),
-                    Department: (response.data.staffCode).indexOf("SD") != -1 ? "SD" : "BPS",
-                    Type: response.data.roleId == 1 ? "Admin" : "Staff" 
-
-                });
-
-            })
-            .catch((error) => {
-                toast.error("Load information failed");
-            });
-    },[])
-    // console.log(information);
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const navigate = useNavigate();
     const {Option} = Select;
@@ -59,6 +36,33 @@ export default function EditUser() {
             offset: 1,
         },
     };
+    useEffect(() => {
+        axios
+            // .get(`http://localhost:8080/api/information?accountid=` + idInformation.id, config)
+            .get(`https://asset-assignment-be.azurewebsites.net/api/information?accountid=` + idInformation.id, config)
+            .then((response) => {
+                // console.log(response.data);
+                const dateOfBirth = formatDate.FormatDate(response.data.dateOfBirth);
+                const joinedDate = formatDate.FormatDate(response.data.joinDate);
+                setInformation(response.data);
+                form.setFieldsValue({
+                    Firstname: response.data.firstName,
+                    Lastname: response.data.lastName,
+                    DateOfBirth: moment(dateOfBirth,'DD/MM/YYYY'),
+                    Gender: response.data.gender.toLowerCase(),
+                    JoinedDate: moment(joinedDate,'DD/MM/YYYY'),
+                    Department: (response.data.staffCode).indexOf("SD") != -1 ? "SD" : "BPS",
+                    Type: response.data.accountsRoleRoleid == 1 ? "Admin" : "Staff" 
+
+                });
+
+            })
+            .catch((error) => {
+                toast.error("Load information failed");
+            });
+    },[])
+    // console.log(information);
+    
     const onFinish = (fieldsValue) => {
         // console.log(fieldsValue);
         const values = {
@@ -72,7 +76,7 @@ export default function EditUser() {
                 firstName: information.firstName,
                 lastName: information.lastName,
                 joinDate: values.JoinedDate,
-                roleId: values.Type  == "Staff" ? 2 : 1,
+                accountsRoleRoleid: values.Type,
                 dateOfBirth: values.DateOfBirth,
                 gender: values.Gender,
                 staffCode: information.staffCode,
@@ -169,6 +173,7 @@ export default function EditUser() {
                                         disabled={isLoading.isLoading === true}
                                         format="DD/MM/YYYY"
                                         className="inputForm"
+                                        popupStyle={{width: "26.5%", textAlign: "center"}}
                                     />
 
                             </Form.Item>
@@ -217,6 +222,7 @@ export default function EditUser() {
                                         format="DD/MM/YYYY"
 
                                         className="inputForm"
+                                        popupStyle={{width: "26.5%", textAlign: "center"}}
 
                                     />
 

@@ -7,6 +7,7 @@ import "../changePassword/ChangePasswordForm.css";
 import toast, { Toaster } from 'react-hot-toast';
 export default function ChangePasswordModal(props) {
 
+    var regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/;
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const [error, setError] = useState("");
     const formItemLayout = {
@@ -30,17 +31,13 @@ export default function ChangePasswordModal(props) {
     const [Footer, setFooter] = useState({});
     const [oldEmpty,setOldEmpty] = useState(false);
     const [newEmpty,setNewEmpty] = useState(false);
+    const [showError,setShowError] = useState();
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
 
-    const checkPassword = (callback) => {
-        if(error == ""){
-            callback();
-            return;
-        }
-        callback("Password is incorrect");
-    }
+    
+console.log(showError);
     return (
         <>
             <Modal
@@ -61,6 +58,7 @@ export default function ChangePasswordModal(props) {
                         setTimeout(() => {
                             setModal({ ...modal, isLoading: false })
                         }, 3000)
+                        
                         axios
                             // .put(`${process.env.CHANGEPASSWORD_USERURL}`+ loginState.id, password,config)
                             .put("https://asset-assignment-be.azurewebsites.net/api/account/"+ loginState.id, password,config)
@@ -87,7 +85,17 @@ export default function ChangePasswordModal(props) {
                             .catch((error) => {
                                 console.log(error.response.data.message);
                                 setModal({ ...modal, isOpen: true });
-                                    setError(error.response.data.message);
+                                if(error.response.data.message == "Password is incorrect"){
+                                    setShowError("1");
+                                    setError("Password is incorrect");
+                                }else{
+                                    setShowError("2");
+                                    if(password.old_password == password.new_password){
+                                        setError("New password must be difference with old password");
+                                    }else{
+                                    setError("Password must have uppercase, number, no blank, special character, length between 8 and 15");
+                                    }
+                                }
                             })
                     }
                     }>Save</Button>,
@@ -125,16 +133,19 @@ export default function ChangePasswordModal(props) {
                             });
                         })
                         .catch((error) => {
-                            console.log(error.response.data.message)
-
-                            if (!error.response.data.title) {
-
-                                setModal(true);
-                                setError(error.response.data.message);
-                            } else {
-                                setModal(true);
-                                setError(error.response.data.title);
-                            }
+                            // console.log(error.response.data.message);
+                                setModal({ ...modal, isOpen: true });
+                                if(error.response.data.message == "Password is incorrect"){
+                                    setShowError("1");
+                                    setError("Password is incorrect");
+                                }else{
+                                    setShowError("2");
+                                    if(password.old_password == password.new_password){
+                                        setError("New password must be difference with old password");
+                                    }else{
+                                        setError("Password must have uppercase, number, no blank, special character, length between 8 and 15");
+                                    }
+                                }
                         });
                 }}
                 onCancel={() => {
@@ -147,6 +158,7 @@ export default function ChangePasswordModal(props) {
                 {changeSuccess === false ? (
                     <Form {...formItemLayout} className="formChangePassword">
                         <Form.Item
+                        
                             name="oldPassword"
                             label="Old password"
                         >
@@ -158,15 +170,17 @@ export default function ChangePasswordModal(props) {
                                     setPassword({ ...password, old_password: old.target.value });
                                     setOldEmpty(old.target.value !== "" ? true : false);
                                     setError("");
+                                    setShowError("");
                                 }}
                             />
                             
                         </Form.Item>
                         <Form.Item
+                        hidden={showError == "1" ? false : true}
                         style={{marginLeft: 125,color: "red"}}
-                         name="errorIncorrectPassword">
-                        {/* <p id="errorOldPassword"> */}
-                        {error}
+                         className="errorIncorrectPassword">
+                        {
+                            error}
                         {/* </p> */}
                         </Form.Item>
                         <Form.Item
@@ -185,8 +199,17 @@ export default function ChangePasswordModal(props) {
                                     });
                                     setNewEmpty(newPass.target.value !== "" ? true : false);
                                     setError("");
+                                    setShowError("");
                                 }}
                             />
+                        </Form.Item>
+                        <Form.Item
+                        hidden={showError == "2" ? false : true}
+                        style={{marginLeft: 125,color: "red"}}
+                         className="errorInvalidPassword">
+                        {/* <p id="errorOldPassword"> */}
+                        {error}
+                        {/* </p> */}
                         </Form.Item>
                     </Form>
                 ) : (

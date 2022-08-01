@@ -78,8 +78,12 @@ export default function ChangePasswordFirstLogin(props) {
                             });
                         })
                         .catch((error) => {
-                            toast.error(error.response.data.message);
+                            // toast.error(error.response.data.message);
+                            if(error.response.data.message == "Password not changed"){
+                                setError("New password must be difference old password");
+                            }else{
                             setError("Password must have uppercase, number, no blank, special character, length between 8 and 15");
+                            }
                             console.log(error.response.data.message)
                             
                         });

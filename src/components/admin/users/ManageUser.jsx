@@ -45,7 +45,7 @@ export default function ManageUser() {
     const getListUser = () => {
         axios
             // .get("https://asset-assignment-be.azurewebsites.net/api/account?page="+ state.current, config)
-            .get("http://localhost:8080/api/account?page=" + state.current , config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + state.current , config)
             .then(function (response) {
                 setListUser(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -66,9 +66,9 @@ export default function ManageUser() {
     function getListUserFilter(name, page,sort) {
         let link ="";
         if(sort === "")
-            link = "http://localhost:8080/api/account?filter=" + name + "&page=" + page
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + name + "&page=" + page
         else
-            link = "http://localhost:8080/api/account?filter=" + name + "&page=" + page + "&sort=" + sort
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + name + "&page=" + page + "&sort=" + sort
         axios
             // .get("https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&page="+page, config)
             .get(link, config)
@@ -213,13 +213,13 @@ export default function ManageUser() {
         console.log("findListUserToSort" + type + "  "+namesearch)
         let link = "";
         if(type !== null && namesearch === null)
-            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page + "&filter=" + type
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?sort="+sort+"&page="+page + "&filter=" + type
         else if(namesearch !== null && type === null)
-            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page + "&code=" + namesearch
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?sort="+sort+"&page="+page + "&code=" + namesearch
         else if(type !== null && namesearch !== null)
-            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page + "&filter=" + type + "&code="+namesearch
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?sort="+sort+"&page="+page + "&filter=" + type + "&code="+namesearch
         else
-            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?sort="+sort+"&page="+page
         axios
             .get(link, config)
             .then(function (response) {
@@ -244,9 +244,9 @@ export default function ManageUser() {
         //     link = "https://asset-assignment-be.azurewebsites.net/api/account?filter="+ name + "&code=" + code + "&page=" + page
         let link = "";
         if (name === "all")
-            link = "http://localhost:8080/api/account?" + "code=" + code + "&page=" + page +"&sort=" + sort
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?" + "code=" + code + "&page=" + page +"&sort=" + sort
         else
-            link = "http://localhost:8080/api/account?filter=" + name + "&code=" + code + "&page=" + page +"&sort=" + sort
+            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + name + "&code=" + code + "&page=" + page +"&sort=" + sort
 
         axios
             .get(link, config)
@@ -265,7 +265,7 @@ export default function ManageUser() {
     function getListUserPage(page,sort){
         axios
             // .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + page, config)
-            .get("http://localhost:8080/api/account?page=" + page +"&sort="+sort , config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + page +"&sort="+sort , config)
             .then(function (response) {
                 setListUser(response.data.content)
                 setTotalPage(response.data.totalPages)
