@@ -216,3 +216,9 @@
 .ant-form-item-label label::after{
     content: none !important;
 }
+@media only screen and (max-width: 1000px){
+    .ant-form-item-label label{
+        font-size: 11px !important;
+        font-family: sans-serif !important;
+    }
+}

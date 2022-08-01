@@ -134,10 +134,10 @@ export default function ManageUser() {
                     } else if (checked[0] === "Staff") {
                         findListUserToSort(0, name, "staff",search_name)
                     } else if (checked[0] === "All") {
-                        findListUserToSort(0, name, "all",search_name)
+                        findListUserToSort(0, name, null,search_name)
                     }
                 } else {
-                    findListUserToSort(0, name, "all",search_name)
+                    findListUserToSort(0, name, null,search_name)
                 }
             } else {
                 findListUserToSort(0, name, null,search_name)
@@ -152,10 +152,10 @@ export default function ManageUser() {
                         console.log("heheheeee")
                         findListUserToSort(0, name, "staff",null)
                     } else if (checked[0] === "All") {
-                        findListUserToSort(0, name, "all",null)
+                        findListUserToSort(0, name, null,null)
                     }
                 } else {
-                    findListUserToSort(0, name, "all",null)
+                    findListUserToSort(0, name, null,null)
                 }
             } else {
                 findListUserToSort(0, name,null,null)

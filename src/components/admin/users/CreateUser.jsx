@@ -106,6 +106,10 @@ export default function CreateUser() {
                             onFinish={onFinish}
                             {...formItemLayout}
                             labelAlign="left"
+                            initialValues={{
+                                Department: 'SD',
+                                Type: ['staff']
+                              }}
                         >
                             <Form.Item className="labelCreate" label="First name" >
                                 <Form.Item
@@ -115,7 +119,7 @@ export default function CreateUser() {
                                             pattern: new RegExp("^[a-zA-Z'. ]+$"),
                                             message: 'First name is not allowed to contain number or special characters'
                                         }
-                                        , {max: 128, message: "First name must less than 128 characters"},
+                                        , {max: 128, message: "First name must be less than 128 characters"},
                                         () => ({
                                             validator(_, value) {
                                                 if ((value.trim())==='') {
@@ -147,7 +151,7 @@ export default function CreateUser() {
                                             pattern: new RegExp("^[a-zA-Z'. ]+$"),
                                             message: 'Last name is not allowed to contain number or special characters'
                                         }
-                                        , {max: 128, message: "Last name must less than 128 characters"}
+                                        , {max: 128, message: "Last name must be less than 128 characters"}
                                     ]}
                                     hasFeedback
                                 >
@@ -180,7 +184,6 @@ export default function CreateUser() {
                                     <DatePicker
                                         disabled={isLoading.isLoading === true}
                                         format="DD/MM/YYYY"
-
                                         className="inputForm"
                                     />
 
@@ -243,6 +246,7 @@ export default function CreateUser() {
                                 <Form.Item
                                     name="Department"
                                     rules={[{required: true, message: 'Type must be required'}]}
+                                    
                                     hasFeedback
                                 >
                                     <Select
@@ -260,6 +264,7 @@ export default function CreateUser() {
                                                 .toLowerCase()
                                                 .localeCompare(optionB.children.toLowerCase())
                                         }
+                                        defaultValue="SD"
                                     >
                                         <Option value="BPS">Business Process Solution</Option>
                                         <Option value="SD">Software Development</Option>
@@ -287,7 +292,9 @@ export default function CreateUser() {
                                                 .toLowerCase()
                                                 .localeCompare(optionB.children.toLowerCase())
                                         }
+                                
                                         options={options}
+                                        
                                     
                                         
                                     />
@@ -300,8 +307,9 @@ export default function CreateUser() {
                                 <Row style={{float: 'right'}}>
                                         < Button
                                             disabled={
-                                                !form.isFieldsTouched(true) ||
-                                                form.getFieldsError().filter(({errors}) => errors.length).length > 0
+                                                !form.isFieldTouched("Firstname") || !form.isFieldTouched("Lastname")
+                                                || !form.isFieldTouched("DateOfBirth") || !form.isFieldTouched("JoinedDate") || !form.isFieldTouched("Gender")
+                                                ||form.getFieldsError().filter(({errors}) => errors.length).length > 0
                                             }
                                             className="buttonSave"
                                             style={{background: "#e30c18", color: "white"}}
