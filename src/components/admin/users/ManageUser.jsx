@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { Pagination} from "antd";
 
-import {faSearch, faFilter} from '@fortawesome/free-solid-svg-icons'
+import {faSearch, faFilter, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import "../../../styles/Styles.css";
 import "antd/dist/antd.css";
@@ -22,7 +22,11 @@ export default function ManageUser() {
     const checkList = ["All", "Admin", "Staff"];
     const [listUserFilter, setListUserFilter] = useState([]);
     const [checkFilter, setCheckFilter] = useState(false);
-
+    const [checkSortType, setCheckSort] = useState(false);
+    const [listUserSort, setListUserSort] = useState([]);
+    const [sort, setSort] = useState({
+        name: "",
+    });
     const [totalPage, setTotalPage] = useState(0);
     const [state, setState] = useState({
         current: 0,
@@ -40,7 +44,8 @@ export default function ManageUser() {
 
     const getListUser = () => {
         axios
-            .get("https://asset-assignment-be.azurewebsites.net/api/account?page="+ state.current, config)
+            // .get("https://asset-assignment-be.azurewebsites.net/api/account?page="+ state.current, config)
+            .get("http://localhost:8080/api/account?page=" + state.current , config)
             .then(function (response) {
                 setListUser(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -58,9 +63,15 @@ export default function ManageUser() {
 
     // get list user when admin click type filter
 
-    function getListUserFilter(name , page){
+    function getListUserFilter(name, page,sort) {
+        let link ="";
+        if(sort === "")
+            link = "http://localhost:8080/api/account?filter=" + name + "&page=" + page
+        else
+            link = "http://localhost:8080/api/account?filter=" + name + "&page=" + page + "&sort=" + sort
         axios
-            .get("https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&page="+page, config)
+            // .get("https://asset-assignment-be.azurewebsites.net/api/account?filter="+name+"&page="+page, config)
+            .get(link, config)
             .then(function (response) {
                 if(page===0){
                     setListUserFilter(response.data.content)
@@ -81,17 +92,17 @@ export default function ManageUser() {
         if (checked.length !== 0) {
             if (checked.length === 1) {
                 if (checked[0] === "Admin") {
-                    getListUserSearch("admin", nameSearch, page)
+                    getListUserSearch("admin", nameSearch, page,sort.name)
                 } else if (checked[0] === "Staff") {
-                    getListUserSearch("staff", nameSearch, page)
+                    getListUserSearch("staff", nameSearch, page,sort.name)
                 } else if (checked[0] === "All") {
-                    getListUserSearch("all", nameSearch, page)
+                    getListUserSearch("all", nameSearch, page,sort.name)
                 }
             } else {
-                getListUserSearch("all", nameSearch, page)
+                getListUserSearch("all", nameSearch, page,sort.name)
             }
         } else {
-            getListUserSearch("all", nameSearch, page)
+            getListUserSearch("all", nameSearch, page,sort.name)
         }
     }
     // check find list user when admin perform 2 operations at the same time ( type , page )
@@ -100,25 +111,143 @@ export default function ManageUser() {
         if (checked.length !== 0) {
             if (checked.length === 1) {
                 if (checked[0] === "Admin") {
-                    getListUserFilter("admin", page)
+                    getListUserFilter("admin", page,sort.name)
                 } else if (checked[0] === "Staff") {
-                    getListUserFilter("staff", page)
+                    getListUserFilter("staff", page,sort.name)
                 } else
-                    getListUserPage(page);
+                    getListUserPage(page,sort.name);
             } else
-                getListUserPage(page);
+                getListUserPage(page,sort.name);
         } else {
-            getListUserPage(page);
+            getListUserPage(page,sort.name);
         }
     }
+    function listCheckSortColumn(name,search_name){
+        setState({
+            current: 0,
+        });
+        if(search_name !== ""){
+            if (checked.length !== 0) {
+                if (checked.length === 1) {
+                    if (checked[0] === "Admin") {
+                        findListUserToSort(0, name, "admin",search_name)
+                    } else if (checked[0] === "Staff") {
+                        findListUserToSort(0, name, "staff",search_name)
+                    } else if (checked[0] === "All") {
+                        findListUserToSort(0, name, "all",search_name)
+                    }
+                } else {
+                    findListUserToSort(0, name, "all",search_name)
+                }
+            } else {
+                findListUserToSort(0, name, null,search_name)
+            }
+        }
+        else{
+            if (checked.length !== 0) {
+                if (checked.length === 1) {
+                    if (checked[0] === "Admin") {
+                        findListUserToSort(0, name, "admin",null)
+                    } else if (checked[0] === "Staff") {
+                        console.log("heheheeee")
+                        findListUserToSort(0, name, "staff",null)
+                    } else if (checked[0] === "All") {
+                        findListUserToSort(0, name, "all",null)
+                    }
+                } else {
+                    findListUserToSort(0, name, "all",null)
+                }
+            } else {
+                findListUserToSort(0, name,null,null)
+            }
+        }
+
+    }
+    const getListUserSort = (col) => {
+        switch (col) {
+            case 'sa': {
+                setSort({...sort, name: "sa"})
+                listCheckSortColumn("sa",nameSearch);
+                break;
+            }
+            case 'sd': {
+                setSort({...sort, name: "sd"})
+                listCheckSortColumn("sd",nameSearch);
+                break;
+            }
+            case 'ua': {
+                setSort({...sort, name: "ua"})
+                listCheckSortColumn("ua",nameSearch);
+                break;
+            }
+            case 'ud': {
+                setSort({...sort, name: "ud"})
+                listCheckSortColumn("ud",nameSearch);
+                break;
+            }
+            case 'fd': {
+                setSort({...sort, name: "fd"})
+                listCheckSortColumn("fd",nameSearch);
+                break;
+            }
+            case 'fa': {
+                setSort({...sort, name: "fa"})
+                listCheckSortColumn("fa",nameSearch);
+                break;
+            }
+            case 'ja': {
+                setSort({...sort, name: "ja"})
+                listCheckSortColumn("ja",nameSearch);
+                break;
+            }
+            case 'jd': {
+                setSort({...sort, name: "jd"})
+                listCheckSortColumn("jd",nameSearch);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    function findListUserToSort(page,sort,type,namesearch) {
+        console.log("findListUserToSort" + type + "  "+namesearch)
+        let link = "";
+        if(type !== null && namesearch === null)
+            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page + "&filter=" + type
+        else if(namesearch !== null && type === null)
+            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page + "&code=" + namesearch
+        else if(type !== null && namesearch !== null)
+            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page + "&filter=" + type + "&code="+namesearch
+        else
+            link = "http://localhost:8080/api/account?sort="+sort+"&page="+page
+        axios
+            .get(link, config)
+            .then(function (response) {
+                setListUserSort(response.data.content)
+                setCheckSort(true)
+                setTotalPage(response.data.totalPages)
+            })
+            .catch((error) => {
+                setListUserSort([])
+                setCheckSort(true)
+                setTotalPage(0)
+            });
+    }
+
     // get list user when admin search
 
-    function getListUserSearch(name , code,page){
-        let link="";
-        if(name === "all")
-            link = "https://asset-assignment-be.azurewebsites.net/api/account?" + "code=" + code + "&page=" + page
+    function getListUserSearch(name , code,page,sort){
+        // let link="";
+        // if(name === "all")
+        //     link = "https://asset-assignment-be.azurewebsites.net/api/account?" + "code=" + code + "&page=" + page
+        // else
+        //     link = "https://asset-assignment-be.azurewebsites.net/api/account?filter="+ name + "&code=" + code + "&page=" + page
+        let link = "";
+        if (name === "all")
+            link = "http://localhost:8080/api/account?" + "code=" + code + "&page=" + page +"&sort=" + sort
         else
-            link = "https://asset-assignment-be.azurewebsites.net/api/account?filter="+ name + "&code=" + code + "&page=" + page
+            link = "http://localhost:8080/api/account?filter=" + name + "&code=" + code + "&page=" + page +"&sort=" + sort
+
         axios
             .get(link, config)
             .then(function (response) {
@@ -133,9 +262,10 @@ export default function ManageUser() {
                 setTotalPage(0)
             });
     }
-    function getListUserPage(page){
+    function getListUserPage(page,sort){
         axios
-            .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + page, config)
+            // .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + page, config)
+            .get("http://localhost:8080/api/account?page=" + page +"&sort="+sort , config)
             .then(function (response) {
                 setListUser(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -161,7 +291,7 @@ export default function ManageUser() {
         setState({
             current: 0,
         });
-        getListUserToPage(0)
+        getListUserToPage(0,"")
     };
     const findListUserSearch = () => {
         if (nameSearch.length > 20)
@@ -191,6 +321,7 @@ export default function ManageUser() {
         } else {
             getListUserToPage(checkpage)
         }
+        console.log("is page: " + listUser.length)
     };
 
 
@@ -260,7 +391,119 @@ export default function ManageUser() {
                 </div>
                 {
                     <div>
-                        <TableUser listUser={listUser} listFilter={listUserFilter} checkSearch ={checkFilter}/>
+                        <div className="results-section">
+                            <div className="user_table">
+                                <>
+                                    <table>
+                                        {
+                                            totalPage === 0 ?
+                                                ""
+                                                :
+                                                <thead>
+                                                <tr>
+                                                    <th style={{width:"200px"}} className="col" >
+                                                        <p className="col_1 staff_code_col">Staff Code
+                                                            {
+                                                                sort.name === "sa"?
+                                                                    <FontAwesomeIcon
+                                                                        id="up_Staff"
+                                                                        onClick={()=>getListUserSort("sd")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortUp}>`
+                                                                    </FontAwesomeIcon>
+                                                                    :
+                                                                    <FontAwesomeIcon
+                                                                        id="down_Staff"
+                                                                        onClick={()=>getListUserSort("sa")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortDown}>`
+                                                                    </FontAwesomeIcon>
+
+                                                            }
+                                                        </p>
+                                                    </th>
+                                                    <th className="col" >
+                                                        <p className=" col_1 full_name_col">Full Name
+                                                            {
+                                                                sort.name === "fa"?
+                                                                    <FontAwesomeIcon
+                                                                        id="up_Fullname"
+                                                                        onClick={()=>getListUserSort("fd")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortUp}>`
+                                                                    </FontAwesomeIcon>
+                                                                    :
+                                                                    <FontAwesomeIcon
+                                                                        id="down_Fullname"
+                                                                        onClick={()=>getListUserSort("fa")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortDown}>`
+                                                                    </FontAwesomeIcon>
+
+                                                            }
+                                                        </p>
+                                                    </th>
+                                                    <th className="col">
+                                                        <p className="col_1 username_col">Username</p>
+                                                    </th>
+                                                    <th className="col" >
+                                                        <p className="col_1 joined_day_col">Joined Date
+
+                                                            {
+                                                                sort.name === "ja"?
+                                                                    <FontAwesomeIcon
+                                                                        id="up_JoinedDate"
+                                                                        onClick={()=>getListUserSort("jd")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortUp}>`
+                                                                    </FontAwesomeIcon>
+                                                                    :
+                                                                    <FontAwesomeIcon
+                                                                        id="down_JoinedDate"
+                                                                        onClick={()=>getListUserSort("ja")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortDown}>`
+                                                                    </FontAwesomeIcon>
+
+                                                            }
+                                                        </p>
+                                                    </th>
+                                                    <th className="col" >
+                                                        <p className="col_1 type_col">Type
+                                                            {
+                                                                sort.name === "ua"?
+                                                                    <FontAwesomeIcon
+                                                                        id="up_Type"
+                                                                        onClick={()=>getListUserSort("ud")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortUp}>`
+                                                                    </FontAwesomeIcon>
+                                                                    :
+                                                                    <FontAwesomeIcon
+                                                                        id="down_Type"
+                                                                        onClick={()=>getListUserSort("ua")}
+                                                                        style={{marginLeft: "0.3rem"}}
+                                                                        icon={faSortDown}>`
+                                                                    </FontAwesomeIcon>
+
+                                                            }
+                                                        </p>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                        }
+                                        <TableUser
+                                            listUser={listUser}
+                                            listFilter={listUserFilter}
+                                            checkSearch ={checkFilter}
+                                            listSort ={listUserSort}
+                                            checkSort ={checkSortType}
+                                        />
+                                    </table>
+                                </>
+                            </div>
+
+                        </div>
                         {
                             totalPage === 0 ?
                                 ""
