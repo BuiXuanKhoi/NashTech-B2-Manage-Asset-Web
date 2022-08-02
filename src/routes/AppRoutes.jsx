@@ -1,6 +1,7 @@
 import CreateAsset from "../components/admin/assets/CreateAsset";
 import EditAsset from "../components/admin/assets/EditAsset";
 import ManageAsset from "../components/admin/assets/ManageAsset";
+import CreateAssignment from "../components/admin/assignments/CreateAssignment";
 import ManageAssignment from "../components/admin/assignments/ManageAssignment";
 import HomeAdmin from "../components/admin/HomeAdmin";
 import CreateUser from "../components/admin/users/CreateUser";
@@ -40,11 +41,11 @@ export const AppRoutes = [
         element: <ManageAssignment/>,
         title: "Manage Assignment",
     },
-    // {
-    //     path: "/createAssignment",
-    //     element: <CreateAssignmentPage/>,
-    //     title: "Manage Assignment > Create Assignment",
-    // },
+    {
+        path: "/createAssignment",
+        element: <CreateAssignment/>,
+        title: "Manage Assignment > Create Assignment",
+    },
     // {
     //     path: "/editAssignment/:id",
     //     element: <EditAssignmentPage/>,

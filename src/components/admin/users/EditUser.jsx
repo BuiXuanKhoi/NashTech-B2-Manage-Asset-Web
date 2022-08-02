@@ -72,15 +72,16 @@ export default function EditUser() {
         };
 
         const data = {
-            informationId: information.informationId,
+            // informationId: information.informationId,
                 firstName: information.firstName,
                 lastName: information.lastName,
                 joinDate: values.JoinedDate,
-                accountsRoleRoleid: values.Type,
+                roleId: values.Type =="Admin" ? 1 : 2,
                 dateOfBirth: values.DateOfBirth,
                 gender: values.Gender,
                 staffCode: information.staffCode,
-                locations: information.locations
+                locations: information.locations,
+                roleName: ""
         }
         console.log(data);
         axios
@@ -99,7 +100,7 @@ export default function EditUser() {
             .catch((error) => {
                 toast.error("Edit user failed");
                 console.log(error)
-                console.log(error.response.data.message);
+                // console.log(error.response.data.message);
             });
      };
       

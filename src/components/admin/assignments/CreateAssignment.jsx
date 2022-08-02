@@ -5,9 +5,11 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import "antd/dist/antd.css";
 import moment from "moment";
+import toast from 'react-hot-toast';
 
 export default function CreateAssignment() {
     const loginState = JSON.parse(localStorage.getItem("loginState"));
+    const date = new Date();
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
@@ -18,7 +20,7 @@ export default function CreateAssignment() {
         assetId: -1,
         fullName: "",
         assignToId: -1,
-        assignedDate: "",
+        assignedDate: moment(date.getDate().toString(),"DD/MM/YYYY"),
         note: ""
     });
 
@@ -53,17 +55,10 @@ export default function CreateAssignment() {
         },
     };
 
-    const fetchData = (url, method, data) => {
-        return axios({
-            method: method,
-            url: url,
-            data: data,
-        });
-    };
-
     useEffect(() => {
         axios
-            .get(`https://asset-assignment-be.azurewebsites.net/api/information/all`,config)
+            // .get(`https://asset-assignment-be.azurewebsites.net/api/information/all`,config)
+            .get(`http://localhost:8080/api/information/all`,config)
             .then(response => {
                 let respData = response.data
                 respData.forEach((element) => {
@@ -99,7 +94,8 @@ export default function CreateAssignment() {
 
     useEffect(() => {
         axios
-            .get(`https://asset-assignment-be.azurewebsites.net/api/asset/all`, config)
+            // .get(`https://asset-assignment-be.azurewebsites.net/api/asset/all`, config)
+            .get(`http://localhost:8080/api/asset/all`, config)
             .then(response => {
                     let respData = response.data
                     setAssetData(respData);
@@ -130,13 +126,18 @@ export default function CreateAssignment() {
         
         const values = {
             ...fieldsValue,
-            assignedDate: fieldsValue["assignedDate"].format("YYYY-MM-DD"),
+            assignedDate: fieldsValue["assignedDate"].format("DD/MM/YYYY"),
+            accountId: submitData.assignToId,
+            assetId: submitData.assetId
         };
-        fetchData(`${process.env.REACT_APP_UNSPLASH_ASSIGNMENT}`, "POST", {
-            ...submitData,
-            assignedDate: values.assignedDate
-        })
-            .then(() => {
+        axios.post(`http://localhost:8080/api/assignment`, {
+            assignedToId: submitData.accountId,
+            assetId: submitData.assetId,
+            assignedAt: values.assignedDate,
+            note: values.note
+             
+        },config)
+            .then((response) => {
                 setSubmitData({
                     assetId: "",
                     assignToId: "",
@@ -145,11 +146,22 @@ export default function CreateAssignment() {
                     assetName: "",
                     fullName: "",
                 });
+
+                toast.success("Create assignment success");
                 navigate("/assignment");
+                console.log(response)
             })
             .catch((err) => {
-
+                toast.error("Create assignment failed");
+                console.log(err);
             });
+        console.log({
+            assignedToId: submitData.assignToId,
+            assetId: submitData.assetId,
+            assignedAt: values.assignedDate,
+            note: values.note
+             
+        });
     };
     const userColumns = [
         {
@@ -183,8 +195,8 @@ export default function CreateAssignment() {
         },
         {
             title: "Type",
-            dataIndex: "accountsRoleRolename",
-            key: "accountsRoleRolename",
+            dataIndex: "roleName",
+            key: "roleName",
             sorter: (a, b) => {
                 if (a.roleName > b.roleName) {
                     return -1;
@@ -227,8 +239,8 @@ export default function CreateAssignment() {
         },
         {
             title: "Category",
-            dataIndex: "categoryCategoryname",
-            key: "categoryCategoryname",
+            dataIndex: "categoryName",
+            key: "categoryName",
             sorter: (a, b) => {
                 if (a.category > b.category) {
                     return -1;
@@ -247,7 +259,7 @@ export default function CreateAssignment() {
             setSubmitData({
                 ...submitData,
                 fullName: selectedRows[0].fullName,
-                accountId: selectedRows[0].accountId,
+                accountId: selectedRowKeys[0],
             })
 
         },
@@ -260,13 +272,14 @@ export default function CreateAssignment() {
             setSubmitData({
                 ...submitData,
                 assetName: selectedRows[0].assetName,
-                assetId: selectedRows[0].id,
+                assetId: selectedRowKeys[0],
             })
 
         },
 
     };
-console.log(assetData)
+    
+// console.log(assetData)
     return (
         <Row>
             <Modal visible={userModal.isOpen}
@@ -318,7 +331,13 @@ console.log(assetData)
                     }}
                     columns={userColumns}
                     dataSource={finalUserData}
-                    rowKey="staffCode"
+                    rowKey="accountId"
+                    loading={() => { 
+                        if(userData === []){
+                            return true;
+                        }
+                        return false;
+                    }}
                     pagination={{
                         defaultPageSize: 5,
                         pageSizeOptions: [2, 4, 6, 8, 10]
@@ -373,7 +392,7 @@ console.log(assetData)
                     }}
                     columns={assetColumns}
                     dataSource={finalAssetData}
-                    rowKey="assetCode"
+                    rowKey="assetId"
                     pagination={{
                         defaultPageSize: 5,
                         pageSizeOptions: [2, 4, 6, 8, 10]
@@ -453,19 +472,19 @@ console.log(assetData)
                             <Form.Item label="Assigned Date" style={{marginBottom: 0}}>
                                 <Form.Item
                                     name="assignedDate"
-                                    rules={[{required: true, message: 'Assigned Date must be required'},
-                                        (fieldvalue) => ({
-                                            validator(_, value) {
+                                    // rules={[{required: true, message: 'Assigned Date must be required'},
+                                    //     (fieldvalue) => ({
+                                    //         validator(_, value) {
 
-                                                if (moment(new Date().getDate(), "DD-MM-YYYY").isSameOrAfter(value._d, "DD-MM-YYYY")) {
-                                                    return Promise.reject('Assigned Date can not be in the past')
-                                                } else {
-                                                    return Promise.resolve()
-                                                }
+                                    //             if (moment(new Date().getDate(), "DD-MM-YYYY").isAfter(value._d, "DD-MM-YYYY")) {
+                                    //                 return Promise.reject('Assigned Date can not be in the past')
+                                    //             } else {
+                                    //                 return Promise.resolve()
+                                    //             }
 
-                                            }
-                                        })
-                                    ]}
+                                    //         }
+                                    //     })
+                                    // ]}
                                     style={{display: "block"}}
                                     hasFeedback
                                 >
@@ -476,8 +495,11 @@ console.log(assetData)
                                         className="inputForm"
                                         format="DD-MM-YYYY"
                                         value={submitData.assignedDate}
+                                        // defaultValue={() => {
+                                        //     return moment(date.getDate().toString(),"DD/MM/YYYY")
+                                        // }}
                                         onChange={handleAssignedDateChange}
-
+                                        
                                     />
                                 </Form.Item>
                             </Form.Item>
@@ -505,7 +527,7 @@ console.log(assetData)
                                 <Row style={{float: "right"}}>
                                         <Button
                                             disabled={
-                                                !form.isFieldsTouched(true) ||
+                                                // !form.isFieldsTouched(true) ||
                                                 form.getFieldsError().filter(({errors}) => errors.length).length > 0
                                             }
                                             className='buttonSave'
@@ -517,7 +539,7 @@ console.log(assetData)
                                                 setTimeout(() => {
                                                     setLoading({isLoading: false})
                                                 }, 1000)
-                                                handleCreate()
+                                                // handleCreate()
                                             }}
                                         >
                                             Save

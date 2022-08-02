@@ -72,7 +72,6 @@ export default function EditAsset(){
                     InstalledDate: moment(installedDate,'DD/MM/YYYY')
 
                 });
-                
 
             })
             .catch((error) => {
@@ -102,15 +101,15 @@ export default function EditAsset(){
             setTimeout(() => {
                 setLoading({isLoading: false});
             }, 2000)
-
-            toast.success("Edit asset successfully");
-            console.log(response.data);
+            toast.success("Edit asset success");
             navigate("/asset");
+            console.log(response.data);
 
         })
         .catch((error) => {
-            console.log(error)
             toast.error("Edit asset failed");
+            console.log(error)
+            console.log(error.response.data.message);
         });
     }
 

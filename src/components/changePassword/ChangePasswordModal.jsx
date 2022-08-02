@@ -91,7 +91,7 @@ console.log(showError);
                                 }else{
                                     setShowError("2");
                                     if(password.old_password == password.new_password){
-                                        setError("New password must be difference with old password");
+                                        setError("New password must be different from old password");
                                     }else{
                                     setError("Password must have uppercase, number, no blank, special character, length between 8 and 15");
                                     }
