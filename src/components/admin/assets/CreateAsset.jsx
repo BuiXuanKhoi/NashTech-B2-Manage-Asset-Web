@@ -301,7 +301,7 @@ export default function CreateAsset(){
                                         <Radio value="Available" >Available</Radio>
                                         <br/>
                                         <br/>
-                                        <Radio value="NotAvailable" >Not Available</Radio>
+                                        <Radio value="UnAvailable" >Not Available</Radio>
                                     </Radio.Group>
 
                                 </Form.Item>
