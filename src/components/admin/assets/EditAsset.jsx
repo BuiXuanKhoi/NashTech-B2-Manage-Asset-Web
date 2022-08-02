@@ -110,9 +110,7 @@ export default function EditAsset(){
         })
         .catch((error) => {
             console.log(error)
-            console.log(error.response.data.message);
             toast.error("Edit asset failed");
-            console.log(response.data);
         });
     }
 
