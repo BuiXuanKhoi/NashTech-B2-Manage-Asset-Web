@@ -139,10 +139,6 @@
     font-size: 16px !important;
 }
 
-.ant-input {
-    border: solid 5px black;
-}
-
 .ant-input:hover {
     border-color: #00a0e9 !important;
 }
