@@ -1,3 +1,4 @@
+import CreateAsset from "../components/admin/assets/CreateAsset";
 import EditAsset from "../components/admin/assets/EditAsset";
 import ManageAsset from "../components/admin/assets/ManageAsset";
 import ManageAssignment from "../components/admin/assignments/ManageAssignment";
@@ -67,9 +68,9 @@ export const AppRoutes = [
         element: <EditUser/>,
         title: "Manage User > Edit User",
     },
-    // {
-    //     path: "/createAsset",
-    //     element: <CreateAssetPage/>,
-    //     title: "Manage Asset > Create Asset",
-    // },
+    {
+        path: "/createAsset",
+        element: <CreateAsset/>,
+        title: "Manage Asset > Create Asset",
+    },
 ];
