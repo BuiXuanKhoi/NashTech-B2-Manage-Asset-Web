@@ -64,14 +64,16 @@
 .ant-input-group.ant-input-group-compact > *:not(:last-child) {
     margin-right: -1px;
     border-right-width: 1px;
-    width: 75%;
+    width: 70%;
     height: 25px;
     font-style: italic;
+    font-size: 12px;
 }
-.ant-input-group .ant-input-affix-wrapper:not(:first-child){
-    width: 25%;
+.ant-input-group.ant-input-group-compact > *:last-child{
+    width: 30%;
     height: 25px;
-    font-style: oblique;
+    font-style: italic;
+    font-size: 12px;
 }
 .ant-input-affix-wrapper{
     padding-left: 5px;
@@ -85,17 +87,17 @@
     padding: 4px 4px
 }
 .fa-check{
-    margin-left: 10px;
+    /* margin-left: 10px; */
     color: #cf2338;
     height: 1.5em;
-    margin-top: 7px;
-    margin-right: 10px;
+    /* margin-top: 7px;
+    margin-right: 10px; */
 }
 .fa-xmark{
     height: 1.5em;
-    padding-top: 7px;
+    /* padding-top: 7px;
     padding-left: 15px;
-    margin-right: 5px;
+    margin-right: 5px; */
 }
 .ant-divider-horizontal{
     margin: 5px 0;
@@ -107,4 +109,18 @@
 .ant-btn-link:hover{
     color: #e46070;
 }
-
+.ant-input-suffix {
+    margin-right: 10px;
+}
+.cancelButton{
+    color: black;
+    padding: 4px 5px;
+}
+.cancelButton:hover{
+    color: rgb(175, 161, 161);
+}
+.addButton{
+    padding: 4px 5px;
+    color: #cf2338;
+    margin-right: 0px;
+}

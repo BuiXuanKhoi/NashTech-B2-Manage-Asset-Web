@@ -16,15 +16,14 @@ export default function CreateAsset(){
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const navigate = useNavigate();
     const [listCategory, setListCategory] = useState([{}]);
-    let newCategory ={
-        categoryName : '',
-        key: '',
-    }
+    const [categoryName, setCategoryName] = useState("");
+    const [key, setKey] = useState("");
     const {Option} = Select;
     const [form] = Form.useForm();
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
+    const [addCategory, setAdd] = useState(false);
     const formItemLayout = {
         labelCol: {
             span: 6,
@@ -35,15 +34,20 @@ export default function CreateAsset(){
         },
     };
     const addItem = () => {
-        if(newCategory.categoryName.trim().length===0 || newCategory.key.trim().length===0){
-            console.log(newCategory);
-            toast.error("Category and Prefix must be required");
+        var bt = new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$")
+        if(!categoryName.match(bt)){
+            toast.error("Category name is not allowed to contain Vietnamese characters");
             return;
         }
-       
+        if(!key.match(bt)){
+            toast.error("Prefix is not allowed to contain Vietnamese characters");
+            return;
+        }
+        console.log(categoryName + "   "+ key)
         axios
             .post(`https://asset-assignment-be.azurewebsites.net/api/category`, {
-                ...newCategory
+                categoryName : categoryName.trim(),
+                key: key.trim()
             }, config)
             .then((response) => {
                 setTimeout(() => {
@@ -55,10 +59,6 @@ export default function CreateAsset(){
                 setElementCategory(
                     <Button type="link" onClick= {onAddCategory}><u>Add new category</u></Button>
                 )
-                newCategory = {
-                    categoryName: '',
-                    key: '',
-                }
             })
             .catch((error) => {
                 toast.error(error.response.data.message);
@@ -67,46 +67,14 @@ export default function CreateAsset(){
         
     }
     const cancelItem = () => {
-        newCategory = {
-            categoryName: '',
-            key: '',
-        }
-        setElementCategory(
-            <Button type="link" onClick= {onAddCategory}><u>Add new category</u></Button>
-        )
+        setAdd(false) ;
+        
     }
     const onAddCategory = ()=>{
-        newCategory = {
-            categoryName: '',
-            key: '',
-        }
-        setElementCategory(
-            <>
-            <Row>
-            <Input.Group compact>
-                <Input className="categoryName"
-                    enterKeyHint="Category"
-                    placeholder="Category"
-                    onChange={(e)=> {newCategory = {...newCategory, categoryName: e.target.value}}}
-                    
-                />
-                <Input className="prefix"
-                    enterKeyHint="Prefix"
-                    placeholder="Prefix"
-                    onChange={(e)=> {newCategory = {...newCategory, key: e.target.value}}}
-                />
-                </Input.Group>
-                <FontAwesomeIcon 
-                    className="addIcon" 
-                    onClick={addItem}
-                    icon={faCheck} />
-                <FontAwesomeIcon 
-                    className="cancelIcon" 
-                    onClick={cancelItem}
-                    icon={faXmark} />
-                </Row>
-                </>
-        )
+        setCategoryName('');
+        setKey('')
+        setAdd(true)
+        
     }
     const [elementCategory, setElementCategory] = useState(
         <Button type="link" onClick= {onAddCategory}><u>Add new category</u></Button>
@@ -130,6 +98,45 @@ export default function CreateAsset(){
     useEffect(() =>{
         getCategories();
     }, [])
+    useEffect(() =>{
+        console.log(addCategory)
+        if(addCategory === true){
+        setElementCategory(
+            <>
+            <Row>
+            <Input.Group compact>
+                <Input className="categoryName"
+                    enterKeyHint="Category"
+                    placeholder="Category name"
+                    onChange={(e)=> { setCategoryName(e.target.value)}}
+                    
+                />
+                <Input className="prefix"
+                    enterKeyHint="Prefix"
+                    placeholder="Prefix"
+                    onChange={(e)=> { setKey(e.target.value)}}
+                />
+                </Input.Group>
+                <Button type="link" className="addButton" disabled={(categoryName.trim().length===0 || key.trim().length===0)}><FontAwesomeIcon 
+                                       
+                    onClick={addItem}
+                    icon={faCheck} /></Button>
+                
+                <Button type="link" className="cancelButton"><FontAwesomeIcon 
+                     
+                    onClick={cancelItem}
+                    icon={faXmark} />
+                </Button>
+                </Row>
+                </>
+        )}
+        else{
+            setElementCategory(
+                <Button type="link" onClick= {onAddCategory}><u>Add new category</u></Button>
+            )
+        }
+        
+    }, [categoryName, key, addCategory])
 
 
     const onFinish = (fieldsValue) => {
@@ -193,13 +200,20 @@ export default function CreateAsset(){
                                                 if ((value.trim())==='') {
                                                     return Promise.reject("Name must be required")
                                                 }
+                                                else if(!value.match(new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
+                                                    return Promise.reject("Name is not allowed to contain Vietnamese characters")
+                                                }
+                                                else if ((value.trim().length)>128) {
+                                                    return Promise.reject("Name must be less than 128 characters")
+                                                }
+
                                                 return Promise.resolve();
                                             }
                                         })
                                     ]}
                                     hasFeedback
                                 >
-                                    <Input disabled={isLoading.isLoading === true}
+                                    <Input disabled={isLoading.isLoading === true} maxLength={129}
                                            className="inputForm"/>
                                 </Form.Item>
                             </Form.Item>
@@ -208,7 +222,7 @@ export default function CreateAsset(){
                                 <Form.Item
                                     name="Category"
                                     rules={[{required: true, message: 'You must choose a category for this asset'}]}
-                                    hasFeedback
+                                    
                                 >
                                     <Select
                                         disabled={isLoading===true}
@@ -242,10 +256,17 @@ export default function CreateAsset(){
                                 <Form.Item
                                     name="Specification"
                                     rules={[
+                                        
                                         () => ({
                                             validator(_, value) {
                                                 if ((value.trim())==='') {
                                                     return Promise.reject("Specification must be required")
+                                                }
+                                                else if(!value.match(new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
+                                                    return Promise.reject("Specification is not allowed to contain Vietnamese characters")
+                                                }
+                                                else if ((value.trim().length)>500) {
+                                                    return Promise.reject("Specification must be less than 500 characters")
                                                 }
                                                 return Promise.resolve();
                                             }
@@ -256,6 +277,7 @@ export default function CreateAsset(){
                                 <TextArea 
                                           className="largeInput"
                                           rows="5" cols="20"
+                                          maxLength={501}
                                 >
 
                                 </TextArea>
@@ -274,6 +296,9 @@ export default function CreateAsset(){
                                                     return Promise.resolve()
                                                 }else if ((new Date() - value._d) < 0) {
                                                     return Promise.reject("Asset has not installed. Please select a different date")
+                                                }
+                                                else if (value._d.getFullYear() < 1950){
+                                                    return Promise.reject("Can only select the date from 1950 or later. Please select a different date")
                                                 }
                                                  else {
                                                     return Promise.resolve()

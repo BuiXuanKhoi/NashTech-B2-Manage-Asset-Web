@@ -164,6 +164,9 @@ export default function EditUser() {
                                                 & (new Date() - value._d) >= 0) {
                                                     return Promise.reject("User is under 18. Please select a different date")
                                                 }
+                                            else if (value._d.getFullYear() < 1950){
+                                                return Promise.reject("Can only select the date from 1950 or later. Please select a different date")
+                                            }
                                             else return Promise.resolve();
                                         }
                                     })
