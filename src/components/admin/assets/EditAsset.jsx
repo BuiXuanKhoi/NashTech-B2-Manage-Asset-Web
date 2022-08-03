@@ -66,7 +66,7 @@ export default function EditAsset(){
                 setAsset(response.data);
                 form.setFieldsValue({
                     Name: response.data.assetName,
-                    Category: response.data.categoryCategoryname,
+                    Category: response.data.categoryName,
                     Specification: response.data.specification,
                     State: response.data.state,
                     InstalledDate: moment(installedDate,'DD/MM/YYYY')
