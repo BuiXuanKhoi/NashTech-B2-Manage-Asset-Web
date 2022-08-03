@@ -23,13 +23,13 @@ export default function ManageAsset() {
     const [state, setState] = useState({
         current: 0,
     });
-
+    const navigate = useNavigate();
     const config = {
         headers: {Authorization: `Bearer ${user.token}`}
     };
     const getListCategory = () => {
         axios
-            .get("http://localhost:8080/api/category", config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/category", config)
             .then(function (response) {
                 console.log(response.data)
                 setListCategory(response.data)
@@ -42,7 +42,7 @@ export default function ManageAsset() {
     const getListAsset = () => {
         axios
             // .get("https://asset-assignment-be.azurewebsites.net/api/account?page="+ state.current, config)
-            .get("http://localhost:8080/api/asset", config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/asset", config)
             .then(function (response) {
                 console.log(response.data)
                 setListAsset(response.data.content)
@@ -65,7 +65,7 @@ export default function ManageAsset() {
     function getListAssetPageNoFilter(page,sort){
         axios
             // .get("https://asset-assignment-be.azurewebsites.net/api/account?page=" + page, config)
-            .get("http://localhost:8080/api/asset?page=" + page  , config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/asset?page=" + page  , config)
             .then(function (response) {
                 setListAsset(response.data.content)
                 console.log("Page " + page +" length "+ response.data)
@@ -176,7 +176,8 @@ export default function ManageAsset() {
                                 </div>
                             }
                             <div id="create-btn-section">
-                                <button className="btn-createUser">
+                                <button className="btn-createUser" onClick={() => {
+                                navigate("/createAsset")}}>
                                     <p className="btn_create_text"> Create new asset</p>
                                 </button>
                             </div>

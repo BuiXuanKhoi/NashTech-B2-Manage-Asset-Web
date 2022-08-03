@@ -26,11 +26,17 @@ export default function CreateUser() {
     };
     const onFinish = (fieldsValue) => {
         console.log(fieldsValue);
-        const values = {
+        let values = {
             ...fieldsValue,
             DateOfBirth: fieldsValue["DateOfBirth"].format("DD/MM/YYYY"),
             JoinedDate: fieldsValue["JoinedDate"].format("DD/MM/YYYY"),
         };
+        if(values.Type[1]===undefined){
+            values = {
+                ...values,
+                Type: [ values.Type[0], 'HCM']
+            }
+        }
 
         axios
             .post(`https://asset-assignment-be.azurewebsites.net/api/account`, {
@@ -57,8 +63,6 @@ export default function CreateUser() {
                 toast.error("Create new user failed");
                 console.log(error)
                 console.log(error.response.data.message);
-                localStorage.removeItem("loginState");
-                window.location.href = "https://mango-tree-0d1b58810.1.azurestaticapps.net/";
             });
      };
 

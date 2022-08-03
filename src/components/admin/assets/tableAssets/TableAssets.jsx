@@ -5,10 +5,12 @@ import "antd/dist/antd.css";
 import "./TableAssets.css"
 import {ReloadOutlined, CloseCircleOutlined, LoadingOutlined} from "@ant-design/icons";
 
+import {useNavigate} from "react-router-dom";
+
 
 function TableAsset(props) {
     const [displayList, setDisplayList] = useState(props.listAsset);
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         setDisplayList(props.listAsset);
@@ -61,7 +63,8 @@ function TableAsset(props) {
                                             </>
                                             :
                                             <>
-                                                <td className="btn_col_assignment edit">
+                                                <td className="btn_col_assignment edit" onClick={() => {
+                                        navigate("/editAsset/" + item.assetId)}}>
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                 </td>
