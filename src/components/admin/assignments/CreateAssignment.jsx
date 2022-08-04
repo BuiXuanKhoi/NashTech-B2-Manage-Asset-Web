@@ -1,5 +1,5 @@
-import {Row,Col,Form,Input,Button,DatePicker, Modal, Table,} from "antd";
-import {SearchOutlined} from "@ant-design/icons";
+import {Row,Col,Form,Input,Button,DatePicker, Modal, Table,Spin} from "antd";
+import {SearchOutlined,LoadingOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
@@ -10,6 +10,13 @@ import toast from 'react-hot-toast';
 export default function CreateAssignment() {
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const date = new Date();
+    const yyyy = date.getFullYear();
+    let mm = date.getMonth() + 1;
+    let dd = date.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
@@ -20,7 +27,7 @@ export default function CreateAssignment() {
         assetId: -1,
         fullName: "",
         assignToId: -1,
-        assignedDate: moment(date.getDate().toString(),"DD/MM/YYYY"),
+        assignedDate: dd + "/" + mm + "/" + yyyy,
         note: ""
     });
 
@@ -57,8 +64,8 @@ export default function CreateAssignment() {
 
     useEffect(() => {
         axios
-            // .get(`https://asset-assignment-be.azurewebsites.net/api/information/all`,config)
-            .get(`http://localhost:8080/api/information/all`,config)
+            .get(`https://asset-assignment-be.azurewebsites.net/api/information/location?accountid=` + loginState.id,config)
+            // .get(`http://localhost:8080/api/information/location?accountid=` + loginState.id,config)
             .then(response => {
                 let respData = response.data
                 respData.forEach((element) => {
@@ -72,30 +79,10 @@ export default function CreateAssignment() {
 
     }, []);
 
-    const finalUserData =
-        searchText === ""
-            ? userData
-            : userData.filter(
-                (u) =>
-                    (u.fullName.toLowerCase()).replace(/\s+/g, '').includes(searchText.toLowerCase().replace(/\s+/g, '')) ||
-                    u.staffCode.toLowerCase().includes(searchText.toLowerCase())
-            );
-
-    const assetByState = assetData.filter((u) => u.state === "AVAILABLE")
-    const finalAssetData =
-        searchText === ""
-            ? assetByState :
-            assetByState.filter(
-                (u) =>
-                    u.assetName.toLowerCase().includes(searchText.toLowerCase()) ||
-                    u.assetCode.toLowerCase().includes(searchText.toLowerCase()) ||
-                    u.categoryCategoryname.toLowerCase().includes(searchText.toLowerCase())
-            );
-
     useEffect(() => {
         axios
-            // .get(`https://asset-assignment-be.azurewebsites.net/api/asset/all`, config)
-            .get(`http://localhost:8080/api/asset/all`, config)
+            .get(`https://asset-assignment-be.azurewebsites.net/api/asset/available`, config)
+            // .get(`http://localhost:8080/api/asset/available`, config)
             .then(response => {
                     let respData = response.data
                     setAssetData(respData);
@@ -105,6 +92,26 @@ export default function CreateAssignment() {
 
             })
     }, [])
+    const finalUserData =
+        searchText === ""
+            ? userData
+            : userData.filter(
+                (u) =>
+                    (u.fullName.toLowerCase()).replace(/\s+/g, '').includes(searchText.toLowerCase().replace(/\s+/g, '')) ||
+                    u.staffCode.toLowerCase().includes(searchText.toLowerCase())
+            );
+
+    const finalAssetData =
+        searchText === ""
+            ? assetData :
+            assetData.filter(
+                (u) =>
+                    u.assetName.toLowerCase().includes(searchText.toLowerCase()) ||
+                    u.assetCode.toLowerCase().includes(searchText.toLowerCase()) 
+            );
+
+            
+    
 
     const handleNoteChange = (name) => {
 
@@ -114,7 +121,6 @@ export default function CreateAssignment() {
         });
     };
     const handleAssignedDateChange = (name, Datestring) => {
-
         setSubmitData({
             ...submitData,
             assignedDate: Datestring,
@@ -126,11 +132,11 @@ export default function CreateAssignment() {
         
         const values = {
             ...fieldsValue,
-            assignedDate: fieldsValue["assignedDate"].format("DD/MM/YYYY"),
+            assignedDate: fieldsValue["assignedDate"] != undefined ? fieldsValue["assignedDate"].format("DD/MM/YYYY") : submitData.assignedDate,
             accountId: submitData.assignToId,
             assetId: submitData.assetId
         };
-        axios.post(`http://localhost:8080/api/assignment`, {
+        axios.post(`https://asset-assignment-be.azurewebsites.net/api/assignment`, {
             assignedToId: submitData.accountId,
             assetId: submitData.assetId,
             assignedAt: values.assignedDate,
@@ -242,10 +248,10 @@ export default function CreateAssignment() {
             dataIndex: "categoryName",
             key: "categoryName",
             sorter: (a, b) => {
-                if (a.category > b.category) {
+                if (a.categoryName > b.categoryName) {
                     return -1;
                 }
-                if (b.category > a.category) {
+                if (b.categoryName > a.categoryName) {
                     return 1;
                 }
                 return 0;
@@ -280,12 +286,20 @@ export default function CreateAssignment() {
     };
     
 // console.log(assetData)
+    const antIcon = (
+        <LoadingOutlined
+        style={{
+            fontSize: 24,
+        }}
+        spin
+        />
+    );
     return (
         <Row>
             <Modal visible={userModal.isOpen}
             style={{position: "absolute",top: "18%", left: "48%"}}
             mask={false}
-                   title="Select User"
+                   title={false}
                    footer={[
 
                        <Button
@@ -313,17 +327,20 @@ export default function CreateAssignment() {
                    ]}
                    closable={false}
             >
-                <Input.Search
-                    maxLength={255}
-                    allowClear
-                    onSearch={(e) => {
-                        setSearchText(e.replace(/ /g, ''))
-                    }}
-                    onEnter={(e) => {
-                        setSearchText(e.replace(/ /g, ''))
-                    }}
-
-                />
+                <div style={{display: "flex"}} className="searchModel">
+                    <h2 style={{width: "40%", fontWeight: 600, color: "red"}}>Select User</h2>
+                    <Input.Search
+                        // width={"60%"}
+                        maxLength={255}
+                        allowClear
+                        onSearch={(e) => {
+                            setSearchText(e.replace(/ /g, ''))
+                        }}
+                        onEnter={(e) => {
+                            setSearchText(e.replace(/ /g, ''))
+                        }}
+                    />
+                </div>
                 <Table
                     rowSelection={{
                         type: "radio",
@@ -332,12 +349,9 @@ export default function CreateAssignment() {
                     columns={userColumns}
                     dataSource={finalUserData}
                     rowKey="accountId"
-                    loading={() => { 
-                        if(userData === []){
-                            return true;
-                        }
-                        return false;
-                    }}
+                    loading={userData.length < 1 ? (
+                        <Spin />
+                    ) : false}
                     pagination={{
                         defaultPageSize: 5,
                         pageSizeOptions: [2, 4, 6, 8, 10]
@@ -349,7 +363,7 @@ export default function CreateAssignment() {
                 visible={assetModal.isOpen}
                 mask={false}
                 style={{position: "absolute",top: "24%", left: "48%"}}
-                   title="Select Asset"
+                   title={false}
                    footer={[
                        <Button
                            className="buttonSave"
@@ -375,16 +389,20 @@ export default function CreateAssignment() {
                    closable={false}
 
             >
-                <Input.Search
-                    maxLength={255}
-                    allowClear
-                    onSearch={(e) => {
-                        setSearchText(e.replace(/ /g, ''))
-                    }}
-                    onEnter={(e) => {
-                        setSearchText(e.replace(/ /g, ''))
-                    }}
-                />
+                <div style={{display: "flex"}} className="searchModel">
+                    <h2 style={{width: "40%", fontWeight: 600, color: "red"}}>Select Asset</h2>
+                    <Input.Search
+                        // width={"60%"}
+                        maxLength={255}
+                        allowClear
+                        onSearch={(e) => {
+                            setSearchText(e.replace(/ /g, ''))
+                        }}
+                        onEnter={(e) => {
+                            setSearchText(e.replace(/ /g, ''))
+                        }}
+                    />
+                </div>
                 <Table
                     rowSelection={{
                         type: "radio",
@@ -393,6 +411,9 @@ export default function CreateAssignment() {
                     columns={assetColumns}
                     dataSource={finalAssetData}
                     rowKey="assetId"
+                    loading={assetData.length < 1 ? (
+                        <Spin />
+                    ) : false}
                     pagination={{
                         defaultPageSize: 5,
                         pageSizeOptions: [2, 4, 6, 8, 10]
@@ -422,7 +443,6 @@ export default function CreateAssignment() {
                                     // { max: 50, message: 'Username must be less than 50 characters long' }
                                     // ]}
                                     style={{display: "block"}}
-                                    hasFeedback
                                 >
 
                                     <Input
@@ -450,7 +470,6 @@ export default function CreateAssignment() {
                                     // { max: 50, message: 'Asset must be less than 50 characters long' }
                                     // ]}
                                     style={{display: "block"}}
-                                    hasFeedback
                                 >
                                     <Input
                                         readOnly={true}
@@ -463,30 +482,29 @@ export default function CreateAssignment() {
                                             setAssetModal({...assetModal, isOpen: true})
                                         }
                                         }><SearchOutlined/></span>}
-                                        onClick={() => {
-                                            setAssetModal({...assetModal, isOpen: true})
-                                        }}
+                                        // onClick={() => {
+                                        //     setAssetModal({...assetModal, isOpen: true})
+                                        // }}
                                     />
                                 </Form.Item>
                             </Form.Item>
                             <Form.Item label="Assigned Date" style={{marginBottom: 0}}>
                                 <Form.Item
                                     name="assignedDate"
-                                    // rules={[{required: true, message: 'Assigned Date must be required'},
-                                    //     (fieldvalue) => ({
-                                    //         validator(_, value) {
+                                    rules={[
+                                        (fieldvalue) => ({
+                                            validator(_, value) {
 
-                                    //             if (moment(new Date().getDate(), "DD-MM-YYYY").isAfter(value._d, "DD-MM-YYYY")) {
-                                    //                 return Promise.reject('Assigned Date can not be in the past')
-                                    //             } else {
-                                    //                 return Promise.resolve()
-                                    //             }
+                                                if (moment(new Date().getDate(), "DD-MM-YYYY").isAfter(value, "DD-MM-YYYY")) {
+                                                    return Promise.reject('Assigned Date can not be in the past')
+                                                } else {
+                                                    return Promise.resolve()
+                                                }
 
-                                    //         }
-                                    //     })
-                                    // ]}
+                                            }
+                                        })
+                                    ]}
                                     style={{display: "block"}}
-                                    hasFeedback
                                 >
                                     <DatePicker
                                         disabled={isLoading.isLoading === true}
@@ -495,9 +513,9 @@ export default function CreateAssignment() {
                                         className="inputForm"
                                         format="DD-MM-YYYY"
                                         value={submitData.assignedDate}
-                                        // defaultValue={() => {
-                                        //     return moment(date.getDate().toString(),"DD/MM/YYYY")
-                                        // }}
+                                        defaultValue={() => {
+                                            return moment(date.getDate().toString(),"DD/MM/YYYY")
+                                        }}
                                         onChange={handleAssignedDateChange}
                                         
                                     />
@@ -511,7 +529,6 @@ export default function CreateAssignment() {
                                         {whitespace: true, message: 'Note can not be empty'},
                                         {max: 500, message: 'Note must be less than 500 characters long'}
                                     ]}
-                                    hasFeedback
                                 >
                                     <Input.TextArea
                                         disabled={isLoading.isLoading === true}
@@ -528,6 +545,7 @@ export default function CreateAssignment() {
                                         <Button
                                             disabled={
                                                 // !form.isFieldsTouched(true) ||
+                                                (submitData.assetName == "" && submitData.fullName == "" ) ||
                                                 form.getFieldsError().filter(({errors}) => errors.length).length > 0
                                             }
                                             className='buttonSave'
