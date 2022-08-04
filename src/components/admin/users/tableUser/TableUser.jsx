@@ -122,16 +122,32 @@ function TableUser(props) {
                                         }}>
                                         <p className="col staff_code_col">{item.staffCode}</p>
                                     </td>
-                                    <td className="col full_name_col">
+                                    <td className="col full_name_col"  onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col full_name_col">{item.firstName + " " + item.lastName}</p>
                                     </td>
-                                    <td className="col username_col">
+                                    <td className="col username_col"  onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col username_col">{item.userName}</p>
                                     </td>
-                                    <td className="col joined_day_col">
+                                    <td className="col joined_day_col"  onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col joined_day_col">{(item.joinedDate.split("-")[2]).split("T")[0] +"/"+item.joinedDate.split("-")[1]+"/"+ item.joinedDate.split("-")[0] }</p>
                                     </td>
-                                    <td className="col type_col">
+                                    <td className="col type_col"  onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col type_col">{item.roleName}</p>
                                     </td>
                                     <td className="btn_col pencil" onClick={() => {

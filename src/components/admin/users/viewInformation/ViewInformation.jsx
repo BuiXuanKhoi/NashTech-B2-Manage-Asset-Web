@@ -34,11 +34,11 @@ export default function ViewInformation(props){
                    title="Detailed User Information"
                    visible={isModalVisible}
                    style={{left:"190px" , marginTop:"10px"}}
-                   closeIcon={<CloseSquareOutlined />}
+                   closeIcon={<CloseSquareOutlined  style={{marginRight:"20px", paddingRight:"10px"}}/>}
             >
                 <div className="satff-code">
                     <p className="text-view-information">Staff Code</p>
-                    <p className="text-view-information" id="data-staff">{props.dataUser.staffCode}</p>
+                    <p className="text-view-information" id="data-staffcode">{props.dataUser.staffCode}</p>
                 </div>
                 <div className="full-name">
                     <p className="text-view-information">Full Name</p>
