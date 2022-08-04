@@ -61,15 +61,15 @@ export default function EditAsset(){
             .get(`https://asset-assignment-be.azurewebsites.net/api/asset/` + idAsset.id, config)
             .then((response) => {
                 // console.log(response.data);
-                const installedDate = formatDate.FormatDate(response.data.installedDate);
-                console.log(formatDate)
+                // const installedDate = formatDate.FormatDate(response.data.installedDate);
+                // console.log(formatDate)
                 setAsset(response.data);
                 form.setFieldsValue({
                     Name: response.data.assetName,
                     Category: response.data.categoryName,
                     Specification: response.data.specification,
                     State: response.data.state,
-                    InstalledDate: moment(installedDate,'DD/MM/YYYY')
+                    InstalledDate: moment(response.data.installedDate,'DD/MM/YYYY')
 
                 });
             })
@@ -92,7 +92,7 @@ export default function EditAsset(){
                 InstalledDate: fieldsValue["InstalledDate"].format("DD/MM/YYYY")
                 // 
             }
-        console.log(values)
+        // console.log(values)
         axios.put(`https://asset-assignment-be.azurewebsites.net/api/asset/` + idAsset.id,{
             specification: values.Specification,
             installedDate: values.InstalledDate,

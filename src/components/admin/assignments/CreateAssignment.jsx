@@ -515,7 +515,7 @@ export default function CreateAssignment() {
                                         style={{display: "block"}}
                                         popupStyle={{width: "25%", textAlign: "center"}}
                                         className="inputForm"
-                                        format="DD-MM-YYYY"
+                                        format="DD/MM/YYYY"
                                         value={submitData.assignedDate}
                                         defaultValue={() => {
                                             return moment(date.getDate().toString(),"DD/MM/YYYY")

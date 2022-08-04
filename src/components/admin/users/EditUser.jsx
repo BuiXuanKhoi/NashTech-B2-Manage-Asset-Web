@@ -42,19 +42,20 @@ export default function EditUser() {
             .get(`https://asset-assignment-be.azurewebsites.net/api/information?accountid=` + idInformation.id, config)
             .then((response) => {
                 // console.log(response.data);
-                const dateOfBirth = formatDate.FormatDate(response.data.dateOfBirth);
-                const joinedDate = formatDate.FormatDate(response.data.joinDate);
+                // const dateOfBirth = formatDate.FormatDate(response.data.dateOfBirth);
+                // const joinedDate = formatDate.FormatDate(response.data.joinDate);
                 setInformation(response.data);
                 form.setFieldsValue({
                     Firstname: response.data.firstName,
                     Lastname: response.data.lastName,
-                    DateOfBirth: moment(dateOfBirth,'DD/MM/YYYY'),
+                    DateOfBirth: moment(response.data.dateOfBirth,'DD/MM/YYYY'),
                     Gender: response.data.gender.toLowerCase(),
-                    JoinedDate: moment(joinedDate,'DD/MM/YYYY'),
+                    JoinedDate: moment(response.data.joinDate,'DD/MM/YYYY'),
                     Department: (response.data.staffCode).indexOf("SD") != -1 ? "SD" : "BPS",
                     Type: response.data.accountsRoleRoleid == 1 ? "Admin" : "Staff" 
 
                 });
+                console.log(response.data)
 
             })
             .catch((error) => {
@@ -86,7 +87,7 @@ export default function EditUser() {
         console.log(data);
         axios
             // .put(`http://localhost:8080/api/information/` + information.informationId, data, config)
-            .put(`https://asset-assignment-be.azurewebsites.net/api/information/` + idInformation.id, data, config)
+            .put(`https://asset-assignment-be.azurewebsites.net/api/information/` + information.informationId, data, config)
             .then((response) => {
                 setTimeout(() => {
                     setLoading({isLoading: false});
@@ -96,7 +97,7 @@ export default function EditUser() {
                 localStorage.setItem(
                     "user",
                     JSON.stringify({
-                        ...response.data
+                        ...response.data,
                     })
                 );
                 toast.success("Edit user successfully");
