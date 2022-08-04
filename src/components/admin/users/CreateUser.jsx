@@ -25,7 +25,6 @@ export default function CreateUser() {
         },
     };
     const onFinish = (fieldsValue) => {
-        console.log(fieldsValue);
         let values = {
             ...fieldsValue,
             DateOfBirth: fieldsValue["DateOfBirth"].format("DD/MM/YYYY"),
@@ -55,6 +54,12 @@ export default function CreateUser() {
                 }, 2000)
 
                 console.log(response.data);
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify({
+                        ...response.data
+                    })
+                );
                 toast.success("Create new user successfully");
                 navigate("/user");
 

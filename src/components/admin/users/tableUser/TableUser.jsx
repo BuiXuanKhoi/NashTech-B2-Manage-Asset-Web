@@ -38,7 +38,7 @@ function TableUser(props) {
         setModalConfirmDisable({...modalConfirmDisable, isOpen: !modalConfirmDisable.isOpen})
     }
     const loginState = JSON.parse(localStorage.getItem("loginState"));
-
+    const user = JSON.parse(localStorage.getItem("user"));
     const onDisable = (id) => {
         setId(id);
         console.log(idAccount)
@@ -67,23 +67,19 @@ function TableUser(props) {
             setDisplayList(props.listUser);
         }
 
-
     }, [props.listUser])
     useEffect(() => {
         if (props.listFilter !== null ) {
             setDisplayList(props.listFilter);
         } else
             setDisplayList([])
-
     }, [props.listFilter])
     useEffect(() => {
         if (props.listSort !== null) {
             setDisplayList(props.listSort);
         } else
             setDisplayList([])
-
     }, [props.listSort])
-
     return (
         <>
             {
@@ -111,6 +107,48 @@ function TableUser(props) {
                     <>
 
                         <tbody>
+                            {
+                                user === null ?
+                                <></>
+                                :
+                                <>
+                                {localStorage.removeItem('user')}
+                                <tr>
+                                    <td className="col staff_code_col"
+                                        onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(user)
+
+                                        }}
+                                        >
+                                        <p className="col staff_code_col">{user.staffCode}</p>
+                                    </td>
+                                    <td className="col full_name_col">
+                                        <p className="col full_name_col">{user.fullName}</p>
+                                    </td>
+                                    <td className="col username_col">
+                                        <p className="col username_col">{user.userName}</p>
+                                    </td>
+                                    <td className="col joined_day_col">
+                                        <p className="col joined_day_col">{(user.joinedDate.split("-")[2]).split("T")[0] +"/"+user.joinedDate.split("-")[1]+"/"+ user.joinedDate.split("-")[0] }</p>
+                                    </td>
+                                    <td className="col type_col">
+                                        <p className="col type_col">{user.roleName}</p>
+                                    </td>
+                                    <td className="btn_col pencil" onClick={() => {
+                                        navigate("/editUser/" + user.accountId);
+                                    }}>
+                                        <i className="fas fa-pencil-alt"></i>
+                                        <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                    </td>
+                                    <td className="btn_col delete">
+                                        <FontAwesomeIcon icon={faTimesCircle}
+                                                         style={{color: "red"}}
+                                                         onClick={() => onDisable(user.accountId)}></FontAwesomeIcon>
+                                    </td>
+                                </tr>
+                                </>
+                            }
                         {
                             displayList.map((item, index) => {
                                 return <tr key={index}>

@@ -38,7 +38,17 @@ function TableAsset(props) {
             }).catch((error) => {
                 console.log(error)
                 setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
-                setModalCannotDelete({...modalCannotDelete, isOpen: true})
+                if(error.response.data.statusCode === 404){
+                    toast.error("This asset has been deleted before")
+                    window.location.reload();
+                }
+                else if(error.response.data.statusCode === 405){
+                    setModalCannotDelete({...modalCannotDelete, isOpen: true})
+                }
+                else{
+                    toast.error("Delete "+assetName+" failed")
+                    window.location.reload();
+                }
             })
         }
    

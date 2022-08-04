@@ -93,6 +93,12 @@ export default function EditUser() {
                 }, 2000)
 
                 console.log(response.data);
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify({
+                        ...response.data
+                    })
+                );
                 toast.success("Edit user successfully");
                 navigate("/user");
 

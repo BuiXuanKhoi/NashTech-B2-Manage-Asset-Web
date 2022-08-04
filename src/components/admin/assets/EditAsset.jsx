@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { Dropdown, Menu, Space } from 'antd';
 import { useRef } from "react";
 import moment from 'moment'
-import toast from 'react-hot-toast';
+import toast, {Toaster} from "react-hot-toast";
 import * as formatDate from "../shared/formatdate"
 let index = 0;
 export default function EditAsset(){
@@ -72,10 +72,14 @@ export default function EditAsset(){
                     InstalledDate: moment(installedDate,'DD/MM/YYYY')
 
                 });
-
             })
             .catch((error) => {
-                toast.error("Load information failed");
+                console.log(error)
+                if(error.response.data.statusCode ===404){
+                    toast.error("This asset not found");
+                }
+                else toast.error("Load information failed");
+                navigate("/asset")
             });
     },[])
 
@@ -101,7 +105,13 @@ export default function EditAsset(){
             setTimeout(() => {
                 setLoading({isLoading: false});
             }, 2000)
-            toast.success("Edit asset success");
+            localStorage.setItem(
+                "asset",
+                JSON.stringify({
+                    ...response.data
+                })
+            );
+            toast.success("Edit asset successfully");
             navigate("/asset");
             console.log(response.data);
 
@@ -142,7 +152,7 @@ export default function EditAsset(){
 
 
 
-    return (<h1>
+    return (<>
         <Row>
             <Col span={12} offset={6}>
                 <div className="content">
@@ -368,7 +378,18 @@ export default function EditAsset(){
                 </div>
             </Col>
         </Row>
-    </h1>);
+        <Toaster
+                toastOptions={{
+                    className: 'toast',
+                    style: {
+                        border: '1px solid #713200',
+                        padding: '36px',
+                        color: '#713200',
+
+                    },
+                }}
+            />
+    </>);
 
 
 // 

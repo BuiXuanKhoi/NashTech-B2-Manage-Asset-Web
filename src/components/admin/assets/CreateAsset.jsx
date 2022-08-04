@@ -157,6 +157,12 @@ export default function CreateAsset(){
                 setTimeout(() => {
                     setLoading({isLoading: false});
                 }, 2000)
+                localStorage.setItem(
+                    "asset",
+                    JSON.stringify({
+                        ...response.data
+                    })
+                );
                 toast.success("Create a new asset successfully");
                 console.log(response.data);
                 navigate("/asset");
