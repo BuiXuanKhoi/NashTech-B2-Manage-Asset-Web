@@ -9,6 +9,7 @@ import _ from "lodash";
 import {ReloadOutlined, CloseCircleOutlined, LoadingOutlined} from "@ant-design/icons";
 import ViewInformation from "../../users/viewInformation/ViewInformation";
 import ViewInformationAssignment from "../viewAssignments/ViewInforAssignment";
+import { useNavigate } from "react-router-dom";
 
 
 function TableAssignment(props) {
@@ -20,8 +21,9 @@ function TableAssignment(props) {
     const setIsOpen = () => {
         setModal({...isModal, isOpen: !isModal.isOpen})
     }
+    const navigate = useNavigate();
     const [dataUser, setDataUser] = useState(false)
-
+    const assignment = JSON.parse(localStorage.getItem("assignment"));
     const [wating,setWaiting] = useState("WAITING FOR ACCEPTANCE")
 
 
@@ -78,6 +80,124 @@ function TableAssignment(props) {
                     <>
 
                         <tbody>
+                            {
+                                assignment === null ?
+                                <></>
+                                :
+                                <>
+                                {localStorage.removeItem('assignment')}
+                                <tr >
+                                    <td className="col_assignment col_no"   onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(assignment)
+
+                                    }}
+                                    >
+                                        <p className="col no_col">{assignment.assignmentId}
+                                        </p>
+                                    </td>
+                                    <td className="col_assignment col_assetCode" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(assignment)
+
+                                    }}>
+                                        <p className="col assetCode_col">{assignment.assetCode}
+                                        </p>
+                                    </td>
+                                    <td className="col_assignment col_assetName" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(assignment)
+
+                                    }}>
+                                        <p className="col assetName_col">{assignment.assetName}
+                                        </p>
+                                    </td>
+                                    <td className="col_assignment col_assignedTo" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(assignment)
+
+                                    }}>
+                                        <p className="col assignedTo_col">{assignment.assignedTo}</p>
+                                    </td>
+                                    <td className="col_assignment col_assignmentBy" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(assignment)
+
+                                    }}>
+                                        <p className="col assignmentBy_col">{assignment.assignedBy}
+                                        </p>
+                                    </td>
+                                    <td className="col_assignment col_assignmentDate" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(assignment)
+
+                                    }}>
+                                        <p className="col ssignmentDate_col"> {(assignment.assignedDate)}
+                                        </p>
+                                    </td>
+                                    {
+                                        assignment.state === "WAITING_FOR_ACCEPTANCE" ?
+                                            <>
+                                                <td className="col_assignment col_state" style={{width:"17% !importance"}} onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(assignment)
+
+                                                }}>
+                                                    <p className="col state_col">WAITING FOR ACCEPTANCE</p>
+                                                </td>
+                                            </>
+                                            :
+                                            <>
+                                                <td className="col_assignment col_state" onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(assignment)
+
+                                                }}>
+                                                    <p className="col state_col">{assignment.state} </p>
+                                                </td>
+
+                                            </>
+
+                                    }
+
+
+
+                                    {
+                                        assignment.state === "WAITING_FOR_ACCEPTANCE" ?
+                                            <>
+                                                <td className="btn_col_assignment edit " onClick={() => {
+                                                        navigate("/editAssignment/" + assignment.assignmentId);
+                                                    }}>
+                                                    <i className="fas fa-pencil-alt"></i>
+                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                </td>
+                                                <td className="btn_col_assignment delete ">
+                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
+                                                </td>
+                                                <td className="btn_col_assignment reload ">
+                                                    <ReloadOutlined style={{color: "black"}}/>
+                                                </td>
+
+                                            </>
+                                            :
+                                            <>
+                                                <td className="btn_col_assignment edit">
+                                                    <i className="fas fa-pencil-alt"></i>
+                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                </td>
+                                                <td className="btn_col_assignment delete">
+                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                </td>
+                                                <td className="btn_col_assignment reload">
+                                                    <ReloadOutlined style={{color: "blue"}}/>
+                                                </td>
+
+                                            </>
+
+                                    }
+                                </tr>
+                                </>
+                            }
                         {
 
                             displayList.map((item, index) => {
@@ -160,7 +280,9 @@ function TableAssignment(props) {
                                     {
                                         item.state === "WAITING_FOR_ACCEPTANCE" ?
                                             <>
-                                                <td className="btn_col_assignment edit ">
+                                                <td className="btn_col_assignment edit " onClick={() => {
+                                                        navigate("/editAssignment/" + item.assignmentId);
+                                                    }}>
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                 </td>

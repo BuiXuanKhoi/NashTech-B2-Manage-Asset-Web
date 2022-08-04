@@ -86,7 +86,7 @@ export default function EditUser() {
         console.log(data);
         axios
             // .put(`http://localhost:8080/api/information/` + information.informationId, data, config)
-            .put(`https://asset-assignment-be.azurewebsites.net/api/information/` + information.informationId, data, config)
+            .put(`https://asset-assignment-be.azurewebsites.net/api/information/` + idInformation.id, data, config)
             .then((response) => {
                 setTimeout(() => {
                     setLoading({isLoading: false});

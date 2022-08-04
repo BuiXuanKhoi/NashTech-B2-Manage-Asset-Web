@@ -9,6 +9,7 @@ import {CalendarFilled, CloseCircleOutlined, ReloadOutlined} from "@ant-design/i
 import axios from "axios";
 import toast, {Toaster} from "react-hot-toast";
 import TableAssignment from "./tableAssignments/TableAssignment";
+import { useNavigate } from "react-router-dom";
 
 export default function ManageAssignment() {
     const checkList = ["All", "Accepted", "Decline", "Waiting for acceptance"];
@@ -29,6 +30,7 @@ export default function ManageAssignment() {
     const config = {
         headers: {Authorization: `Bearer ${user.token}`}
     };
+    const navigate = useNavigate();
     const [checked, setChecked] = useState([]);
     const [totalPage, setTotalPage] = useState(0);
     const [listAssignmentSort, setListAssignmentSort] = useState([]);
@@ -38,7 +40,7 @@ export default function ManageAssignment() {
 
     const getListAssignment = () => {
         axios
-            .get("http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED", config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED", config)
             .then(function (response) {
                 setListAssignment(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -62,25 +64,25 @@ export default function ManageAssignment() {
         if (checked.length !== 0) {
             if (checked.length === 1) {
                 if (checked[0] === "Accepted") {
-                    link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
+                    link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
                 } else if (checked[0] === "Decline") {
-                    link = "http://localhost:8080/api/assignment/list?fl1=DECLINE&fl2=DECLINE&fl3=DECLINE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
+                    link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=DECLINE&fl2=DECLINE&fl3=DECLINE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
                 } else if (checked[0] === "Waiting_for_acceptance") {
-                    link = "http://localhost:8080/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=WAITING_FOR_ACCEPTANCE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+                    link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=WAITING_FOR_ACCEPTANCE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 } else {
-                    link = "http://localhost:8080/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+                    link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 }
             } else if (checked.length === 2) {
                 if (checked[0] === "All" || checked[1] === "All")
-                    link = "http://localhost:8080/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+                    link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 else {
-                    link = "http://localhost:8080/api/assignment/list?fl1=" + checked[0].toUpperCase() + "&fl2=" + checked[0].toUpperCase() + "&fl3=" + checked[1].toUpperCase() + "&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+                    link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=" + checked[0].toUpperCase() + "&fl2=" + checked[0].toUpperCase() + "&fl3=" + checked[1].toUpperCase() + "&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 }
             } else {
-                link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=DECLINE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+                link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=DECLINE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
             }
         } else {
-            link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+            link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
         }
 
         axios
@@ -104,11 +106,11 @@ export default function ManageAssignment() {
     function findListAssignmentToSort(page, sort, type1, type2, type3, day, namesearch, searchDay) {
         let link = "";
         if (type1 === null && type2 === null && type3 === null && day === null && namesearch === null)
-            link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay;
+            link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay;
         else if (namesearch !== null && type1 === null && type2 === null && type3 === null && day === null)
-            link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&code=" + namesearch + "&d=" + searchDay
+            link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&code=" + namesearch + "&d=" + searchDay
         else
-            link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay
+            link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay
         axios
             .get(link, config)
             .then(function (response) {
@@ -213,7 +215,7 @@ export default function ManageAssignment() {
 
     function getListAssignmentPageNoFilter(page, sort, searchDay, nameSearch) {
         axios
-            .get("http://localhost:8080/api/assignment/list?page=" + page + "&sort=" + sort + "&fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED" + "&d=" + searchDay + "&code=" + nameSearch, config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/assignment/list?page=" + page + "&sort=" + sort + "&fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED" + "&d=" + searchDay + "&code=" + nameSearch, config)
             .then(function (response) {
                 setListAssignment(response.data.content)
                 setTotalPage(response.data.totalPages)
@@ -315,7 +317,7 @@ export default function ManageAssignment() {
     return (
         <>
             <div className="title">
-                <h2 style={{color: "red", textAlign: "inherit", fontWeight: "700"}}>User List</h2>
+                <h2 style={{color: "red", textAlign: "inherit", fontWeight: "700"}}>Assignment List</h2>
             </div>
             <div className="user-list-toolbar-wrapper">
                 <div className="user-list-toolbar">
@@ -389,7 +391,9 @@ export default function ManageAssignment() {
                                 <FontAwesomeIcon icon={faSearch}/></button>
                         </div>
                         <div id="create-btn-section">
-                            <button className="btn-createUser">
+                            <button className="btn-createUser" onClick={()=>{
+                                    navigate("/createAssignment");
+                            }}>
                                 <p className="btn_create_text"> Create new assignment</p>
                             </button>
                         </div>

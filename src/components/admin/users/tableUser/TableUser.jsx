@@ -123,16 +123,28 @@ function TableUser(props) {
                                         >
                                         <p className="col staff_code_col">{user.staffCode}</p>
                                     </td>
-                                    <td className="col full_name_col">
-                                        <p className="col full_name_col">{user.fullName}</p>
+                                    <td className="col full_name_col"
+                                        onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(user)}}>
+                                        <p className="col full_name_col">{user.firstName + " " + user.lastName}</p>
                                     </td>
-                                    <td className="col username_col">
+                                    <td className="col username_col"
+                                        onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(user)}}>
                                         <p className="col username_col">{user.userName}</p>
                                     </td>
-                                    <td className="col joined_day_col">
-                                        <p className="col joined_day_col">{(user.joinedDate.split("-")[2]).split("T")[0] +"/"+user.joinedDate.split("-")[1]+"/"+ user.joinedDate.split("-")[0] }</p>
+                                    <td className="col joined_day_col"
+                                        onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(user)}}>
+                                        <p className="col joined_day_col">{user.joinDate}</p>
                                     </td>
-                                    <td className="col type_col">
+                                    <td className="col type_col"
+                                        onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(user)}}>
                                         <p className="col type_col">{user.roleName}</p>
                                     </td>
                                     <td className="btn_col pencil" onClick={() => {
@@ -179,7 +191,7 @@ function TableUser(props) {
                                         setDataUser(item)
 
                                     }}>
-                                        <p className="col joined_day_col">{(item.joinedDate.split("-")[2]).split("T")[0] +"/"+item.joinedDate.split("-")[1]+"/"+ item.joinedDate.split("-")[0] }</p>
+                                        <p className="col joined_day_col">{item.joinedDate}</p>
                                     </td>
                                     <td className="col type_col"  onClick={() => {
                                         setModal({...isModal, isOpen: true});

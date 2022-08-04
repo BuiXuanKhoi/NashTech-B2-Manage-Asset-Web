@@ -50,7 +50,7 @@ export default function ViewInformation(props){
                 </div>
                 <div className="day-of-birth">
                     <p className="text-view-information">Day of birth</p>
-                    <p className="text-view-information" id="data-dayofbirth" style={{paddingLeft:"48px"}}>{(props.dataUser.dateOfBirth.split("-")[2]).split("T")[0] +"/"+props.dataUser.dateOfBirth.split("-")[1]+"/"+ props.dataUser.dateOfBirth.split("-")[0]}</p>
+                    <p className="text-view-information" id="data-dayofbirth" style={{paddingLeft:"48px"}}>{props.dataUser.dateOfBirth}</p>
                 </div>
                 <div className="gender">
                     <p className="text-view-information">Gender</p>
@@ -58,7 +58,7 @@ export default function ViewInformation(props){
                 </div>
                 <div className="join-date">
                     <p className="text-view-information">Joined Date</p>
-                    <p className="text-view-information" id="data-joindate" style={{paddingLeft:"50px"}}>{(props.dataUser.joinedDate.split("-")[2]).split("T")[0] +"/"+props.dataUser.joinedDate.split("-")[1]+"/"+ props.dataUser.joinedDate.split("-")[0]}</p>
+                    <p className="text-view-information" id="data-joindate" style={{paddingLeft:"50px"}}>{props.dataUser.joinedDate}</p>
                 </div>
                 <div className="type">
                     <p className="text-view-information">Type</p>

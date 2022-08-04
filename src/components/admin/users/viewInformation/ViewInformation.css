@@ -23,6 +23,6 @@
     padding-top: 10px;
     color: #8c8989;
 }
-#data-staff,#data-fullname,#data-username,#data-dayofbirth,#data-gender,#data-joindate,#data-type,#data-location{
+#data-staffcode,#data-fullname,#data-username,#data-dayofbirth,#data-gender,#data-joindate,#data-type,#data-location{
     padding-left: 60px;
 }

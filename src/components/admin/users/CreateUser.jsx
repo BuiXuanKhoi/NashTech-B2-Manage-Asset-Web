@@ -42,7 +42,7 @@ export default function CreateUser() {
                 firstName: values.Firstname.trim(),
                 lastName: values.Lastname.trim(),
                 join: values.JoinedDate,
-                role: values.Type[0],
+                roleName: values.Type[0],
                 birth: values.DateOfBirth,
                 gender: values.Gender,
                 prefix: values.Department,

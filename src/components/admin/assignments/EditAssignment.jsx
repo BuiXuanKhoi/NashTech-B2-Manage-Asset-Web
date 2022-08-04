@@ -79,7 +79,7 @@ export default function EditAssignment() {
     const getListUser = () => {
         axios
             // .get(`https://asset-assignment-be.azurewebsites.net/api/information/all`,config)
-            .get(`https://asset-assignment-be.azurewebsites.net/api/information/all`,config)
+            .get(`https://asset-assignment-be.azurewebsites.net/api/information/location?accountid=` + loginState.id,config)
             .then(response => {
                 let respData = response.data
                 respData.forEach((element) => {
@@ -94,7 +94,7 @@ export default function EditAssignment() {
     const getListAsset = () => {
         axios
             // .get(`https://asset-assignment-be.azurewebsites.net/api/asset/all`, config)
-            .get(`https://asset-assignment-be.azurewebsites.net/api/asset/all`, config)
+            .get(`https://asset-assignment-be.azurewebsites.net/api/asset/available`, config)
             .then(response => {
                     setAssetData(response.data);
                 }
@@ -138,6 +138,7 @@ export default function EditAssignment() {
             accountId: submitData.assignedId,
             assetId: submitData.assetId
         };
+        console.log(submitData);
         axios.patch(`https://asset-assignment-be.azurewebsites.net/api/assignment/`+idAssignment.id, {
             assignedId: submitData.assignedId,
             assetId: submitData.assetId,
@@ -146,7 +147,12 @@ export default function EditAssignment() {
              
         },config)
             .then((response) => {
-
+                localStorage.setItem(
+                    "assignment",
+                    JSON.stringify({
+                        ...response.data
+                    })
+                );
                 toast.success("Edit assignment successfully");
                 navigate("/assignment");
                 console.log(response)
@@ -488,14 +494,15 @@ export default function EditAssignment() {
                                             pattern: new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
                                             message: "Note is not allowed to contain Vietnamese characters"
                                         },
-                                        {whitespace: true, message: 'Note can not be empty'},
+                                        {whitespace: true, message: 'Note must be required'},
                                         {max: 500, message: 'Note must be less than 500 characters long'}
                                     ]}
                                 >
                                     <Input.TextArea
                                         disabled={isLoading.isLoading === true}
                                         className="inputForm"
-                                        rows="5" cols="20"
+                                        maxLength={501}
+                                        rows="3" cols="20"
                                     />
                                 </Form.Item>
                             </Form.Item>

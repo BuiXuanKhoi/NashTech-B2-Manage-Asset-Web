@@ -152,10 +152,14 @@ export default function CreateAssignment() {
                     assetName: "",
                     fullName: "",
                 });
-
-                toast.success("Create assignment success");
+                localStorage.setItem(
+                    "assignment",
+                    JSON.stringify({
+                        ...response.data
+                    })
+                );
+                toast.success("Create assignment successfully");
                 navigate("/assignment");
-                console.log(response)
             })
             .catch((err) => {
                 toast.error("Create assignment failed");
@@ -526,7 +530,11 @@ export default function CreateAssignment() {
                                 <Form.Item
                                     name="note"
                                     rules={[
-                                        {whitespace: true, message: 'Note can not be empty'},
+                                        {
+                                            pattern: new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
+                                            message: "Note is not allowed to contain Vietnamese characters"
+                                        },
+                                        {whitespace: true, message: 'Note must be required'},
                                         {max: 500, message: 'Note must be less than 500 characters long'}
                                     ]}
                                 >
@@ -534,7 +542,9 @@ export default function CreateAssignment() {
                                         disabled={isLoading.isLoading === true}
                                         className="inputForm"
                                         value={submitData.note}
+                                        maxLength={501}
                                         onChange={handleNoteChange}
+                                        rows="3" cols="20"
                                     />
                                 </Form.Item>
                             </Form.Item>

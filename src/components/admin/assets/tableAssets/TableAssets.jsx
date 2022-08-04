@@ -12,7 +12,7 @@ import toast, {Toaster} from "react-hot-toast";
 
 
 function TableAsset(props) {
-    
+    const asset = JSON.parse(localStorage.getItem("asset"));
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const [displayList, setDisplayList] = useState(props.listAsset);
     const navigate = useNavigate();
@@ -60,6 +60,7 @@ function TableAsset(props) {
 
     return (
         <>
+        
             {
 
                 displayList.length === 0 ?
@@ -71,6 +72,62 @@ function TableAsset(props) {
                     <>
 
                         <tbody>
+                            {
+                                asset === null ?
+                                <></>
+                                :
+                                <>
+                                    {localStorage.removeItem('asset')}
+                                    <tr >
+                                    <td className="col_asset col_assetCode_asset">
+                                        <p className="col  assetCode_asset_col">{asset.assetCode}
+                                        </p>
+                                    </td>
+                                    <td className="col_asset col_assetName">
+                                        <p className="col assetName_col">{asset.assetName}
+                                        </p>
+                                    </td>
+                                    <td className="col_asset col_assetCategory">
+                                        <p className="col assetCategory_col">{asset.categoryName}
+                                        </p>
+                                    </td>
+                                    <td className="col_asset col_state">
+                                        <p className="col state_col">{asset.state}</p>
+                                    </td>
+                                    {
+                                        asset.state === "ASSIGNED" ?
+                                            <>
+                                                <td className="btn_col_assignment edit ant-pagination-disabled">
+                                                    <i className="fas fa-pencil-alt"></i>
+                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                </td>
+                                                <td className="btn_col_assignment delete ant-pagination-disabled">
+                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
+                                                </td>
+
+                                            </>
+                                            :
+                                            <>
+                                                <td className="btn_col_assignment edit" onClick={() => {
+                                        navigate("/editAsset/" + asset.assetId)}}>
+                                                    <i className="fas fa-pencil-alt"></i>
+                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                </td>
+                                                <td className="btn_col_assignment delete" onClick={()=>{
+                                                    setId(asset.assetId);
+                                                    setAssetName(asset.assetName)
+                                                    console.log(id);
+                                                    setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
+                                                }}>
+                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                </td>
+
+                                            </>
+
+                                    }
+                                </tr>
+                                </>
+                            }
                         {
 
                             displayList.map((item, index) => {
