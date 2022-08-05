@@ -155,8 +155,13 @@ function TableAsset(props) {
                             }
                         {
 
-                            displayList.map((item, index) => {
-                                return <tr key={index}>
+                            displayList.map((item, index) => (
+                                <>
+                                {
+                                    asset !== null && asset.assetId === item.assetId ?
+                                    <></>
+                                    :
+                                     <tr key={index}>
                                     <td className="col_asset col_assetCode_asset">
                                         <p className="col  assetCode_asset_col">{item.assetCode}
                                         </p>
@@ -211,9 +216,9 @@ function TableAsset(props) {
 
                                     }
                                 </tr>
-                            })
-
-                        }
+                                }
+                                </>
+                            ))}
                         </tbody>
                     </>
             }

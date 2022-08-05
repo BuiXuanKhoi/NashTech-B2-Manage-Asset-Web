@@ -50,7 +50,7 @@ export default function EditUser() {
                     Lastname: response.data.lastName,
                     DateOfBirth: moment(response.data.dateOfBirth,'DD/MM/YYYY'),
                     Gender: response.data.gender.toLowerCase(),
-                    JoinedDate: moment(response.data.joinDate,'DD/MM/YYYY'),
+                    JoinedDate: moment(response.data.joinedDate,'DD/MM/YYYY'),
                     Department: (response.data.staffCode).indexOf("SD") != -1 ? "SD" : "BPS",
                     Type: response.data.accountsRoleRoleid == 1 ? "Admin" : "Staff" 
 
@@ -76,7 +76,7 @@ export default function EditUser() {
             // informationId: information.informationId,
                 firstName: information.firstName,
                 lastName: information.lastName,
-                joinDate: values.JoinedDate,
+                joinedDate: values.JoinedDate,
                 roleId: values.Type =="Admin" ? 1 : 2,
                 dateOfBirth: values.DateOfBirth,
                 gender: values.Gender,

@@ -200,8 +200,13 @@ function TableAssignment(props) {
                             }
                         {
 
-                            displayList.map((item, index) => {
-                                return <tr key={index}>
+                            displayList.map((item, index) => (
+                                <>
+                                {
+                                    assignment !== null && assignment.assignmentId === item.assignmentId ?
+                                    <></>
+                                    :
+                                    <tr key={index}>
                                     <td className="col_assignment col_no"   onClick={() => {
                                         setModal({...isModal, isOpen: true});
                                         setDataUser(item)
@@ -311,8 +316,9 @@ function TableAssignment(props) {
 
                                     }
                                 </tr>
-                            })
-                        }
+                            } 
+                            </>
+                        ))}
                         </tbody>
                     </>
             }
