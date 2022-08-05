@@ -27,6 +27,10 @@ p.assetName_col, p.assignedTo_col, p.assignmentBy_col, p.assignmentDate_col, p.s
 .dropdown-content-asset ul{
     padding-left: 10px !important;
 }
+.dropdown-content-category ul{
+    padding-left: 10px !important;
+}
+
 .ant-pagination-next :disabled {
     color: black !important;
 }
@@ -83,16 +87,9 @@ p.assetName_col, p.assignedTo_col, p.assignmentBy_col, p.assignmentDate_col, p.s
 
 }
 
-
-/*input[type="checkbox"] {*/
-/*    text-align: left;*/
-/*    margin-top: 0.3rem;*/
-/*    margin-bottom: 0rem;*/
-/*    accent-color: white;*/
-/*    caret-color: #CF2338;*/
-/*    transform: scale(1.25);*/
-
-/*}*/
+.dropdown-toggle:hover .dropdown-content-category {
+    height: unset !important;
+}
 input[type="checkbox"]:checked + label::after {
     content: '';
     position: absolute;
@@ -186,6 +183,15 @@ input:focus {
     top: 3px;
 }
 
+.dropdown-toggle:hover .dropdown-content-category {
+    display: block;
+    width: 12.25rem;
+    height: 11.5rem;
+    background-color: #F5F5F5;
+    position: relative;
+    top: 3px;
+}
+
 .dropdown-header {
     display: flex;
     flex-direction: row;
@@ -211,6 +217,17 @@ input:focus {
 
 
 .dropdown-content-asset {
+    text-align: left ;
+
+    display: none;
+    border: 0.75px solid #B5B5B5;
+    width: 7rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    opacity: 1;
+}
+
+.dropdown-content-category {
     text-align: left ;
 
     display: none;

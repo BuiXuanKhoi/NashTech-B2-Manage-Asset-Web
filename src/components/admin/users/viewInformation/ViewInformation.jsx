@@ -42,7 +42,7 @@ export default function ViewInformation(props){
                 </div>
                 <div className="full-name">
                     <p className="text-view-information">Full Name</p>
-                    <p className="text-view-information" id="data-fullname">{props.dataUser.lastName+" " + props.dataUser.firstName}</p>
+                    <p className="text-view-information" id="data-fullname">{props.dataUser.firstName+" " + props.dataUser.lastName}</p>
                 </div>
                 <div className="username">
                     <p className="text-view-information">Username</p>

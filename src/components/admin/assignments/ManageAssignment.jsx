@@ -140,47 +140,47 @@ export default function ManageAssignment() {
         switch (col) {
             case 'aa': {
                 setSort({...sort, name: "aa"})
-                listCheckSortColumn("ad", nameSearch);
+                listCheckSortColumn("aa", nameSearch);
                 break;
             }
             case 'ad': {
                 setSort({...sort, name: "ad"})
-                listCheckSortColumn("aa", nameSearch);
+                listCheckSortColumn("ad", nameSearch);
                 break;
             }
             case 'ca': {
                 setSort({...sort, name: "ca"})
-                listCheckSortColumn("cd", nameSearch);
+                listCheckSortColumn("ca", nameSearch);
                 break;
             }
             case 'cd': {
                 setSort({...sort, name: "cd"})
-                listCheckSortColumn("ca", nameSearch);
+                listCheckSortColumn("cd", nameSearch);
                 break;
             }
             case 'nd': {
                 setSort({...sort, name: "nd"})
-                listCheckSortColumn("na", nameSearch);
+                listCheckSortColumn("nd", nameSearch);
                 break;
             }
             case 'na': {
                 setSort({...sort, name: "na"})
-                listCheckSortColumn("nd", nameSearch);
+                listCheckSortColumn("na", nameSearch);
                 break;
             }
             case 'td': {
                 setSort({...sort, name: "td"})
-                listCheckSortColumn("ta", nameSearch);
+                listCheckSortColumn("td", nameSearch);
                 break;
             }
             case 'ta': {
                 setSort({...sort, name: "ta"})
-                listCheckSortColumn("td", nameSearch);
+                listCheckSortColumn("ta", nameSearch);
                 break;
             }
             case 'bd': {
                 setSort({...sort, name: "bd"})
-                listCheckSortColumn("ba", nameSearch);
+                listCheckSortColumn("bd", nameSearch);
                 break;
             }
             case 'ba': {
@@ -190,28 +190,29 @@ export default function ManageAssignment() {
             }
             case 'dd': {
                 setSort({...sort, name: "dd"})
-                listCheckSortColumn("da", nameSearch);
+                listCheckSortColumn("dd", nameSearch);
                 break;
             }
             case 'da': {
                 setSort({...sort, name: "da"})
-                listCheckSortColumn("dd", nameSearch);
+                listCheckSortColumn("da", nameSearch);
                 break;
             }
             case 'ed': {
                 setSort({...sort, name: "ed"})
-                listCheckSortColumn("ea", nameSearch);
+                listCheckSortColumn("ed", nameSearch);
                 break;
             }
             case 'ea': {
                 setSort({...sort, name: "ea"})
-                listCheckSortColumn("ed", nameSearch);
+                listCheckSortColumn("ea", nameSearch);
                 break;
             }
             default:
                 break;
         }
     }
+
 
     function getListAssignmentPageNoFilter(page, sort, searchDay, nameSearch) {
         axios
@@ -271,8 +272,6 @@ export default function ManageAssignment() {
     };
 
     const onChangeDay = (date, dateString) => {
-        // if (new Date() - date < 0)
-        //     return;
         if (date === null) {
             setCheckFilter(true)
             setSearchDay("")
@@ -290,12 +289,6 @@ export default function ManageAssignment() {
             getListAssignmentPageNoFilter(0, sort.name, dateString, nameSearch);
         }
 
-    }
-    const onFinish = (fieldsValue) => {
-        const values = {
-            ...fieldsValue,
-            DateOfBirth: fieldsValue["dayAssigment"].format("DD/MM/YYYY"),
-        };
     }
     const findListAssigmentSearch = () => {
         if (nameSearch.length > 20)
@@ -361,10 +354,11 @@ export default function ManageAssignment() {
                             style={{
                                 paddingTop: "0",
                                 paddingBottom: "0",
-                                paddingLeft: "0",
+                                paddingLeft: "10px",
                                 color: "black",
                                 border: "0.75px solid #B5B5B5",
-                                borderRadius: " 0.2rem"
+                                borderRadius: " 0.2rem",
+                                paddingRight: "10px"
                             }}
                             suffixIcon={<CalendarFilled
                                 style={{color: "black", background: " #d9363e !important"}}/>}
@@ -433,19 +427,19 @@ export default function ManageAssignment() {
                                                         </p>
                                                     </th>
                                                     <th className="col_assignment col_assetCode">
-                                                        <p className="col_1 assetCode_col">Asset Code
+                                                        <p className="col_1 asset_code_col">Asset Code
                                                             {
-                                                                sort.name === "ca" ?
+                                                                sort.name === "cd" ?
                                                                     <FontAwesomeIcon
                                                                         id="up_Assetcode"
-                                                                        onClick={() => getListAssignmentSort("cd")}
+                                                                        onClick={() => getListAssignmentSort("ca")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortUp}>`
                                                                     </FontAwesomeIcon>
                                                                     :
                                                                     <FontAwesomeIcon
                                                                         id="down_Assetcode"
-                                                                        onClick={() => getListAssignmentSort("ca")}
+                                                                        onClick={() => getListAssignmentSort("cd")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortDown}>`
                                                                     </FontAwesomeIcon>
@@ -454,19 +448,19 @@ export default function ManageAssignment() {
                                                         </p>
                                                     </th>
                                                     <th className="col_assignment col_assetName">
-                                                        <p className="assetName_col">Asset Name
+                                                        <p className="asset_name_col">Asset Name
                                                             {
-                                                                sort.name === "na" ?
+                                                                sort.name === "nd" ?
                                                                     <FontAwesomeIcon
                                                                         id="up_Assetname"
-                                                                        onClick={() => getListAssignmentSort("nd")}
+                                                                        onClick={() => getListAssignmentSort("na")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortUp}>`
                                                                     </FontAwesomeIcon>
                                                                     :
                                                                     <FontAwesomeIcon
                                                                         id="down_Assetname"
-                                                                        onClick={() => getListAssignmentSort("na")}
+                                                                        onClick={() => getListAssignmentSort("nd")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortDown}>`
                                                                     </FontAwesomeIcon>
@@ -475,19 +469,19 @@ export default function ManageAssignment() {
                                                         </p>
                                                     </th>
                                                     <th className="col_assignment col_assignedTo">
-                                                        <p className="assignedTo_col">Assigned to
+                                                        <p className="assigned_to_col">Assigned to
                                                             {
-                                                                sort.name === "ta" ?
+                                                                sort.name === "td" ?
                                                                     <FontAwesomeIcon
                                                                         id="up_Assignedto"
-                                                                        onClick={() => getListAssignmentSort("td")}
+                                                                        onClick={() => getListAssignmentSort("ta")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortUp}>`
                                                                     </FontAwesomeIcon>
                                                                     :
                                                                     <FontAwesomeIcon
                                                                         id="down_Assignedto"
-                                                                        onClick={() => getListAssignmentSort("ta")}
+                                                                        onClick={() => getListAssignmentSort("td")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortDown}>`
                                                                     </FontAwesomeIcon>
@@ -495,19 +489,19 @@ export default function ManageAssignment() {
                                                             }</p>
                                                     </th>
                                                     <th className="col_assignment col_assignmentBy">
-                                                        <p className="assignmentBy_col">Assigned by
+                                                        <p className="assigned_by_col">Assigned by
                                                             {
-                                                                sort.name === "ba" ?
+                                                                sort.name === "bd" ?
                                                                     <FontAwesomeIcon
                                                                         id="up_Assignedby"
-                                                                        onClick={() => getListAssignmentSort("bd")}
+                                                                        onClick={() => getListAssignmentSort("ba")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortUp}>`
                                                                     </FontAwesomeIcon>
                                                                     :
                                                                     <FontAwesomeIcon
                                                                         id="down_Assignedby"
-                                                                        onClick={() => getListAssignmentSort("ba")}
+                                                                        onClick={() => getListAssignmentSort("bd")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortDown}>`
                                                                     </FontAwesomeIcon>
@@ -516,19 +510,19 @@ export default function ManageAssignment() {
                                                         </p>
                                                     </th>
                                                     <th className="col_assignment col_assignmentDate">
-                                                        <p className="assignmentDate_col">Assigned Date
+                                                        <p className="assigned_date_col">Assigned Date
                                                             {
-                                                                sort.name === "da" ?
+                                                                sort.name === "dd" ?
                                                                     <FontAwesomeIcon
                                                                         id="up_AssignedDate"
-                                                                        onClick={() => getListAssignmentSort("dd")}
+                                                                        onClick={() => getListAssignmentSort("da")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortUp}>`
                                                                     </FontAwesomeIcon>
                                                                     :
                                                                     <FontAwesomeIcon
                                                                         id="down_AssignedDate"
-                                                                        onClick={() => getListAssignmentSort("da")}
+                                                                        onClick={() => getListAssignmentSort("dd")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortDown}>`
                                                                     </FontAwesomeIcon>
@@ -539,17 +533,17 @@ export default function ManageAssignment() {
                                                     <th className="col_assignment col_state">
                                                         <p className="state_col">State
                                                             {
-                                                                sort.name === "ea" ?
+                                                                sort.name === "ed" ?
                                                                     <FontAwesomeIcon
                                                                         id="up_State"
-                                                                        onClick={() => getListAssignmentSort("ed")}
+                                                                        onClick={() => getListAssignmentSort("ea")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortUp}>`
                                                                     </FontAwesomeIcon>
                                                                     :
                                                                     <FontAwesomeIcon
                                                                         id="down_State"
-                                                                        onClick={() => getListAssignmentSort("ea")}
+                                                                        onClick={() => getListAssignmentSort("ed")}
                                                                         style={{marginLeft: "0.3rem"}}
                                                                         icon={faSortDown}>`
                                                                     </FontAwesomeIcon>
@@ -565,6 +559,7 @@ export default function ManageAssignment() {
                                                          checkSearch ={checkFilter}/>
 
                                     </table>
+
                                 </>
                             </div>
 

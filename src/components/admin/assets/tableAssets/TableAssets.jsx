@@ -51,23 +51,48 @@ function TableAsset(props) {
                 }
             })
         }
-   
 
     useEffect(() => {
-        setDisplayList(props.listAsset);
+        if (props.listFilterState === null ) {
+            setDisplayList([])
+        } else {
+            setDisplayList(props.listAsset);
+        }
     }, [props.listAsset])
+
+    useEffect(() => {
+        if (props.listFilterState !== null ) {
+            setDisplayList(props.listFilterState);
+        } else
+            setDisplayList([])
+
+    }, [props.listFilterState])
 
 
     return (
         <>
-        
+
             {
 
                 displayList.length === 0 ?
-                    <>
-                        <LoadingOutlined
-                            style={{fontSize: "60px", color: "red", textAlign: "center", marginTop: "70px"}}/>
-                    </>
+                    props.checkSearch ?
+                        <>
+                            <div className="data-notfound">
+                                <img style={{height: "260px", width: "260px"}}
+                                     src={process.env.PUBLIC_URL + '/nodataload.png'}/>
+                                <p className="name-notfound">No Result Found</p>
+                                <p className="name-notfound-child">Please try again with another</p>
+                                <p className="name-notfound-child">keywords or maybe use generic term</p>
+                            </div>
+
+                        </>
+
+                        :
+                        <>
+                            <LoadingOutlined
+                                style={{fontSize: "60px", color: "red", textAlign: "center", marginTop: "70px"}}/>
+                        </>
+
                     :
                     <>
 
@@ -144,9 +169,16 @@ function TableAsset(props) {
                                         <p className="col assetCategory_col">{item.categoryName}
                                         </p>
                                     </td>
-                                    <td className="col_asset col_state">
-                                        <p className="col state_col">{item.state}</p>
-                                    </td>
+                                    {
+                                        item.state === "UNAVAILABLE" ?
+                                            <td className="col_asset col_state">
+                                                <p className="col state_col">NOT AVAILABLE</p>
+                                            </td>
+                                            :
+                                            <td className="col_asset col_state">
+                                                <p className="col state_col">{item.state}</p>
+                                            </td>
+                                    }
                                     {
                                         item.state === "ASSIGNED" ?
                                             <>

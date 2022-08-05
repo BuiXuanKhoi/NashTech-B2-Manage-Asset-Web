@@ -278,13 +278,13 @@ function TableAssignment(props) {
 
 
                                     {
-                                        item.state === "WAITING_FOR_ACCEPTANCE" ?
+                                        item.state === "WAITING_FOR_ACCEPTANCE"  || item.state === "DECLINE" ?
                                             <>
-                                                <td className="btn_col_assignment edit " onClick={() => {
+                                                <td className="btn_col_assignment pencil " onClick={() => {
                                                         navigate("/editAssignment/" + item.assignmentId);
                                                     }}>
                                                     <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                    <FontAwesomeIcon icon={faPencilAlt} style={{color:"#CCCCCC"}}></FontAwesomeIcon>
                                                 </td>
                                                 <td className="btn_col_assignment delete ">
                                                     <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
@@ -296,7 +296,7 @@ function TableAssignment(props) {
                                             </>
                                             :
                                             <>
-                                                <td className="btn_col_assignment edit">
+                                                <td className="btn_col_assignment pencil">
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                 </td>
