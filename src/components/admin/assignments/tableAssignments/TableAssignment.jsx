@@ -283,17 +283,17 @@ function TableAssignment(props) {
 
 
                                     {
-                                        item.state === "WAITING_FOR_ACCEPTANCE"  || item.state === "DECLINE" ?
+                                        item.state === "WAITING_FOR_ACCEPTANCE" ?
                                             <>
-                                                <td className="btn_col_assignment pencil " onClick={() => {
+                                                <td className="btn_col_assignment pencil"  onClick={() => {
                                                         navigate("/editAssignment/" + item.assignmentId);
                                                     }}>
                                                     <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt} style={{color:"#CCCCCC"}}></FontAwesomeIcon>
+                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                 </td>
-                                                <td className="btn_col_assignment delete ">
-                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
-                                                </td>
+                                                <td className="btn_col_assignment delete">
+                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                </td>  
                                                 <td className="btn_col_assignment reload ">
                                                     <ReloadOutlined style={{color: "black"}}/>
                                                 </td>
@@ -301,13 +301,14 @@ function TableAssignment(props) {
                                             </>
                                             :
                                             <>
-                                                <td className="btn_col_assignment pencil">
+                                                <td className="btn_col_assignment pencil ">
                                                     <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                    <FontAwesomeIcon icon={faPencilAlt} style={{color:"#CCCCCC"}}></FontAwesomeIcon>
                                                 </td>
-                                                <td className="btn_col_assignment delete">
-                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                <td className="btn_col_assignment delete ">
+                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
                                                 </td>
+                                                
                                                 <td className="btn_col_assignment reload">
                                                     <ReloadOutlined style={{color: "blue"}}/>
                                                 </td>
