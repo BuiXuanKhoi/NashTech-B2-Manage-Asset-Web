@@ -139,7 +139,7 @@ function TableUser(props) {
                                         onClick={() => {
                                             setModal({...isModal, isOpen: true});
                                             setDataUser(user)}}>
-                                        <p className="col joined_day_col">{user.joinDate}</p>
+                                        <p className="col joined_day_col">{user.joinedDate}</p>
                                     </td>
                                     <td className="col type_col"
                                         onClick={() => {
@@ -162,8 +162,13 @@ function TableUser(props) {
                                 </>
                             }
                         {
-                            displayList.map((item, index) => {
-                                return <tr key={index}>
+                            displayList.map((item, index) => (
+                                <>
+                                {
+                                    user !== null && user.accountId === item.accountId ?
+                                    <></>
+                                    :
+                                    <tr key={index}>
                                     <td className="col staff_code_col"
                                         onClick={() => {
                                             setModal({...isModal, isOpen: true});
@@ -212,8 +217,10 @@ function TableUser(props) {
                                                          onClick={() => onDisable(item.accountId)}></FontAwesomeIcon>
                                     </td>
                                 </tr>
-                            })
-                        }
+                            }
+                                
+                            </>
+                        ))}
                         </tbody>
 
                     </>
