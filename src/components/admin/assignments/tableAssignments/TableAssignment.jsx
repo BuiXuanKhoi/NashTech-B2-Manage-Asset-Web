@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTimesCircle, faSortDown, faPencilAlt, faSortUp} from '@fortawesome/free-solid-svg-icons';
 import "antd/dist/antd.css";
-import {Row, Col, Form, Input, Select, Button, DatePicker, Radio, Cascader} from "antd";
+import {Row, Col, Form, Input, Select, Button, DatePicker, Radio, Cascader, Modal} from "antd";
 import {Pagination} from "antd";
 import "./TableAssignment.css"
 import _ from "lodash";
