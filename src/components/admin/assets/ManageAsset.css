@@ -28,7 +28,7 @@ p.assetName_col, p.assignedTo_col, p.assignmentBy_col, p.assignmentDate_col, p.s
     padding-left: 10px !important;
 }
 .dropdown-content-category ul{
-    padding-left: 10px !important;
+    padding-left: 0 !important;
 }
 
 .ant-pagination-next :disabled {
@@ -387,5 +387,21 @@ div.pagination p {
     border: 0.75px solid #B5B5B5;
     border-radius: 0.2rem;
     height: inherit;
+}
+
+#Category {
+    height: 154px;
+    background-color:#FFFFFF;
+}
+.ex3 {
+    width: 194px;
+    height: 154px;
+    overflow: auto;
+    background-color:  #F5F5F5;
+}
+p.assetName_col {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 

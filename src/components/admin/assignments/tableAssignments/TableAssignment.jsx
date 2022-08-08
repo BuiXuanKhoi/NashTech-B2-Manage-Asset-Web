@@ -24,9 +24,6 @@ function TableAssignment(props) {
     const navigate = useNavigate();
     const [dataUser, setDataUser] = useState(false)
     const assignment = JSON.parse(localStorage.getItem("assignment"));
-    const [wating,setWaiting] = useState("WAITING FOR ACCEPTANCE")
-
-
 
     useEffect(() => {
         if (props.listSort === null ) {
@@ -51,6 +48,8 @@ function TableAssignment(props) {
             setDisplayList([])
 
     }, [props.listSort])
+
+    console.log(displayList)
 
 
     return (

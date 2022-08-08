@@ -38,7 +38,6 @@ export default function ManageAsset() {
     const config = {
         headers: {Authorization: `Bearer ${user.token}`}
     };
-    let indexplus = 6
     const getListCategory = () => {
         axios
             .get("https://asset-assignment-be.azurewebsites.net/api/category", config)
@@ -364,21 +363,24 @@ export default function ManageAsset() {
                                     </div>
                                     <div className="dropdown-content-category">
                                         <ul style={{listStyleType: "none"}}>
+                                            <div id="Category">
+                                                <div className="ex3">
+                                                    {listCategory.map((item, i) => (
+                                                        <li key={i+6}>
+                                                            <input value={item.categoryName} type="checkbox" name="role" id={i+6}
+                                                                   style={{marginTop: "12px"}}
+                                                                   onChange={handleCheckCategory}
+                                                            />
+                                                            <label htmlFor={i+6}
+                                                                   style={{
+                                                                       paddingLeft: "10px",
+                                                                       display: "flex"
+                                                                   }}> {item.categoryName}</label>
+                                                        </li>
+                                                    ))}
+                                                </div>
+                                            </div>
 
-                                            {listCategory.map((item, i) => (
-
-                                                <li key={i+6}>
-                                                    <input value={item.categoryName} type="checkbox" name="role" id={i+6}
-                                                           style={{marginTop: "12px"}}
-                                                           onChange={handleCheckCategory}
-                                                    />
-                                                    <label htmlFor={i+6}
-                                                             style={{
-                                                                 paddingLeft: "10px",
-                                                                 display: "flex"
-                                                             }}> {item.categoryName}</label>
-                                                </li>
-                                            ))}
                                         </ul>
                                     </div>
                                 </div>

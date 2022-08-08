@@ -24,3 +24,23 @@
 .note{
     padding-bottom: 25px;
 }
+/*.note-view{*/
+/*    vertical-align: top;*/
+/*}*/
+
+#myDIV {
+    height:100px;
+    background-color:#FFFFFF;
+}
+.ex1 {
+    width: 436px;
+    height: 65px;
+    overflow:auto;
+    margin-bottom: 30px;
+}
+
+.ex2{
+    width: 389px;
+    height: 65px;
+    overflow:auto;
+}

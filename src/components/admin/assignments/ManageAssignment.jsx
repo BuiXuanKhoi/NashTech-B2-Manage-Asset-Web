@@ -185,7 +185,7 @@ export default function ManageAssignment() {
             }
             case 'ba': {
                 setSort({...sort, name: "ba"})
-                listCheckSortColumn("bd", nameSearch);
+                listCheckSortColumn("ba", nameSearch);
                 break;
             }
             case 'dd': {
@@ -362,7 +362,6 @@ export default function ManageAssignment() {
                             }}
                             suffixIcon={<CalendarFilled
                                 style={{color: "black", background: " #d9363e !important"}}/>}
-                            disabled={isLoading.isLoading === true}
                             format="DD/MM/YYYY"
                             placeholder={"Assigned Date"}
                             className="assignedform"

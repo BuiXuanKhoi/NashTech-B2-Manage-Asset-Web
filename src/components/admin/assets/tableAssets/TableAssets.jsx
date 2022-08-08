@@ -9,6 +9,8 @@ import {useNavigate} from "react-router-dom";
 import axios from 'axios';
 
 import toast, {Toaster} from "react-hot-toast";
+import ViewInformationAssignment from "../../assignments/viewAssignments/ViewInforAssignment";
+import ViewInformationAsset from "../viewInformation/ViewInformation";
 
 
 function TableAsset(props) {
@@ -20,6 +22,14 @@ function TableAsset(props) {
         isOpen: false,
         isLoading: false,
     });
+    const [dataUser, setDataUser] = useState(false)
+    const [isModal, setModal] = useState({
+        isOpen: false,
+        isLoading: false,
+    });
+    const setIsOpen = () => {
+        setModal({...isModal, isOpen: !isModal.isOpen})
+    }
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
@@ -104,7 +114,7 @@ function TableAsset(props) {
                                 <>
                                     {localStorage.removeItem('asset')}
                                     <tr >
-                                    <td className="col_asset col_assetCode_asset">
+                                    <td className="col_asset col_assetCode_asset" >
                                         <p className="col  assetCode_asset_col">{asset.assetCode}
                                         </p>
                                     </td>
@@ -162,32 +172,52 @@ function TableAsset(props) {
                                     <></>
                                     :
                                      <tr key={index}>
-                                    <td className="col_asset col_assetCode_asset">
+                                    <td className="col_asset col_assetCode_asset" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col  assetCode_asset_col">{item.assetCode}
                                         </p>
                                     </td>
-                                    <td className="col_asset col_assetName">
+                                    <td className="col_asset col_assetName" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col assetName_col">{item.assetName}
                                         </p>
                                     </td>
-                                    <td className="col_asset col_assetCategory">
+                                    <td className="col_asset col_assetCategory" onClick={() => {
+                                        setModal({...isModal, isOpen: true});
+                                        setDataUser(item)
+
+                                    }}>
                                         <p className="col assetCategory_col">{item.categoryName}
                                         </p>
                                     </td>
                                     {
                                         item.state === "UNAVAILABLE" ?
-                                            <td className="col_asset col_state">
+                                            <td className="col_asset col_state" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(item)
+
+                                            }}>
                                                 <p className="col state_col">NOT AVAILABLE</p>
                                             </td>
                                             :
-                                            <td className="col_asset col_state">
+                                            <td className="col_asset col_state" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(item)
+
+                                            }}>
                                                 <p className="col state_col">{item.state}</p>
                                             </td>
                                     }
                                     {
                                         item.state === "ASSIGNED" ?
                                             <>
-                                                <td className="btn_col_assignment edit ant-pagination-disabled">
+                                                <td className="btn_col_assignment edit ant-pagination-disabled" >
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                 </td>
@@ -218,8 +248,17 @@ function TableAsset(props) {
                                 </tr>
                                 }
                                 </>
-                            ))}
+                            ))
+                        }
                         </tbody>
+                        {isModal.isOpen ?
+                            <div>
+                                <ViewInformationAsset isVisible={setIsOpen} dataUser={dataUser}/>
+                            </div>
+
+                            :
+                            ""
+                        }
                     </>
             }
             
