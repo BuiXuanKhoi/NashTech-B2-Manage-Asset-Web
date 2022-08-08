@@ -154,7 +154,7 @@ function TableAsset(props) {
                                         </p>
                                     </td>
                                     {
-                                        item.state === "UNAVAILABLE" ?
+                                        asset.state === "UNAVAILABLE" ?
                                             <td className="col_asset col_state" onClick={() => {
                                                 setModal({...isModal, isOpen: true});
                                                 setDataUser(asset)
