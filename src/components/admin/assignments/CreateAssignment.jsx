@@ -531,8 +531,8 @@ export default function CreateAssignment() {
                                     name="note"
                                     rules={[
                                         {
-                                            pattern: new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
-                                            message: "Note is not allowed to contain Vietnamese characters"
+                                            pattern: new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
+                                            message: "Don't allow Unicode UTF-8 characters for this filed"
                                         },
                                         {whitespace: true, message: 'Note must be required'},
                                         {max: 500, message: 'Note must be less than 500 characters long'}

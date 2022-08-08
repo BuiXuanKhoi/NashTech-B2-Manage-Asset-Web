@@ -49,7 +49,7 @@ function TableAsset(props) {
                 console.log(error)
                 setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
                 if(error.response.data.statusCode === 404){
-                    toast.error("This asset has been deleted before")
+                    toast.error("This asset not found")
                     window.location.reload();
                 }
                 else if(error.response.data.statusCode === 405){
@@ -61,7 +61,28 @@ function TableAsset(props) {
                 }
             })
         }
-
+        const onDeleteAsset = (assetId) =>{
+            console.log(id)
+            axios.get(`https://asset-assignment-be.azurewebsites.net/api/asset/`+assetId, config) // thay link
+            .then(
+           (response) => {
+            if(response.data.assignmentDtoList.length>0){
+                setModalCannotDelete({...modalCannotDelete, isOpen: true});
+            }
+            else{
+                setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
+            }
+            }).catch((error) => {
+                console.log(error)
+                setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
+                setModalCannotDelete({...modalCannotDelete, isOpen: false});
+                if(error.response.data.statusCode === 404){
+                    toast.error("This asset not found")
+                    window.location.reload();
+                }
+                
+            })
+        }
     useEffect(() => {
         if (props.listFilterState === null ) {
             setDisplayList([])
@@ -152,7 +173,7 @@ function TableAsset(props) {
                                                     setId(asset.assetId);
                                                     setAssetName(asset.assetName)
                                                     console.log(id);
-                                                    setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
+                                                    onDeleteAsset(asset.assetId);
                                                 }}>
                                                     <CloseCircleOutlined style={{color: "red"}}/>
                                                 </td>
@@ -237,7 +258,7 @@ function TableAsset(props) {
                                                     setId(item.assetId);
                                                     setAssetName(item.assetName)
                                                     console.log(id);
-                                                    setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
+                                                    onDeleteAsset(item.assetId);
                                                 }}>
                                                     <CloseCircleOutlined style={{color: "red"}}/>
                                                 </td>
@@ -295,7 +316,8 @@ function TableAsset(props) {
                 footer={[]}
             >
                 <p>Cannot delete the asset because it belongs to one or more historical assignments.
-If the asset is not able to be used anymore, please update its state in <Button type="link" onClick={()=>{navigate("/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
+                    <br/>
+                If the asset is not able to be used anymore, please update its state in <Button type="link" className= "linkButton" onClick={()=>{navigate("/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
                 <br/>
             </Modal>
             

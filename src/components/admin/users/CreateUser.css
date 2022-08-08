@@ -124,3 +124,19 @@
     color: #cf2338;
     margin-right: 0px;
 }
+
+.linkButton{
+    padding-left: 1px;
+    font-style: normal;
+}
+
+.ant-modal-close-icon{
+    border: 3px solid #d81e34;
+    color: #d81e34;
+    border-radius:5px ;
+        
+}
+.ant-cascader-menu{
+    height: 105px;
+}
+

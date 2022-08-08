@@ -56,13 +56,12 @@ export default function EditAssignment() {
         axios
         .get(`https://asset-assignment-be.azurewebsites.net/api/assignment/`+ idAssignment.id,config)
             .then(response => {
-                const assignedDate = formatDate.FormatDate(response.data.assignedDate);
-                console.log(formatDate)
+                
                 form.setFieldsValue({
                     fullName: response.data.assignedName,
                     assetName: response.data.assetName,
                     note: response.data.note,
-                    assignedDate: moment(assignedDate,'DD/MM/YYYY')
+                    assignedDate: moment(response.data.assignedDate,'DD/MM/YYYY')
                 })
                 setSubmitData({...submitData,
                     assignedId: response.data.assignedId,
@@ -491,8 +490,8 @@ export default function EditAssignment() {
                                     name="note"
                                     rules={[
                                         {
-                                            pattern: new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
-                                            message: "Note is not allowed to contain Vietnamese characters"
+                                            pattern: new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
+                                            message: "Don't allow Unicode UTF-8 characters for this filed"
                                         },
                                         {whitespace: true, message: 'Note must be required'},
                                         {max: 500, message: 'Note must be less than 500 characters long'}

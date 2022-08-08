@@ -177,7 +177,7 @@ export default function EditAsset(){
                                                     return Promise.reject("Name must be required")
                                                 }
                                                 else if(!value.match(new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
-                                                    return Promise.reject("Name is not allowed to contain Vietnamese characters")
+                                                    return Promise.reject("Don't allow Unicode UTF-8 characters for this filed")
                                                 }
                                                 else if ((value.trim().length)>128) {
                                                     return Promise.reject("Name must be less than 128 characters")
@@ -265,10 +265,10 @@ export default function EditAsset(){
                                                 if ((value.trim())==='') {
                                                     return Promise.reject("Specification must be required")
                                                 }
-                                                else if(!value.match(new RegExp("^[a-zA-Z'\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
-                                                    return Promise.reject("Specification is not allowed to contain Vietnamese characters")
+                                                else if(!value.match(new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
+                                                    return Promise.reject("Don't allow Unicode UTF-8 characters for this filed")
                                                 }
-                                                else if ((value.trim().length)>500) {
+                                                else if ((value.length)>500) {
                                                     return Promise.reject("Specification must be less than 500 characters")
                                                 }
                                                 return Promise.resolve();
@@ -297,7 +297,7 @@ export default function EditAsset(){
                                                 if (value === null || value === "") {
                                                     return Promise.resolve()
                                                 }else if ((new Date() - value._d) < 0) {
-                                                    return Promise.reject("Asset has not installed. Please select a different date")
+                                                    return Promise.reject("Asset has not been installed. Please select a different date")
                                                 }
                                                 else if (value._d.getFullYear() < 1950){
                                                     return Promise.reject("Can only select the date from 1950 or later. Please select a different date")

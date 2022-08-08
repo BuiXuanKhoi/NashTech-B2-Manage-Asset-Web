@@ -10,7 +10,8 @@ import {ReloadOutlined, CloseCircleOutlined, LoadingOutlined} from "@ant-design/
 import ViewInformation from "../../users/viewInformation/ViewInformation";
 import ViewInformationAssignment from "../viewAssignments/ViewInforAssignment";
 import { useNavigate } from "react-router-dom";
-
+import toast, {Toaster} from "react-hot-toast";
+import axios from 'axios';
 
 function TableAssignment(props) {
     const [displayList, setDisplayList] = useState(props.listAssignment);
@@ -24,6 +25,37 @@ function TableAssignment(props) {
     const navigate = useNavigate();
     const [dataUser, setDataUser] = useState(false)
     const assignment = JSON.parse(localStorage.getItem("assignment"));
+    const loginState = JSON.parse(localStorage.getItem("loginState"));
+    const config = {
+        headers: { Authorization: `Bearer ${loginState.token}` }
+    };
+    const [modalConfirmDelete, setModalConfirmDelete] = useState({
+        isOpen: false,
+        isLoading: false,
+    });
+    const [id,setId] = useState(0);
+    const handleDelete = () => {
+        console.log(id);
+        axios.delete(`https://asset-assignment-be.azurewebsites.net/api/assignment/`+id, config)
+            .then(
+           (response) => {
+            setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
+            toast.success("Delete assignment successfully");
+            window.location.reload();
+            }).catch((error) => {
+                console.log(error)
+                setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
+                if(error.response.data.statusCode === 404){
+                    toast.error("This assignment not found")
+                    //toast.error("This asset has been deleted before")
+                    window.location.reload();
+                }
+                else{
+                    toast.error(error.response.data.message)
+                    window.location.reload();
+                }
+            })
+    }
 
     useEffect(() => {
         if (props.listSort === null ) {
@@ -281,7 +313,7 @@ function TableAssignment(props) {
 
 
 
-                                    {
+{
                                         item.state === "WAITING_FOR_ACCEPTANCE" ?
                                             <>
                                                 <td className="btn_col_assignment pencil"  onClick={() => {
@@ -291,26 +323,54 @@ function TableAssignment(props) {
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
                                                 </td>
                                                 <td className="btn_col_assignment delete">
-                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                    <CloseCircleOutlined style={{color: "red"}} onClick={() => {
+                                                        setId(item.assignmentId);
+                                                        setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
+
+                                                    }}/>
                                                 </td>  
                                                 <td className="btn_col_assignment reload ">
-                                                    <ReloadOutlined style={{color: "black"}}/>
+                                                    <ReloadOutlined style={{color: "grey"}}/>
                                                 </td>
 
                                             </>
                                             :
+                                            
                                             <>
-                                                <td className="btn_col_assignment pencil ">
+                                                {
+                                                   item.state === "DECLINE" ? 
+                                                   <>
+                                                        <td className="btn_col_assignment pencil ">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                        <FontAwesomeIcon icon={faPencilAlt} style={{color:"#CCCCCC"}}></FontAwesomeIcon>
+                                                        </td>
+                                                        <td className="btn_col_assignment delete">
+                                                    <CloseCircleOutlined style={{color: "red"}} onClick={() => {
+                                                        setId(item.assignmentId);
+                                                        setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
+
+                                                        }}/>
+                                                        </td> 
+                                                        <td className="btn_col_assignment reload ">
+                                                    <ReloadOutlined style={{color: "grey"}}/>
+                                                </td> 
+                                                   </>
+                                                   :
+                                                   <>
+                                                   <td className="btn_col_assignment pencil ">
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt} style={{color:"#CCCCCC"}}></FontAwesomeIcon>
-                                                </td>
-                                                <td className="btn_col_assignment delete ">
-                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
-                                                </td>
+                                                    </td>
+                                                    <td className="btn_col_assignment delete ">
+                                                        <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
+                                                    </td>
+                                                    
+                                                    <td className="btn_col_assignment reload">
+                                                        <ReloadOutlined style={{color: "blue"}}/>
+                                                    </td>
+                                                   </>
+                                                }
                                                 
-                                                <td className="btn_col_assignment reload">
-                                                    <ReloadOutlined style={{color: "blue"}}/>
-                                                </td>
 
                                             </>
 
@@ -330,6 +390,27 @@ function TableAssignment(props) {
                 :
                 ""
             }
+            <Modal
+        className = "modalConfirm"
+                title="Are you sure?"
+                visible={modalConfirmDelete.isOpen}
+                width={400}
+                closable={false}
+                onOk={handleDelete}
+                onCancel = {()=> {setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })}}
+                footer={[
+                    <Button key="submit" className="buttonSave" onClick={handleDelete}>
+                     Delete
+                    </Button>,
+                    <Button key="cancel" className = "buttonCancel" onClick={()=> {setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })}}>
+                      Cancel
+                    </Button>
+                  ]}
+                
+            >
+                <p>Do you want to delete this assignment?</p>
+                <br/>
+            </Modal>
         </>
     )
 }
