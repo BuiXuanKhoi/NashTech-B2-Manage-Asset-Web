@@ -135,21 +135,40 @@ function TableAsset(props) {
                                 <>
                                     {localStorage.removeItem('asset')}
                                     <tr >
-                                    <td className="col_asset col_assetCode_asset" >
+                                    <td className="col_asset col_assetCode_asset" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(asset)}}>
                                         <p className="col  assetCode_asset_col">{asset.assetCode}
                                         </p>
                                     </td>
-                                    <td className="col_asset col_assetName">
+                                    <td className="col_asset col_assetName" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(asset)}}>
                                         <p className="col assetName_col">{asset.assetName}
                                         </p>
                                     </td>
-                                    <td className="col_asset col_assetCategory">
+                                    <td className="col_asset col_assetCategory" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(asset)}}>
                                         <p className="col assetCategory_col">{asset.categoryName}
                                         </p>
                                     </td>
-                                    <td className="col_asset col_state">
-                                        <p className="col state_col">{asset.state}</p>
-                                    </td>
+                                    {
+                                        item.state === "UNAVAILABLE" ?
+                                            <td className="col_asset col_state" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(asset)
+
+                                            }}>
+                                                <p className="col state_col">NOT AVAILABLE</p>
+                                            </td>
+                                            :
+                                            <td className="col_asset col_state" onClick={() => {
+                                                setModal({...isModal, isOpen: true});
+                                                setDataUser(asset)}}>
+                                                <p className="col state_col">{asset.state}</p>
+                                            </td>
+                                    }
                                     {
                                         asset.state === "ASSIGNED" ?
                                             <>
