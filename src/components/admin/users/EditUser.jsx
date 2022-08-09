@@ -52,7 +52,7 @@ export default function EditUser() {
                     Gender: response.data.gender.toLowerCase(),
                     JoinedDate: moment(response.data.joinedDate,'DD/MM/YYYY'),
                     Department: (response.data.staffCode).indexOf("SD") != -1 ? "SD" : "BPS",
-                    Type: response.data.accountsRoleRoleid == 1 ? "Admin" : "Staff" 
+                    Type: response.data.roleId == 1 ? "Admin" : "Staff" 
 
                 });
                 console.log(response.data)
@@ -77,7 +77,7 @@ export default function EditUser() {
                 firstName: information.firstName,
                 lastName: information.lastName,
                 joinedDate: values.JoinedDate,
-                roleId: values.Type =="Admin" ? 1 : 2,
+                roleId: values.Type == 1 || values.Type== "Admin" ? 1 : 2,
                 dateOfBirth: values.DateOfBirth,
                 gender: values.Gender,
                 staffCode: information.staffCode,
@@ -105,7 +105,7 @@ export default function EditUser() {
 
             })
             .catch((error) => {
-                toast.error("Edit user failed");
+                // toast.error("Edit user failed");
                 console.log(error)
                 // console.log(error.response.data.message);
             });
