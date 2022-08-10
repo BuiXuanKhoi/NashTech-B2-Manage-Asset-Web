@@ -26,6 +26,7 @@ export default function ManageAsset() {
     const [checked, setChecked] = useState([]);
     const [checkedCategory, setCheckedCategory] = useState([]);
     const [checkFilter, setCheckFilter] = useState(false);
+    const [checkNameSearch, setCheckNameSearch] = useState(false);
 
 
     const [nameSearch, setNameSearch] = useState("");
@@ -53,7 +54,7 @@ export default function ManageAsset() {
     };
     const getListAsset = () => {
         axios
-            .get("https://asset-assignment-be.azurewebsites.net/api/asset?state=AVAILABLE UNAVAILABLE", config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/asset?state=AVAILABLE UNAVAILABLE ASSIGNED", config)
             .then(function (response) {
                 console.log(response.data)
                 setListAsset(response.data.content)
@@ -90,10 +91,14 @@ export default function ManageAsset() {
             }
         }
         else{
-            state = "AVAILABLE UNAVAILABLE";
+            state = "AVAILABLE UNAVAILABLE ASSIGNED";
         }
         if(checkedCategory.length !== 0){
             for (let i=0;i<checkedCategory.length;i++){
+                if(checkedCategory[i] === "All") {
+                    category = "";
+                    break;
+                }
                 listCategory.map(item=>{
                     if(item.categoryName === checkedCategory[i]){
                         category = category + item.categoryId + " ";
@@ -101,6 +106,7 @@ export default function ManageAsset() {
                 })
             }
         }
+        console.log(category)
 
         console.log(state)
 
@@ -145,10 +151,14 @@ export default function ManageAsset() {
             }
         }
         else{
-            state = "AVAILABLE UNAVAILABLE";
+            state = "AVAILABLE UNAVAILABLE ASSIGNED";
         }
         if(checkedCategory.length !== 0){
             for (let i=0;i<checkedCategory.length;i++){
+                if(checkedCategory[i] === "All") {
+                    category = "";
+                    break;
+                }
                 listCategory.map(item=>{
                     if(item.categoryName === checkedCategory[i]){
                         category = category + item.categoryId + " ";
@@ -156,10 +166,10 @@ export default function ManageAsset() {
                 })
             }
         }
-        console.log(state)
+        console.log(category)
 
 
-        link = "https://asset-assignment-be.azurewebsites.net/api/asset?state=" +state+"&sort=" + sort+ "&page=" + page + "&code=" + nameSearch +"&category="+category
+        link = "https://asset-assignment-be.azurewebsites.net/api/asset?state=" + state + "&sort=" + sort + "&page=" + page + "&code=" + nameSearch + "&category=" + category
         axios
             .get(link, config)
             .then(function (response) {
@@ -184,42 +194,93 @@ export default function ManageAsset() {
         switch (col) {
             case 'ca': {
                 setSort({...sort, name: "ca"})
-                getListAssetFilterSortSearch("ca", 0,nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("ca", 0,nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("ca", 0,"");
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+
+                }
                 break;
             }
             case 'cd': {
                 setSort({...sort, name: "cd"})
-                getListAssetFilterSortSearch("cd",  0, nameSearch);
+                if(checkNameSearch) {
+                    getListAssetFilterSortSearch("cd", 0, nameSearch);
+                }
+                else{
+                    getListAssetFilterSortSearch("cd", 0, "");
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+
+                }
                 break;
             }
             case 'na': {
                 setSort({...sort, name: "na"})
-                getListAssetFilterSortSearch("na",  0,nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("na",  0,nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("na",  0,nameSearch);
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+                }
                 break;
             }
             case 'nd': {
                 setSort({...sort, name: "nd"})
-                getListAssetFilterSortSearch("nd", 0, nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("nd", 0, nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("nd", 0, nameSearch);
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+                }
                 break;
             }
             case 'ed': {
                 setSort({...sort, name: "ed"})
-                getListAssetFilterSortSearch("ed", 0, nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("ed", 0, nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("ed", 0, nameSearch);
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+                }
                 break;
             }
             case 'ea': {
                 setSort({...sort, name: "ea"})
-                getListAssetFilterSortSearch("ea", 0, nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("ea", 0, nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("ea", 0, nameSearch);
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+                }
                 break;
             }
             case 'sd': {
                 setSort({...sort, name: "sd"})
-                getListAssetFilterSortSearch("sd",  0,nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("sd",  0,nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("sd",  0,nameSearch);
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+                }
                 break;
             }
             case 'sa': {
                 setSort({...sort, name: "sa"})
-                getListAssetFilterSortSearch("sa", 0, nameSearch);
+                if(checkNameSearch){
+                    getListAssetFilterSortSearch("sa", 0, nameSearch);
+                }else{
+                    getListAssetFilterSortSearch("sa", 0, nameSearch);
+                    setNameSearch("")
+                    setCheckNameSearch(false)
+                }
                 break;
             }
             default:
@@ -244,11 +305,24 @@ export default function ManageAsset() {
         if (page > 0) {
             checkpage = page - 1;
         }
-        getListAssetFilterSortSearch(sort.name,checkpage,nameSearch);
+        if(checkNameSearch){
+            getListAssetFilterSortSearch(sort.name,checkpage,nameSearch);
+        }else{
+            getListAssetFilterSortSearch(sort.name,checkpage,"");
+            setNameSearch("")
+            setCheckNameSearch(false)
+        }
     };
     function getListAssetToPage(page,nameSearch) {
         if (checked.length !== 0 || checkedCategory.length !== 0) {
-            getListAssetFilterState(checked, page, sort.name, nameSearch)
+            if(checkNameSearch) {
+                getListAssetFilterState(checked, page, sort.name, nameSearch)
+            }
+            else{
+                getListAssetFilterState(checked, page, sort.name, "")
+                setNameSearch("")
+                setCheckNameSearch(false)
+            }
         } else {
             getListAssetFilterSortSearch(sort.name, 0, nameSearch);
         }
@@ -270,7 +344,10 @@ export default function ManageAsset() {
         setState({
             current: 0,
         });
-        getListAssetToPage(0,nameSearch)
+        setNameSearch("")
+        setCheckNameSearch(false)
+        getListAssetToPage(0,"")
+
     };
 
     const findListAsset= () => {
@@ -281,9 +358,14 @@ export default function ManageAsset() {
                 current: 0,
             });
             setCheckFilter(true)
+            setCheckNameSearch(true)
+            if(checkNameSearch)
+                console.log("aaaaaaaa")
+            console.log(nameSearch)
             if (checked.length !== 0 || checkedCategory.length !== 0) {
                 getListAssetFilterState(checked, 0, sort.name, nameSearch)
             } else {
+
                 getListAssetFilterSortSearch(sort.name, 0, nameSearch);
             }
         }
@@ -306,7 +388,9 @@ export default function ManageAsset() {
         setState({
             current: 0,
         });
-        getListAssetToPage(0,nameSearch)
+        setNameSearch("")
+        setCheckNameSearch(false)
+        getListAssetToPage(0,"")
     };
 
 
@@ -365,13 +449,24 @@ export default function ManageAsset() {
                                         <ul style={{listStyleType: "none"}}>
                                             <div id="Category">
                                                 <div className="ex3">
+                                                    <li key={6}>
+                                                        <input value="All" type="checkbox" name="role" id={6}
+                                                               style={{marginTop: "12px"}}
+                                                               onChange={handleCheckCategory}
+                                                        />
+                                                        <label htmlFor={6}
+                                                               style={{
+                                                                   paddingLeft: "10px",
+                                                                   display: "flex"
+                                                               }}> All</label>
+                                                    </li>
                                                     {listCategory.map((item, i) => (
-                                                        <li key={i+6}>
-                                                            <input value={item.categoryName} type="checkbox" name="role" id={i+6}
+                                                        <li key={i+7}>
+                                                            <input value={item.categoryName} type="checkbox" name="role" id={i+7}
                                                                    style={{marginTop: "12px"}}
                                                                    onChange={handleCheckCategory}
                                                             />
-                                                            <label htmlFor={i+6}
+                                                            <label htmlFor={i+7}
                                                                    style={{
                                                                        paddingLeft: "10px",
                                                                        display: "flex"
@@ -394,7 +489,7 @@ export default function ManageAsset() {
                                         name="keyword"
                                         value={nameSearch || ""}
                                         id="search-query"
-                                        onChange={e => setNameSearch(e.target.value)}
+                                        onChange={e => (setNameSearch(e.target.value), setCheckNameSearch(false))}
                                     />
 
                                     <button type="button" className="button-search" onClick={findListAsset}>
@@ -403,13 +498,13 @@ export default function ManageAsset() {
                             }
                             <div id="create-btn-section">
                                 <button className="btn-createUser" onClick={() => {
-                                navigate("/createAsset")}}>
+                                    navigate("/createAsset")}}>
                                     <p className="btn_create_text"> Create new asset</p>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div style={{ height : "100vh"}}>
                         <div className="results-section">
                             <div className="Asset_table">
                                 <>

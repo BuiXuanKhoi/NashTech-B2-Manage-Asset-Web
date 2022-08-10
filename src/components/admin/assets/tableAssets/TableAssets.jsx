@@ -4,7 +4,7 @@ import {faTimesCircle, faSortDown, faPencilAlt, faSortUp} from '@fortawesome/fre
 import "antd/dist/antd.css";
 import "./TableAssets.css"
 import {ReloadOutlined, CloseCircleOutlined, LoadingOutlined} from "@ant-design/icons";
-import { Modal, Button } from 'antd';
+import {Modal, Button} from 'antd';
 import {useNavigate} from "react-router-dom";
 import axios from 'axios';
 
@@ -31,60 +31,65 @@ function TableAsset(props) {
         setModal({...isModal, isOpen: !isModal.isOpen})
     }
     const config = {
-        headers: { Authorization: `Bearer ${loginState.token}` }
+        headers: {Authorization: `Bearer ${loginState.token}`}
     };
-    
+
+    function changeState(s) {
+        if (s === "WAITING_FOR_RECYCLE") {
+            s = "WAITING FOR RECYCLE"
+        }
+        return s
+    }
+
     const [modalCannotDelete, setModalCannotDelete] = useState(false);
-    const [id,setId] = useState(0);
-    const [assetName, setAssetName]=useState('');
-    const handleDelete = ()=>{
+    const [id, setId] = useState(0);
+    const [assetName, setAssetName] = useState('');
+    const handleDelete = () => {
         console.log(id);
-        axios.delete(`https://asset-assignment-be.azurewebsites.net/api/asset/`+id, config)
+        axios.delete(`https://asset-assignment-be.azurewebsites.net/api/asset/` + id, config)
             .then(
-           (response) => {
-            setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
-            toast.success("Delete "+assetName+" successfully");
-            window.location.reload();
-            }).catch((error) => {
-                console.log(error)
-                setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
-                if(error.response.data.statusCode === 404){
-                    toast.error("This asset not found")
+                (response) => {
+                    setModalConfirmDelete({...modalConfirmDelete, isOpen: false})
+                    toast.success("Delete " + assetName + " successfully");
                     window.location.reload();
-                }
-                else if(error.response.data.statusCode === 405){
-                    setModalCannotDelete({...modalCannotDelete, isOpen: true})
-                }
-                else{
-                    toast.error("Delete "+assetName+" failed")
-                    window.location.reload();
-                }
-            })
-        }
-        const onDeleteAsset = (assetId) =>{
-            console.log(id)
-            axios.get(`https://asset-assignment-be.azurewebsites.net/api/asset/`+assetId, config) // thay link
+                }).catch((error) => {
+            console.log(error)
+            setModalConfirmDelete({...modalConfirmDelete, isOpen: false})
+            if (error.response.data.statusCode === 404) {
+                toast.error("This asset not found")
+                window.location.reload();
+            } else if (error.response.data.statusCode === 405) {
+                setModalCannotDelete({...modalCannotDelete, isOpen: true})
+            } else {
+                toast.error("Delete " + assetName + " failed")
+                window.location.reload();
+            }
+        })
+    }
+    const onDeleteAsset = (assetId) => {
+        console.log(id)
+        axios.get(`https://asset-assignment-be.azurewebsites.net/api/asset/` + assetId, config) // thay link
             .then(
-           (response) => {
-            if(response.data.assignmentDtoList.length>0){
-                setModalCannotDelete({...modalCannotDelete, isOpen: true});
+                (response) => {
+                    if (response.data.assignmentDtoList.length > 0) {
+                        setModalCannotDelete({...modalCannotDelete, isOpen: true});
+                    } else {
+                        setModalConfirmDelete({...modalConfirmDelete, isOpen: true})
+                    }
+                }).catch((error) => {
+            console.log(error)
+            setModalConfirmDelete({...modalConfirmDelete, isOpen: false})
+            setModalCannotDelete({...modalCannotDelete, isOpen: false});
+            if (error.response.data.statusCode === 404) {
+                toast.error("This asset not found")
+                window.location.reload();
             }
-            else{
-                setModalConfirmDelete({ ...modalConfirmDelete, isOpen: true })
-            }
-            }).catch((error) => {
-                console.log(error)
-                setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })
-                setModalCannotDelete({...modalCannotDelete, isOpen: false});
-                if(error.response.data.statusCode === 404){
-                    toast.error("This asset not found")
-                    window.location.reload();
-                }
-                
-            })
-        }
+        })
+    }
+
+
     useEffect(() => {
-        if (props.listFilterState === null ) {
+        if (props.listFilterState === null) {
             setDisplayList([])
         } else {
             setDisplayList(props.listAsset);
@@ -92,7 +97,7 @@ function TableAsset(props) {
     }, [props.listAsset])
 
     useEffect(() => {
-        if (props.listFilterState !== null ) {
+        if (props.listFilterState !== null) {
             setDisplayList(props.listFilterState);
         } else
             setDisplayList([])
@@ -128,165 +133,171 @@ function TableAsset(props) {
                     <>
 
                         <tbody>
-                            {
-                                asset === null ?
+                        {
+                            asset === null ?
                                 <></>
                                 :
                                 <>
                                     {localStorage.removeItem('asset')}
-                                    <tr >
-                                    <td className="col_asset col_assetCode_asset" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(asset)}}>
-                                        <p className="col  assetCode_asset_col">{asset.assetCode}
-                                        </p>
-                                    </td>
-                                    <td className="col_asset col_assetName" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(asset)}}>
-                                        <p className="col assetName_col">{asset.assetName}
-                                        </p>
-                                    </td>
-                                    <td className="col_asset col_assetCategory" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(asset)}}>
-                                        <p className="col assetCategory_col">{asset.categoryName}
-                                        </p>
-                                    </td>
-                                    {
-                                        asset.state === "UNAVAILABLE" ?
-                                            <td className="col_asset col_state" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(asset)
-
-                                            }}>
-                                                <p className="col state_col">NOT AVAILABLE</p>
-                                            </td>
-                                            :
-                                            <td className="col_asset col_state" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(asset)}}>
-                                                <p className="col state_col">{asset.state}</p>
-                                            </td>
-                                    }
-                                    {
-                                        asset.state === "ASSIGNED" ?
-                                            <>
-                                                <td className="btn_col_assignment edit ant-pagination-disabled">
-                                                    <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
-                                                </td>
-                                                <td className="btn_col_assignment delete ant-pagination-disabled">
-                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
-                                                </td>
-
-                                            </>
-                                            :
-                                            <>
-                                                <td className="btn_col_assignment edit" onClick={() => {
-                                        navigate("/editAsset/" + asset.assetId)}}>
-                                                    <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
-                                                </td>
-                                                <td className="btn_col_assignment delete" onClick={()=>{
-                                                    setId(asset.assetId);
-                                                    setAssetName(asset.assetName)
-                                                    console.log(id);
-                                                    onDeleteAsset(asset.assetId);
+                                    <tr>
+                                        <td className="col_asset col_assetCode_asset" onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(asset)
+                                        }}>
+                                            <p className="col  assetCode_asset_col">{asset.assetCode}
+                                            </p>
+                                        </td>
+                                        <td className="col_asset col_assetName" onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(asset)
+                                        }}>
+                                            <p className="col assetName_col">{asset.assetName}
+                                            </p>
+                                        </td>
+                                        <td className="col_asset col_assetCategory" onClick={() => {
+                                            setModal({...isModal, isOpen: true});
+                                            setDataUser(asset)
+                                        }}>
+                                            <p className="col assetCategory_col">{asset.categoryName}
+                                            </p>
+                                        </td>
+                                        {
+                                            asset.state === "UNAVAILABLE" ?
+                                                <td className="col_asset col_state" onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(asset)
                                                 }}>
-                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                    <p className="col state_col">NOT AVAILABLE</p>
                                                 </td>
+                                                :
+                                                <td className="col_asset col_state" onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(asset)
+                                                }}>
+                                                    <p className="col state_col">{changeState(asset.state)}</p>
+                                                </td>
+                                        }
+                                        {
+                                            asset.state === "ASSIGNED" ?
+                                                <>
+                                                    <td className="btn_col_assignment edit ant-pagination-disabled">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                        <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                    </td>
+                                                    <td className="btn_col_assignment delete ant-pagination-disabled">
+                                                        <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
+                                                    </td>
 
-                                            </>
+                                                </>
+                                                :
+                                                <>
+                                                    <td className="btn_col_assignment edit" onClick={() => {
+                                                        navigate("/editAsset/" + asset.assetId)
+                                                    }}>
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                        <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                    </td>
+                                                    <td className="btn_col_assignment delete" onClick={() => {
+                                                        setId(asset.assetId);
+                                                        setAssetName(asset.assetName)
+                                                        console.log(id);
+                                                        onDeleteAsset(asset.assetId);
+                                                    }}>
+                                                        <CloseCircleOutlined style={{color: "red"}}/>
+                                                    </td>
 
-                                    }
-                                </tr>
+                                                </>
+
+                                        }
+                                    </tr>
                                 </>
-                            }
+                        }
                         {
 
                             displayList.map((item, index) => (
                                 <>
-                                {
-                                    asset !== null && asset.assetId === item.assetId ?
-                                    <></>
-                                    :
-                                     <tr key={index}>
-                                    <td className="col_asset col_assetCode_asset" onClick={() => {
-                                        setModal({...isModal, isOpen: true});
-                                        setDataUser(item)
-
-                                    }}>
-                                        <p className="col  assetCode_asset_col">{item.assetCode}
-                                        </p>
-                                    </td>
-                                    <td className="col_asset col_assetName" onClick={() => {
-                                        setModal({...isModal, isOpen: true});
-                                        setDataUser(item)
-
-                                    }}>
-                                        <p className="col assetName_col">{item.assetName}
-                                        </p>
-                                    </td>
-                                    <td className="col_asset col_assetCategory" onClick={() => {
-                                        setModal({...isModal, isOpen: true});
-                                        setDataUser(item)
-
-                                    }}>
-                                        <p className="col assetCategory_col">{item.categoryName}
-                                        </p>
-                                    </td>
                                     {
-                                        item.state === "UNAVAILABLE" ?
-                                            <td className="col_asset col_state" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(item)
-
-                                            }}>
-                                                <p className="col state_col">NOT AVAILABLE</p>
-                                            </td>
+                                        asset !== null && asset.assetId === item.assetId ?
+                                            <></>
                                             :
-                                            <td className="col_asset col_state" onClick={() => {
-                                                setModal({...isModal, isOpen: true});
-                                                setDataUser(item)
+                                            <tr key={index}>
+                                                <td className="col_asset col_assetCode_asset" onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(item)
 
-                                            }}>
-                                                <p className="col state_col">{item.state}</p>
-                                            </td>
-                                    }
-                                    {
-                                        item.state === "ASSIGNED" ?
-                                            <>
-                                                <td className="btn_col_assignment edit ant-pagination-disabled" >
-                                                    <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
-                                                </td>
-                                                <td className="btn_col_assignment delete ant-pagination-disabled">
-                                                    <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
-                                                </td>
-
-                                            </>
-                                            :
-                                            <>
-                                                <td className="btn_col_assignment edit" onClick={() => {
-                                        navigate("/editAsset/" + item.assetId)}}>
-                                                    <i className="fas fa-pencil-alt"></i>
-                                                    <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
-                                                </td>
-                                                <td className="btn_col_assignment delete" onClick={()=>{
-                                                    setId(item.assetId);
-                                                    setAssetName(item.assetName)
-                                                    console.log(id);
-                                                    onDeleteAsset(item.assetId);
                                                 }}>
-                                                    <CloseCircleOutlined style={{color: "red"}}/>
+                                                    <p className="col  assetCode_asset_col">{item.assetCode}
+                                                    </p>
                                                 </td>
+                                                <td className="col_asset col_assetName" onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(item)
 
-                                            </>
+                                                }}>
+                                                    <p className="col assetName_col">{item.assetName}
+                                                    </p>
+                                                </td>
+                                                <td className="col_asset col_assetCategory" onClick={() => {
+                                                    setModal({...isModal, isOpen: true});
+                                                    setDataUser(item)
 
+                                                }}>
+                                                    <p className="col assetCategory_col">{item.categoryName}
+                                                    </p>
+                                                </td>
+                                                {
+                                                    item.state === "UNAVAILABLE" ?
+                                                        <td className="col_asset col_state" onClick={() => {
+                                                            setModal({...isModal, isOpen: true});
+                                                            setDataUser(item)
+
+                                                        }}>
+                                                            <p className="col state_col">NOT AVAILABLE</p>
+                                                        </td>
+                                                        :
+                                                        <td className="col_asset col_state" onClick={() => {
+                                                            setModal({...isModal, isOpen: true});
+                                                            setDataUser(item)
+
+                                                        }}>
+                                                            <p className="col state_col">{changeState(item.state)}</p>
+                                                        </td>
+                                                }
+                                                {
+                                                    item.state === "ASSIGNED" ?
+                                                        <>
+                                                            <td className="btn_col_assignment edit ant-pagination-disabled">
+                                                                <i className="fas fa-pencil-alt"></i>
+                                                                <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                            </td>
+                                                            <td className="btn_col_assignment delete ant-pagination-disabled">
+                                                                <CloseCircleOutlined style={{color: "#F3AAAA"}}/>
+                                                            </td>
+
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <td className="btn_col_assignment edit" onClick={() => {
+                                                                navigate("/editAsset/" + item.assetId)
+                                                            }}>
+                                                                <i className="fas fa-pencil-alt"></i>
+                                                                <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
+                                                            </td>
+                                                            <td className="btn_col_assignment delete" onClick={() => {
+                                                                setId(item.assetId);
+                                                                setAssetName(item.assetName)
+                                                                console.log(id);
+                                                                onDeleteAsset(item.assetId);
+
+                                                            }}>
+                                                                <CloseCircleOutlined style={{color: "red"}}/>
+                                                            </td>
+
+                                                        </>
+
+                                                }
+                                            </tr>
                                     }
-                                </tr>
-                                }
                                 </>
                             ))
                         }
@@ -301,24 +312,28 @@ function TableAsset(props) {
                         }
                     </>
             }
-            
+
             <Modal
-        className = "modalConfirm"
+                className="modalConfirm"
                 title="Are you sure?"
                 visible={modalConfirmDelete.isOpen}
                 width={400}
                 closable={false}
                 onOk={handleDelete}
-                onCancel = {()=> {setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })}}
+                onCancel={() => {
+                    setModalConfirmDelete({...modalConfirmDelete, isOpen: false})
+                }}
                 footer={[
                     <Button key="submit" className="buttonSave" onClick={handleDelete}>
-                     Delete
+                        Delete
                     </Button>,
-                    <Button key="cancel" className = "buttonCancel" onClick={()=> {setModalConfirmDelete({ ...modalConfirmDelete, isOpen: false })}}>
-                      Cancel
+                    <Button key="cancel" className="buttonCancel" onClick={() => {
+                        setModalConfirmDelete({...modalConfirmDelete, isOpen: false})
+                    }}>
+                        Cancel
                     </Button>
-                  ]}
-                
+                ]}
+
             >
                 <p>Do you want to delete this asset?</p>
                 <br/>
@@ -336,10 +351,11 @@ function TableAsset(props) {
             >
                 <p>Cannot delete the asset because it belongs to one or more historical assignments.
                     <br/>
-                If the asset is not able to be used anymore, please update its state in <Button type="link" className= "linkButton" onClick={()=>{navigate("/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
+                    If the asset is not able to be used anymore, please update its state in <Button type="link" className= "linkButton" onClick={()=>{navigate("/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
+
                 <br/>
             </Modal>
-            
+
         </>
     )
 }

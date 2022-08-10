@@ -94,8 +94,8 @@ export default function ViewInformationAsset(props) {
                                    style={{paddingLeft: "75px"}}>{Information.location}</p>
                             </div>
                             {
-                                Information.specification.length > 120 ?
-                                    <div className="specification" id="myDIV">
+                                Information.specification.length > 60 ?
+                                    <div className="specification" id="myDIV" >
                                         <p className="text-view-information"
                                            style={{verticalAlign: "top"}}>Specification</p>
                                         <div className="ex5 text-view-information" id="data-specification"
@@ -112,7 +112,7 @@ export default function ViewInformationAsset(props) {
                             {
                                 listHistory.length === 0 ?
                                     <div className="specification" id="myDIV-asset">
-                                        <p className="text-view-information" style={{verticalAlign: "top"}}>History</p>
+                                        <p className="text-view-information" style={{verticalAlign: "top" , marginTop:"4px"}}>History</p>
                                         <div className="ex4 text-view-information" id="data-history"
                                              style={{marginLeft: "80px" , height : "35px"}}>
 
@@ -144,7 +144,7 @@ export default function ViewInformationAsset(props) {
                                     </div>
                                     :
                                     <div className="specification" id="myDIV-asset">
-                                        <p className="text-view-information" style={{verticalAlign: "top"}}>History</p>
+                                        <p className="text-view-information" style={{verticalAlign: "top" ,  marginTop:"4px"}}>History</p>
                                         <div className="ex4 text-view-information" id="data-history"
                                              style={{marginLeft: "80px"}}>
 
@@ -191,7 +191,7 @@ export default function ViewInformationAsset(props) {
                                                                 <td className="col_asset col_returned_date_history">
                                                                     {
                                                                         item.returnedDay === null ?
-                                                                            <p className="col assetCategory_col"><br/> </p>
+                                                                            <p className="col assetCategory_col">No returned date </p>
                                                                             :
                                                                             <p className="col assetCategory_col">{item.returnedDay}</p>
 
