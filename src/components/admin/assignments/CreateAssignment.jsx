@@ -139,7 +139,7 @@ export default function CreateAssignment() {
         axios.post(`https://asset-assignment-be.azurewebsites.net/api/assignment`, {
             assignedToId: submitData.accountId,
             assetId: submitData.assetId,
-            assignedAt: values.assignedDate,
+            assignedDate: values.assignedDate,
             note: values.note
              
         },config)

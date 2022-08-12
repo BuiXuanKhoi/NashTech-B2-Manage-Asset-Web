@@ -6,7 +6,6 @@ import axios from "axios";
 import "antd/dist/antd.css";
 import moment from "moment";
 import toast from 'react-hot-toast';
-import * as formatDate from "../shared/formatdate"
 
 export default function EditAssignment() {
     const loginState = JSON.parse(localStorage.getItem("loginState"));
@@ -141,7 +140,7 @@ export default function EditAssignment() {
         axios.patch(`https://asset-assignment-be.azurewebsites.net/api/assignment/`+idAssignment.id, {
             assignedId: submitData.assignedId,
             assetId: submitData.assetId,
-            dateAssigned: values.assignedDate,
+            assignedDate: values.assignedDate,
             note: values.note,
              
         },config)
