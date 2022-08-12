@@ -31,3 +31,20 @@ code {
   margin-left: 18px !important;
   width: 89% !important;
 }
+
+
+.ant-modal-body {
+  padding-bottom: 0 !important;
+  display: contents !important;
+}
+
+.ant-modal-content {
+  border-radius: 10px !important;
+  text-align: -webkit-center !important;
+}
+
+.ant-modal-header {
+  border-radius: 10px 10px 0 0!important;
+  text-align: -webkit-auto !important;
+
+}
