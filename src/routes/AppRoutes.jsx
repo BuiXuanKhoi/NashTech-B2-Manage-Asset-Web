@@ -8,6 +8,7 @@ import HomeAdmin from "../components/admin/HomeAdmin";
 import CreateUser from "../components/admin/users/CreateUser";
 import EditUser from "../components/admin/users/EditUser";
 import ManageUser from "../components/admin/users/ManageUser";
+import RequestForReturningPage from "../components/admin/request/RequestForReturning"
 
 
 
@@ -52,11 +53,11 @@ export const AppRoutes = [
         element: <EditAssignment/>,
         title: "Manage Assignment > Edit Assignment",
     },
-    // {
-    //     path: "/request",
-    //     element: <RequestForReturningPage/>,
-    //     title: "Request for Returning",
-    // },
+    {
+        path: "/request",
+        element: <RequestForReturningPage/>,
+        title: "Request for Returning",
+    },
 
     // {
     //     path: "/report",
@@ -64,7 +65,7 @@ export const AppRoutes = [
     //     title: "Report",
     // },
 
-    
+
     {
         path: "/editUser/:id",
         element: <EditUser/>,

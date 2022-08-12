@@ -35,8 +35,11 @@ function TableAsset(props) {
     };
 
     function changeState(s) {
-        if (s === "WAITING_FOR_RECYCLE") {
-            s = "WAITING FOR RECYCLE"
+        if (s === "WAITING_FOR_RECYCLING") {
+            s = "WAITING FOR RECYCLING"
+        }
+        if(s === "NOT_AVAILABLE"){
+            s= "NOT AVAILABLE"
         }
         return s
     }
@@ -86,7 +89,13 @@ function TableAsset(props) {
             }
         })
     }
-
+    console.log("aaaa" + props.isLoading)
+    //
+    // {
+    //     props.listFilterState.map(item=>{
+    //         console.log(item)
+    //     })
+    // }
 
     useEffect(() => {
         if (props.listFilterState === null) {
@@ -94,7 +103,7 @@ function TableAsset(props) {
         } else {
             setDisplayList(props.listAsset);
         }
-    }, [props.listAsset])
+    }, [props.listAsset ])
 
     useEffect(() => {
         if (props.listFilterState !== null) {
@@ -103,6 +112,8 @@ function TableAsset(props) {
             setDisplayList([])
 
     }, [props.listFilterState])
+
+    console.log("hehehee" + props.checkSearch)
 
 
     return (
@@ -162,7 +173,7 @@ function TableAsset(props) {
                                             </p>
                                         </td>
                                         {
-                                            asset.state === "UNAVAILABLE" ?
+                                            asset.state === "NOT_AVAILABLE" ?
                                                 <td className="col_asset col_state" onClick={() => {
                                                     setModal({...isModal, isOpen: true});
                                                     setDataUser(asset)
@@ -246,7 +257,7 @@ function TableAsset(props) {
                                                     </p>
                                                 </td>
                                                 {
-                                                    item.state === "UNAVAILABLE" ?
+                                                    item.state === "NOT_AVAILABLE" ?
                                                         <td className="col_asset col_state" onClick={() => {
                                                             setModal({...isModal, isOpen: true});
                                                             setDataUser(item)
@@ -352,7 +363,6 @@ function TableAsset(props) {
                 <p>Cannot delete the asset because it belongs to one or more historical assignments.
                     <br/>
                     If the asset is not able to be used anymore, please update its state in <Button type="link" className= "linkButton" onClick={()=>{navigate("/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
-
                 <br/>
             </Modal>
 

@@ -9,7 +9,7 @@ th.col_no{
 th.col_assetCode{
     width: 10%;
 }
-th.col_assignedTo, th.col_assignmentBy, th.col_assignmentDate{
+th.col_assignedTo, th.col_assignmentBy, th.col_assignmentDate , th.col_acceptedBy{
     width: 12%;
 }
 th.col_assetName{
@@ -96,7 +96,7 @@ p.asset_name_col, p.assigned_to_col, p.assigned_by_col, p.assigned_date_col, p.s
     text-align: center;
     height: 32px !important;
 }
- .ant-picker-date-panel .ant-picker-body{
+.ant-picker-date-panel .ant-picker-body{
     padding:  0 !important;
 }
 

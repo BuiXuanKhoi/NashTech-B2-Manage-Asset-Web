@@ -11,6 +11,7 @@ import axios from "axios";
 import toast, {Toaster} from "react-hot-toast";
 import 'antd/dist/antd.css';
 import {useNavigate} from "react-router-dom";
+import {LoadingOutlined} from "@ant-design/icons";
 
 
 export default function ManageAsset() {
@@ -27,6 +28,7 @@ export default function ManageAsset() {
     const [checkedCategory, setCheckedCategory] = useState([]);
     const [checkFilter, setCheckFilter] = useState(false);
     const [checkNameSearch, setCheckNameSearch] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const [nameSearch, setNameSearch] = useState("");
@@ -39,9 +41,12 @@ export default function ManageAsset() {
     const config = {
         headers: {Authorization: `Bearer ${user.token}`}
     };
+
     const getListCategory = () => {
         axios
             .get("https://asset-assignment-be.azurewebsites.net/api/category", config)
+            // .get("http://localhost:8080/api/category", config)
+
             .then(function (response) {
                 console.log(response.data)
                 setListCategory(response.data)
@@ -54,79 +59,23 @@ export default function ManageAsset() {
     };
     const getListAsset = () => {
         axios
-            .get("https://asset-assignment-be.azurewebsites.net/api/asset?state=AVAILABLE UNAVAILABLE ASSIGNED", config)
+            .get("https://asset-assignment-be.azurewebsites.net/api/asset?state=AVAILABLE,NOT_AVAILABLE,ASSIGNED", config)
+            // .get("http://localhost:8080/api/asset?state=AVAILABLE,NOT_AVAILABLE,ASSIGNED", config)
+
             .then(function (response) {
                 console.log(response.data)
                 setListAsset(response.data.content)
                 console.log("Page "+ response.data.totalPages)
                 setTotalPage(response.data.totalPages)
+
             })
             .catch((error) => {
                 toast.error(error.response.data.message);
                 setTotalPage(0)
+                setIsLoading(false)
+
             });
     };
-    function getListAssetFilterSortSearch( sort ,page,  nameSearch) {
-        if(nameSearch === undefined)
-            nameSearch= "";
-        let link = "";
-        let state = "";
-        let category = "";
-        if(checked.length !== 0){
-            for (let i=0;i<checked.length;i++){
-                if(checked[i]==="All"){
-                    state="ASSIGNED AVAILABLE UNAVAILABLE WAITING_FOR_RECYCLE RECYCLED"
-                    break;
-                }
-                if(checked[i] === "Not available")
-                    state = state + "UNAVAILABLE ";
-                if(checked[i] === "Waiting for recycling")
-                    state = state + "WAITING_FOR_RECYCLE ";
-                if(checked[i] === "Assigned")
-                    state = state + "ASSIGNED ";
-                if(checked[i] === "Recycled")
-                    state = state + "RECYCLED ";
-                if(checked[i] === "Available")
-                    state = state + "AVAILABLE ";
-            }
-        }
-        else{
-            state = "AVAILABLE UNAVAILABLE ASSIGNED";
-        }
-        if(checkedCategory.length !== 0){
-            for (let i=0;i<checkedCategory.length;i++){
-                if(checkedCategory[i] === "All") {
-                    category = "";
-                    break;
-                }
-                listCategory.map(item=>{
-                    if(item.categoryName === checkedCategory[i]){
-                        category = category + item.categoryId + " ";
-                    }
-                })
-            }
-        }
-        console.log(category)
-
-        console.log(state)
-
-        link = "https://asset-assignment-be.azurewebsites.net/api/asset?"+ "&sort=" + sort+ "&page=" + page + "&code=" + nameSearch + "&state="+ state +"&category="+category
-        axios
-            .get(link, config)
-            .then(function (response) {
-                if (page === 0) {
-                    setListAsset(response.data.content)
-                    setTotalPage(response.data.totalPages)
-                } else {
-                    setListAsset(response.data.content)
-                    setTotalPage(response.data.totalPages)
-                }
-            })
-            .catch((error) => {
-                setListAsset([])
-                setTotalPage(0)
-            });
-    }
     function getListAssetFilterState(checked, page, sort, nameSearch) {
         console.log("hehee")
         let link = "";
@@ -135,23 +84,23 @@ export default function ManageAsset() {
         if(checked.length !== 0){
             for (let i=0;i<checked.length;i++){
                 if(checked[i]==="All"){
-                    state="ASSIGNED AVAILABLE UNAVAILABLE WAITING_FOR_RECYCLE RECYCLED"
+                    state="ASSIGNED,AVAILABLE,NOT_AVAILABLE,WAITING_FOR_RECYCLING,RECYCLED"
                     break;
                 }
                 if(checked[i] === "Not available")
-                    state = state + "UNAVAILABLE ";
+                    state = state + "NOT_AVAILABLE,";
                 if(checked[i] === "Waiting for recycling")
-                    state = state + "WAITING_FOR_RECYCLE ";
+                    state = state + "WAITING_FOR_RECYCLING,";
                 if(checked[i] === "Assigned")
-                    state = state + "ASSIGNED ";
+                    state = state + "ASSIGNED,";
                 if(checked[i] === "Recycled")
-                    state = state + "RECYCLED ";
+                    state = state + "RECYCLED,";
                 if(checked[i] === "Available")
-                    state = state + "AVAILABLE ";
+                    state = state + "AVAILABLE,";
             }
         }
         else{
-            state = "AVAILABLE UNAVAILABLE ASSIGNED";
+            state = "AVAILABLE,NOT_AVAILABLE,ASSIGNED";
         }
         if(checkedCategory.length !== 0){
             for (let i=0;i<checkedCategory.length;i++){
@@ -161,7 +110,7 @@ export default function ManageAsset() {
                 }
                 listCategory.map(item=>{
                     if(item.categoryName === checkedCategory[i]){
-                        category = category + item.categoryId + " ";
+                        category = category + item.categoryId + ",";
                     }
                 })
             }
@@ -170,21 +119,30 @@ export default function ManageAsset() {
 
 
         link = "https://asset-assignment-be.azurewebsites.net/api/asset?state=" + state + "&sort=" + sort + "&page=" + page + "&code=" + nameSearch + "&category=" + category
+        // link = "http://localhost:8080/api/asset?state=" + state + "&sort=" + sort + "&page=" + page + "&code=" + nameSearch + "&category=" + category
+        console.log(link)
         axios
             .get(link, config)
             .then(function (response) {
                 if (page === 0) {
                     setListAssetFilter(response.data.content)
+                    console.log(response.data.content)
                     setTotalPage(response.data.totalPages)
+                    setIsLoading(false)   // Hide loading screen
                 } else {
                     setListAssetFilter(response.data.content)
                     setTotalPage(response.data.totalPages)
+                    console.log(response.data.content)
+                    setIsLoading(false)   // Hide loading screen
                 }
             })
             .catch((error) => {
                 console.log("hihih")
                 setListAssetFilter([])
                 setTotalPage(0)
+                setIsLoading(false)
+
+
             });
     }
     const getListAssetSort = (col) => {
@@ -193,11 +151,13 @@ export default function ManageAsset() {
         });
         switch (col) {
             case 'ca': {
+                setIsLoading(true)
                 setSort({...sort, name: "ca"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("ca", 0,nameSearch);
+                    getListAssetFilterState(checked, 0, "ca", nameSearch)
+
                 }else{
-                    getListAssetFilterSortSearch("ca", 0,"");
+                    getListAssetFilterState(checked, 0, "ca", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
 
@@ -205,12 +165,14 @@ export default function ManageAsset() {
                 break;
             }
             case 'cd': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "cd"})
                 if(checkNameSearch) {
-                    getListAssetFilterSortSearch("cd", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "cd", nameSearch)
                 }
                 else{
-                    getListAssetFilterSortSearch("cd", 0, "");
+                    getListAssetFilterState(checked, 0, "cd", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
 
@@ -218,66 +180,84 @@ export default function ManageAsset() {
                 break;
             }
             case 'na': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "na"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("na",  0,nameSearch);
+                    getListAssetFilterState(checked, 0, "na", nameSearch)
                 }else{
-                    getListAssetFilterSortSearch("na",  0,nameSearch);
+                    getListAssetFilterState(checked, 0, "na", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
                 }
                 break;
             }
             case 'nd': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "nd"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("nd", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "nd", nameSearch)
+
                 }else{
-                    getListAssetFilterSortSearch("nd", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "nd", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
                 }
                 break;
             }
             case 'ed': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "ed"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("ed", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "ed", nameSearch)
+
                 }else{
-                    getListAssetFilterSortSearch("ed", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "ed", "")
+
                     setNameSearch("")
                     setCheckNameSearch(false)
                 }
                 break;
             }
             case 'ea': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "ea"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("ea", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "ea", nameSearch)
+
                 }else{
-                    getListAssetFilterSortSearch("ea", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "ea", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
                 }
                 break;
             }
             case 'sd': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "sd"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("sd",  0,nameSearch);
+                    getListAssetFilterState(checked, 0, "sd", nameSearch)
+
                 }else{
-                    getListAssetFilterSortSearch("sd",  0,nameSearch);
+                    getListAssetFilterState(checked, 0, "sd", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
                 }
                 break;
             }
             case 'sa': {
+                setIsLoading(true)
+
                 setSort({...sort, name: "sa"})
                 if(checkNameSearch){
-                    getListAssetFilterSortSearch("sa", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "sa", nameSearch)
+
                 }else{
-                    getListAssetFilterSortSearch("sa", 0, nameSearch);
+                    getListAssetFilterState(checked, 0, "sa", "")
                     setNameSearch("")
                     setCheckNameSearch(false)
                 }
@@ -298,6 +278,7 @@ export default function ManageAsset() {
 
     const handleChange = (page) => {
         setCheckFilter(true)
+        setIsLoading(true)
         setState({
             current: page,
         });
@@ -306,9 +287,10 @@ export default function ManageAsset() {
             checkpage = page - 1;
         }
         if(checkNameSearch){
-            getListAssetFilterSortSearch(sort.name,checkpage,nameSearch);
+            getListAssetFilterState(checked, checkpage, sort.name, nameSearch)
+
         }else{
-            getListAssetFilterSortSearch(sort.name,checkpage,"");
+            getListAssetFilterState(checked, checkpage, sort.name, "")
             setNameSearch("")
             setCheckNameSearch(false)
         }
@@ -324,13 +306,13 @@ export default function ManageAsset() {
                 setCheckNameSearch(false)
             }
         } else {
-            getListAssetFilterSortSearch(sort.name, 0, nameSearch);
+            getListAssetFilterState(checked,0,sort.name,nameSearch)
         }
     }
 
     const handleCheck = (event) => {
         setCheckFilter(true)
-
+        setIsLoading(true)   // Hide loading screen
         setNameSearch("")
         let updatedList = [...checked];
         if (event.target.checked) {
@@ -351,6 +333,7 @@ export default function ManageAsset() {
     };
 
     const findListAsset= () => {
+        setIsLoading(true)
         if (nameSearch.length > 20)
             toast.error("Invalid input ");
         else {
@@ -362,17 +345,12 @@ export default function ManageAsset() {
             if(checkNameSearch)
                 console.log("aaaaaaaa")
             console.log(nameSearch)
-            if (checked.length !== 0 || checkedCategory.length !== 0) {
-                getListAssetFilterState(checked, 0, sort.name, nameSearch)
-            } else {
-
-                getListAssetFilterSortSearch(sort.name, 0, nameSearch);
-            }
+            getListAssetFilterState(checked, 0, sort.name, nameSearch)
         }
     }
     const handleCheckCategory = (event) => {
         setCheckFilter(true)
-
+        setIsLoading(true)
         setNameSearch("")
         let updatedList = [...checked];
         if (event.target.checked) {
@@ -489,10 +467,18 @@ export default function ManageAsset() {
                                         name="keyword"
                                         value={nameSearch || ""}
                                         id="search-query"
+                                        onKeyPress={ function handle(e){
+                                            if(e.key === "Enter"){
+                                                findListAsset()
+                                            }
+                                            return false;
+                                        }}
                                         onChange={e => (setNameSearch(e.target.value), setCheckNameSearch(false))}
                                     />
 
-                                    <button type="button" className="button-search" onClick={findListAsset}>
+                                    <button type="button" className="button-search"
+
+                                            onClick={findListAsset}>
                                         <FontAwesomeIcon icon={faSearch}/></button>
                                 </div>
                             }
@@ -505,139 +491,152 @@ export default function ManageAsset() {
                         </div>
                     </div>
                     <div style={{ height : "100vh"}}>
-                        <div className="results-section">
-                            <div className="Asset_table">
-                                <>
-                                    <table>
-                                        {
-                                            totalPage === 0 ?
-                                                ""
-                                                :
-                                                <thead>
-                                                <tr>
-                                                    <th  className="col_asset col_assetCode_asset">
-                                                        <p className="col_1 assetCode_asset_col">Asset Code
-                                                            {
-                                                                sort.name === "cd" ?
-                                                                    <FontAwesomeIcon
-                                                                        id="up_No"
-                                                                        onClick={() => getListAssetSort("ca")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortUp}>`
-                                                                    </FontAwesomeIcon>
-                                                                    :
-                                                                    <FontAwesomeIcon
-                                                                        id="down_No"
-                                                                        onClick={() => getListAssetSort("cd")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortDown}>`
-                                                                    </FontAwesomeIcon>
-
-                                                            }
-                                                        </p>
-                                                    </th>
-                                                    <th className="col_asset col_assetName">
-                                                        <p className=" col_1 assetName_col">Asset Name
-                                                            {
-                                                                sort.name === "nd" ?
-                                                                    <FontAwesomeIcon
-                                                                        id="up_No"
-                                                                        onClick={() => getListAssetSort("na")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortUp}>`
-                                                                    </FontAwesomeIcon>
-                                                                    :
-                                                                    <FontAwesomeIcon
-                                                                        id="down_No"
-                                                                        onClick={() => getListAssetSort("nd")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortDown}>`
-                                                                    </FontAwesomeIcon>
-
-                                                            }
-                                                        </p>
-                                                    </th>
-                                                    <th className="col_asset col_assetCategory">
-                                                        <p className="col_1 assetCategory_col">Category
-                                                            {
-                                                                sort.name === "ed" ?
-                                                                    <FontAwesomeIcon
-                                                                        id="up_No"
-                                                                        onClick={() => getListAssetSort("ea")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortUp}>`
-                                                                    </FontAwesomeIcon>
-                                                                    :
-                                                                    <FontAwesomeIcon
-                                                                        id="down_No"
-                                                                        onClick={() => getListAssetSort("ed")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortDown}>`
-                                                                    </FontAwesomeIcon>
-
-                                                            }
-                                                        </p>
-                                                    </th>
-                                                    <th className="col_asset col_state">
-                                                        <p className="col_1 state_col">State
-                                                            {
-                                                                sort.name === "sd" ?
-                                                                    <FontAwesomeIcon
-                                                                        id="up_No"
-                                                                        onClick={() => getListAssetSort("sa")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortUp}>`
-                                                                    </FontAwesomeIcon>
-                                                                    :
-                                                                    <FontAwesomeIcon
-                                                                        id="down_No"
-                                                                        onClick={() => getListAssetSort("sd")}
-                                                                        style={{marginLeft: "0.3rem"}}
-                                                                        icon={faSortDown}>`
-                                                                    </FontAwesomeIcon>
-
-                                                            }
-                                                        </p>
-                                                    </th>
-                                                </tr>
-                                                </thead>
-                                        }
-                                        <TableAssets listAsset = {listAsset} listFilterState = {listAssetFilter}
-                                                     checkSearch ={checkFilter}
-                                        />
-                                    </table>
-                                </>
-                            </div>
-
-                        </div>
-
                         {
-                            totalPage === 0 ?
-                                ""
-                                :
+                            !isLoading ?
                                 <>
+                                    <div className="results-section">
+                                        <div className="Asset_table">
+                                            <>
+                                                <table>
+                                                    {
+                                                        totalPage === 0 ?
+                                                            ""
+                                                            :
+                                                            <thead>
+                                                            <tr>
+                                                                <th  className="col_asset col_assetCode_asset">
+                                                                    <p className="col_1 assetCode_asset_col">Asset Code
+                                                                        {
+                                                                            sort.name === "ca" ?
+                                                                                <FontAwesomeIcon
+                                                                                    id="up_No"
+                                                                                    onClick={() => getListAssetSort("cd")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortUp}>`
+                                                                                </FontAwesomeIcon>
+                                                                                :
+                                                                                <FontAwesomeIcon
+                                                                                    id="down_No"
+                                                                                    onClick={() => getListAssetSort("ca")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortDown}>`
+                                                                                </FontAwesomeIcon>
+
+                                                                        }
+                                                                    </p>
+                                                                </th>
+                                                                <th className="col_asset col_assetName">
+                                                                    <p className=" col_1 assetName_col">Asset Name
+                                                                        {
+                                                                            sort.name === "na" ?
+                                                                                <FontAwesomeIcon
+                                                                                    id="up_No"
+                                                                                    onClick={() => getListAssetSort("nd")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortUp}>`
+                                                                                </FontAwesomeIcon>
+                                                                                :
+                                                                                <FontAwesomeIcon
+                                                                                    id="down_No"
+                                                                                    onClick={() => getListAssetSort("na")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortDown}>`
+                                                                                </FontAwesomeIcon>
+
+                                                                        }
+                                                                    </p>
+                                                                </th>
+                                                                <th className="col_asset col_assetCategory">
+                                                                    <p className="col_1 assetCategory_col">Category
+                                                                        {
+                                                                            sort.name === "ea" ?
+                                                                                <FontAwesomeIcon
+                                                                                    id="up_No"
+                                                                                    onClick={() => getListAssetSort("ed")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortUp}>`
+                                                                                </FontAwesomeIcon>
+                                                                                :
+                                                                                <FontAwesomeIcon
+                                                                                    id="down_No"
+                                                                                    onClick={() => getListAssetSort("ea")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortDown}>`
+                                                                                </FontAwesomeIcon>
+
+                                                                        }
+                                                                    </p>
+                                                                </th>
+                                                                <th className="col_asset col_state">
+                                                                    <p className="col_1 state_col">State
+                                                                        {
+                                                                            sort.name === "sa" ?
+                                                                                <FontAwesomeIcon
+                                                                                    id="up_No"
+                                                                                    onClick={() => getListAssetSort("sd")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortUp}>`
+                                                                                </FontAwesomeIcon>
+                                                                                :
+                                                                                <FontAwesomeIcon
+                                                                                    id="down_No"
+                                                                                    onClick={() => getListAssetSort("sa")}
+                                                                                    style={{marginLeft: "0.3rem"}}
+                                                                                    icon={faSortDown}>`
+                                                                                </FontAwesomeIcon>
+
+                                                                        }
+                                                                    </p>
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                    }
+                                                    <TableAssets listAsset = {listAsset} listFilterState = {listAssetFilter}
+                                                                 checkSearch ={checkFilter} isLoading ={isLoading}
+                                                    />
+                                                </table>
+                                            </>
+                                        </div>
+
+                                    </div>
                                     {
-                                        state.current === 0 ?
-                                            <Pagination
-                                                style={{marginTop: "20px", marginLeft: "70%"}}
-                                                nextIcon={"Next"}
-                                                prevIcon={"Previous"}
-                                                current={state.current + 1}
-                                                onChange={handleChange}
-                                                total={totalPage * 10}
-                                            />
+                                        totalPage === 0 ?
+                                            ""
                                             :
-                                            <Pagination
-                                                style={{marginTop: "20px", marginLeft: "70%"}}
-                                                nextIcon={"Next"}
-                                                prevIcon={"Previous"}
-                                                current={state.current}
-                                                onChange={handleChange}
-                                                total={totalPage * 10}
-                                            />
+                                            <>
+                                                {
+                                                    state.current === 0 ?
+                                                        <Pagination
+                                                            style={{marginTop: "20px", marginLeft: "70%"}}
+                                                            nextIcon={"Next"}
+                                                            prevIcon={"Previous"}
+                                                            current={state.current + 1}
+                                                            onChange={handleChange}
+                                                            total={totalPage * 10}
+                                                        />
+                                                        :
+                                                        <Pagination
+                                                            style={{marginTop: "20px", marginLeft: "70%"}}
+                                                            nextIcon={"Next"}
+                                                            prevIcon={"Previous"}
+                                                            current={state.current}
+                                                            onChange={handleChange}
+                                                            total={totalPage * 10}
+                                                        />
+                                                }
+                                            </>
                                     }
+
                                 </>
+
+
+                                :
+                                <LoadingOutlined
+                                    style={{fontSize: "60px", color: "red", textAlign: "center", marginTop: "70px"}}/>
+
+
                         }
+
 
                     </div>
                 </div>

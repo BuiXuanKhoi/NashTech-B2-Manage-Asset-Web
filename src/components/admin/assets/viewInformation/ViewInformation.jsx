@@ -37,6 +37,16 @@ export default function ViewInformationAsset(props) {
         console.log(isModalVisible);
     }, []);
 
+    function changeState(s) {
+        if (s === "WAITING_FOR_RECYCLING") {
+            s = "WAITING FOR RECYCLING"
+        }
+        if(s === "NOT_AVAILABLE"){
+            s = "NOT AVAILABLE"
+        }
+        return s
+    }
+
 
     return (
         <>
@@ -86,7 +96,7 @@ export default function ViewInformationAsset(props) {
                             <div className="state">
                                 <p className="text-view-information">State</p>
                                 <p className="text-view-information" id="data-state"
-                                   style={{paddingLeft: "97px"}}>{Information.state}</p>
+                                   style={{paddingLeft: "97px"}}>{changeState(Information.state)}</p>
                             </div>
                             <div className="assigned-date">
                                 <p className="text-view-information">Location</p>
