@@ -58,6 +58,9 @@ export default function RequestForReturning() {
                     state ="";
                     break;
                 }
+                if (checked[i] === "Waiting for returning"){
+                    checked[i] = "Waiting_for_returning"
+                }
                 state = checked[i].toUpperCase() + "," + state;
             }
         }
@@ -143,7 +146,7 @@ export default function RequestForReturning() {
     return (
         <>
             <div className="title">
-                <h2 style={{color: "red", textAlign: "inherit", fontWeight: "700"}}>Assignment List</h2>
+                <h2 style={{color: "red", textAlign: "inherit", fontWeight: "700"}}>Request List</h2>
             </div>
             <div className="user-list-toolbar-wrapper">
                 <div className="user-list-toolbar">
@@ -235,6 +238,17 @@ export default function RequestForReturning() {
 
                 </div>
             </div>
+            <Toaster
+                toastOptions={{
+                    className: 'toast',
+                    style: {
+                        border: '1px solid #713200',
+                        padding: '36px',
+                        color: '#713200',
+
+                    },
+                }}
+            />
         </>
     );
 }

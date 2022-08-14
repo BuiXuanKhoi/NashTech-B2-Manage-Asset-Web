@@ -7,7 +7,20 @@ import {ReloadOutlined, CloseCircleOutlined, LoadingOutlined, CloseOutlined, Che
 import "./TableRequest.css"
 import {Pagination} from "antd";
 import _ from "lodash";
+
+import { Button, Modal } from 'antd';
+import toast, {Toaster} from "react-hot-toast";
+import axios from 'axios';
 function TableRequest(props) {
+    const [modalConfirmComplete, setModalConfirmComplete] = useState({
+        isOpen: false,
+        isLoading: false,
+    });
+    const loginState = JSON.parse(localStorage.getItem("loginState"));
+    const config = {
+        headers: { Authorization: `Bearer ${loginState.token}` }
+    };
+    const [id, setId] = useState(0);
     const [displayList, setDisplayList] = useState(props.listRequest);
     const [sort, setSort] = useState({
         name: "",
@@ -26,6 +39,27 @@ function TableRequest(props) {
         if(Math.floor(s/20) > 0 && s%20=== 0)
             totalPage = Math.floor(s/20);
         setTotal(totalPage)
+    }
+    const handleComplete = () => {
+        axios.put(`https://asset-assignment-be.azurewebsites.net/api/request/`+id,{},config)
+            .then(
+           (response) => {
+            setModalConfirmComplete({ ...modalConfirmComplete, isOpen: false })
+            toast.success("Completed request successfully");
+            window.location.reload();
+            }).catch((error) => {
+                console.log(error)
+                setModalConfirmComplete({ ...modalConfirmComplete, isOpen: false })
+                if(error.response.data.statusCode === 404){
+                    toast.error("This request not found")
+                    //toast.error("This asset has been deleted before")
+                    window.location.reload();
+                }
+                else{
+                    toast.error(error.response.data.message)
+                    window.location.reload();
+                }
+            })
     }
     useEffect(() => {
         if (props.listRequestFilter === null) {
@@ -512,17 +546,40 @@ function TableRequest(props) {
 
                                                             </>
                                                     }
+                                                    {
+                                                        item.state === "WAITING_FOR_RETURNING" ?
+                                                            <>
+                                                                <td className="btn_col_assignment edit" onClick={() => {
+                                                                        setId(item.requestId);
+                                                                        setModalConfirmComplete({...modalConfirmComplete, isOpen:true})
+                                                                    }}>
+                                                                    <i className="fas fa-pencil-alt"></i>
 
-                                                    <td className="btn_col_assignment edit ant-pagination-disabled">
-                                                        <i className="fas fa-pencil-alt"></i>
+                                                                    <CheckOutlined style={{color: "red"}}/>
 
-                                                        <CheckOutlined style={{color: "red"}}/>
+                                                                </td>
+                                                                <td className="btn_col_assignment delete">
+                                                                    {/* eslint-disable-next-line react/jsx-no-undef */}
+                                                                    <CloseOutlined style={{color: "black"}}/>
+                                                                </td>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <td className="btn_col_assignment edit ant-pagination-disabled">
+                                                                    <i className="fas fa-pencil-alt"></i>
 
-                                                    </td>
-                                                    <td className="btn_col_assignment delete ant-pagination-disabled">
-                                                        {/* eslint-disable-next-line react/jsx-no-undef */}
-                                                        <CloseOutlined style={{color: "black"}}/>
-                                                    </td>
+                                                                    <CheckOutlined style={{color: "#F3AAAA"}}/>
+
+                                                                </td>
+                                                                <td className="btn_col_assignment delete ant-pagination-disabled">
+                                                                    {/* eslint-disable-next-line react/jsx-no-undef */}
+                                                                    <CloseOutlined style={{color: "grey"}}/>
+                                                                </td>
+
+                                                            </>
+                                                    }
+
+                                                    
                                                 </tr>
                                             ))
                                         }
@@ -560,7 +617,27 @@ function TableRequest(props) {
 
 
             }
-
+            <Modal
+        className = "modalConfirm"
+                title="Are you sure?"
+                visible={modalConfirmComplete.isOpen}
+                width={400}
+                closable={false}
+                onOk={handleComplete}
+                onCancel = {()=> {setModalConfirmComplete({ ...modalConfirmComplete, isOpen: false })}}
+                footer={[
+                    <Button key="submit" className="buttonSave" onClick={handleComplete}>
+                    Yes
+                    </Button>,
+                    <Button key="cancel" className = "buttonCancel" onClick={()=> {setModalConfirmComplete({ ...modalConfirmComplete, isOpen: false })}}>
+                    No
+                    </Button>
+                  ]}
+                
+            >
+                <p>Do you want to mark this returning request as "Completed"?</p>
+                <br/>
+            </Modal>
         </>
     )
 }
