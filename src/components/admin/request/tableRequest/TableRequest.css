@@ -1,8 +1,8 @@
 th.col_assetName_request{
-    width: 15% !important;
+    width: 12% !important;
 }
 td.col_assetName_request{
-    width: 15% !important;
+    width: 12% !important;
 }
 th.col_assignedTo, th.col_assignmentBy, th.col_assignmentDate , th.col_acceptedBy , th.col_requestBy{
     width: 12%;

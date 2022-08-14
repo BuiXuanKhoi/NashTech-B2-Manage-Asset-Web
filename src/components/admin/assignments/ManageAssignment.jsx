@@ -223,13 +223,13 @@ export default function ManageAssignment() {
             })
             .catch((error) => {
                 setListAssignment([])
-
                 setTotalPage(0)
 
             });
     }
 
     function getListAssignmnetToPage(page,nameSearch) {
+        setCheckFilter(true)
         if (checked.length !== 0) {
             getListAssignmentFilter(checked, page, sort.name, searchDay, nameSearch)
         } else {
@@ -238,6 +238,7 @@ export default function ManageAssignment() {
     }
 
     const handleCheck = (event) => {
+        setCheckFilter(true)
         setNameSearch("")
         let updatedList = [...checked];
         if (event.target.checked) {
@@ -261,6 +262,7 @@ export default function ManageAssignment() {
     };
 
     const handleChange = (page) => {
+        setCheckFilter(true)
         setState({
             current: page,
         });
@@ -291,6 +293,7 @@ export default function ManageAssignment() {
 
     }
     const findListAssigmentSearch = () => {
+        setCheckFilter(true)
         if (nameSearch.length > 20)
             toast.error("Invalid input ");
         else {
@@ -378,6 +381,12 @@ export default function ManageAssignment() {
                                 value={nameSearch || ""}
                                 id="search-query"
                                 onChange={e => setNameSearch(e.target.value)}
+                                onKeyPress={ function handle(e){
+                                    if(e.key === "Enter"){
+                                        findListAssigmentSearch()
+                                    }
+                                    return false;
+                                }}
                             />
 
                             <button type="button" className="button-search" onClick={findListAssigmentSearch}>

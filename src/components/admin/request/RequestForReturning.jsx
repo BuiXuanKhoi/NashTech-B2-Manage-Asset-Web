@@ -15,6 +15,7 @@ export default function RequestForReturning() {
     const [state, setState] = useState({
         current: 0,
     });
+    const [checkSearch , setCheckSearch] = useState(false)
 
     const [nameSearch, setNameSearch] = useState("");
 
@@ -24,22 +25,118 @@ export default function RequestForReturning() {
     };
     const [totalPage, setTotalPage] = useState(0);
     const [listRequest, setListRequest] = useState([]);
+    const [listRequestFilter, setListRequestFilter] = useState([]);
+    const [listRequestFilterSearch, setListRequestFilterSearch] = useState([]);
+    const [date, setDate] = useState("")
+
+    const [checked, setChecked] = useState([]);
+    const [checkNameSearch, setCheckNameSearch] = useState(false);
+    const [searchDay, setSearchDay] = useState("");
+
 
 
     const getListRequest = () => {
         axios
             .get("https://asset-assignment-be.azurewebsites.net/api/request", config)
             .then(function (response) {
-                setListRequest(response.data)
+                    setListRequest(response.data)
             })
             .catch((error) => {
                 setTotalPage(0)
             });
     };
 
+
+
+    function getListRequestToPage(page,nameSearch,checked,searchDay) {
+        setCheckSearch(true)
+        let link = "";
+        let state = "";
+        if(checked.length !== 0){
+            for (let i=0;i<checked.length;i++){
+                if(checked[i] === "All"){
+                    state ="";
+                    break;
+                }
+                state = checked[i].toUpperCase() + "," + state;
+            }
+        }
+        else{
+            state = "";
+        }
+        link = "https://asset-assignment-be.azurewebsites.net/api/request?state=" + state + "&code=" + nameSearch +"&date=" +searchDay
+        console.log(link)
+        axios
+            .get(link, config)
+            .then(function (response) {
+                setListRequestFilter(response.data)
+                console.log(response.data)
+            })
+            .catch((error) => {
+                setListRequestFilter([])
+            });
+    }
+    function getListAssetToPage(page,nameSearch,searchDay) {
+        if (checked.length !== 0) {
+            if(checkNameSearch) {
+                getListRequestToPage(page,nameSearch,checked,searchDay)
+            }
+            else{
+                getListRequestToPage(page,"",checked,searchDay)
+                setNameSearch("")
+                setCheckNameSearch(false)
+            }
+        } else {
+            getListRequestToPage(page,nameSearch,checked,searchDay)
+        }
+    }
+
+    const handleCheck = (event) => {
+        let updatedList = [...checked];
+        if (event.target.checked) {
+            checked.push(event.target.value)
+            updatedList = [...checked]
+        } else {
+            checked.splice(checked.indexOf(event.target.value), 1);
+            updatedList = [...checked]
+        }
+        setState({
+            current: 0,
+        });
+        setNameSearch("")
+        setCheckNameSearch(false)
+        getListAssetToPage(0,"",searchDay);
+    };
+
+    const findListRequest= () => {
+        if (nameSearch.length > 20)
+            toast.error("Invalid input ");
+        else {
+            setState({
+                current: 0,
+            });
+            setCheckNameSearch(true)
+            if(checkNameSearch)
+                console.log("aaaaaaaa")
+            console.log(nameSearch)
+            getListRequestToPage(0,nameSearch, checked, date)
+        }
+
+    }
+    const onChangeDay = (date, dateString) => {
+        if (date === null) {
+            setSearchDay("")
+        }
+        setSearchDay(dateString)
+        getListAssetToPage(0,nameSearch,dateString);
+
+    }
     useEffect(() => {
         getListRequest();
     }, []);
+
+
+
 
 
 
@@ -61,7 +158,7 @@ export default function RequestForReturning() {
                                         <FontAwesomeIcon icon={faFilter}/>
                                     </div>
                                 </div>
-                                <div className="dropdown-content-assignment">
+                                <div className="dropdown-content-request">
                                     <ul style={{listStyleType: "none"}}>
                                         {checkList.map((item, index) => (
                                             <li key={index}>
@@ -70,6 +167,8 @@ export default function RequestForReturning() {
                                                        name="role"
                                                        id={index}
                                                        style={{marginTop: "12px"}}
+                                                       onChange={handleCheck}
+
                                                 /><label htmlFor={index}
                                                          style={{
                                                              paddingLeft: "10px",
@@ -93,6 +192,8 @@ export default function RequestForReturning() {
                                 borderRadius: " 0.2rem",
                                 paddingRight: "10px"
                             }}
+                            onChange={onChangeDay}
+
                             suffixIcon={<CalendarFilled
                                 style={{color: "black", background: " #d9363e !important"}}/>}
                             format="DD/MM/YYYY"
@@ -111,8 +212,14 @@ export default function RequestForReturning() {
                                 value={nameSearch || ""}
                                 id="search-query"
                                 onChange={e => setNameSearch(e.target.value)}
+                                onKeyPress={ function handle(e){
+                                    if(e.key === "Enter"){
+                                        findListRequest()
+                                    }
+                                    return false;
+                                }}
                             />
-                            <button type="button" className="button-search" >
+                            <button type="button" className="button-search"  onClick={findListRequest}>
                                 <FontAwesomeIcon icon={faSearch}/></button>
                         </div>
                     </div>
@@ -120,16 +227,10 @@ export default function RequestForReturning() {
                 </div>
                 <div>
                     <div>
-                                 <TableRequest listRequest = {listRequest}/>
+                                 <TableRequest listRequest = {listRequest} listRequestFilter={listRequestFilter} checkSearch={checkSearch} searchDay={searchDay}
+                                               listRequestFilterSearch={listRequestFilterSearch}/>
                     </div>
 
-                                        <Pagination
-                                            style={{marginTop: "20px", marginLeft: "70%"}}
-                                            nextIcon={"Next"}
-                                            prevIcon={"Previous"}
-                                            current={1}
-                                            total={30}
-                                        />
 
 
                 </div>
