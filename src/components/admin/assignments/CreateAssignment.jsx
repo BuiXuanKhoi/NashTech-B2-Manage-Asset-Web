@@ -555,7 +555,7 @@ export default function CreateAssignment() {
                                         <Button
                                             disabled={
                                                 // !form.isFieldsTouched(true) ||
-                                                (submitData.assetName == "" && submitData.fullName == "" ) ||
+                                                (submitData.assetName == "" || submitData.fullName == "" ) ||
                                                 form.getFieldsError().filter(({errors}) => errors.length).length > 0
                                             }
                                             className='buttonSave'

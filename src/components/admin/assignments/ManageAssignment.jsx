@@ -394,7 +394,7 @@ export default function ManageAssignment() {
                         </div>
                         <div id="create-btn-section">
                             <button className="btn-createUser" onClick={()=>{
-                                    navigate("/createAssignment");
+                                    navigate("/assignment/createAssignment");
                             }}>
                                 <p className="btn_create_text"> Create new assignment</p>
                             </button>

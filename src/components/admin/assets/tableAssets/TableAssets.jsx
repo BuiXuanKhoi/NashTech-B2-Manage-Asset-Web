@@ -203,7 +203,7 @@ function TableAsset(props) {
                                                 :
                                                 <>
                                                     <td className="btn_col_assignment edit" onClick={() => {
-                                                        navigate("/editAsset/" + asset.assetId)
+                                                        navigate("/asset/editAsset/" + asset.assetId)
                                                     }}>
                                                         <i className="fas fa-pencil-alt"></i>
                                                         <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
@@ -289,7 +289,7 @@ function TableAsset(props) {
                                                         :
                                                         <>
                                                             <td className="btn_col_assignment edit" onClick={() => {
-                                                                navigate("/editAsset/" + item.assetId)
+                                                                navigate("/asset/editAsset/" + item.assetId)
                                                             }}>
                                                                 <i className="fas fa-pencil-alt"></i>
                                                                 <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
@@ -362,7 +362,7 @@ function TableAsset(props) {
             >
                 <p>Cannot delete the asset because it belongs to one or more historical assignments.
                     <br/>
-                    If the asset is not able to be used anymore, please update its state in <Button type="link" className= "linkButton" onClick={()=>{navigate("/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
+                    If the asset is not able to be used anymore, please update its state in <Button type="link" className= "linkButton" onClick={()=>{navigate("/asset/editAsset/"+id)}}><u>Edit Asset page</u></Button></p>
                 <br/>
             </Modal>
 

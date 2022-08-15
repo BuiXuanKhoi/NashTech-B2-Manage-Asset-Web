@@ -220,7 +220,7 @@ function TableAssignment(props) {
                                         assignment.state === "WAITING_FOR_ACCEPTANCE" ?
                                             <>
                                                 <td className="btn_col_assignment edit " onClick={() => {
-                                                        navigate("/editAssignment/" + assignment.assignmentId);
+                                                        navigate("/assignment/editAssignment/" + assignment.assignmentId);
                                                     }}>
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
@@ -361,7 +361,7 @@ function TableAssignment(props) {
                                         item.state === "WAITING_FOR_ACCEPTANCE" ?
                                             <>
                                                 <td className="btn_col_assignment pencil"  onClick={() => {
-                                                        navigate("/editAssignment/" + item.assignmentId);
+                                                        navigate("/assignment/editAssignment/" + item.assignmentId);
                                                     }}>
                                                     <i className="fas fa-pencil-alt"></i>
                                                     <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>

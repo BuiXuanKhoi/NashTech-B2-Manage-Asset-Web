@@ -338,7 +338,7 @@ export default function ManageUser() {
                         }
                         <div id="create-btn-section">
                             <button className="btn-createUser" onClick={() => {
-                                navigate("/createuser");
+                                navigate("/user/createuser");
                             }}>
                                 <p className="btn_create_text"> Create new user</p>
                             </button>

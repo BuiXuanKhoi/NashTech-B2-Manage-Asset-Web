@@ -19,7 +19,7 @@ export const AppRoutes = [
         title: "Home",
     },
     {
-        path: "/createuser",
+        path: "/user/createuser",
         element: <CreateUser/>,
         title: "Manage User > Create User",
     },
@@ -34,7 +34,7 @@ export const AppRoutes = [
         title: "Manage Asset",
     },
     {
-        path: "/editAsset/:id",
+        path: "/asset/editAsset/:id",
         element: <EditAsset/>,
         title: "Manage Asset > Edit Asset",
     },
@@ -44,12 +44,12 @@ export const AppRoutes = [
         title: "Manage Assignment",
     },
     {
-        path: "/createAssignment",
+        path: "/assignment/createAssignment",
         element: <CreateAssignment/>,
         title: "Manage Assignment > Create Assignment",
     },
     {
-        path: "/editAssignment/:id",
+        path: "/assignment/editAssignment/:id",
         element: <EditAssignment/>,
         title: "Manage Assignment > Edit Assignment",
     },
@@ -67,12 +67,12 @@ export const AppRoutes = [
 
 
     {
-        path: "/editUser/:id",
+        path: "/user/editUser/:id",
         element: <EditUser/>,
         title: "Manage User > Edit User",
     },
     {
-        path: "/createAsset",
+        path: "/asset/createAsset",
         element: <CreateAsset/>,
         title: "Manage Asset > Create Asset",
     },

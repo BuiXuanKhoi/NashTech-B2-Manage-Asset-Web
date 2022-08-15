@@ -144,7 +144,7 @@ function TableUser(props) {
                                         <p className="col type_col">{user.roleName}</p>
                                     </td>
                                     <td className="btn_col pencil" onClick={() => {
-                                        navigate("/editUser/" + user.accountId);
+                                        navigate("/user/editUser/" + user.accountId);
                                     }}>
                                         <i className="fas fa-pencil-alt"></i>
                                         <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>
@@ -202,7 +202,7 @@ function TableUser(props) {
                                         <p className="col type_col">{item.roleName}</p>
                                     </td>
                                     <td className="btn_col pencil" onClick={() => {
-                                        navigate("/editUser/" + item.accountId);
+                                        navigate("/user/editUser/" + item.accountId);
                                     }}>
                                         <i className="fas fa-pencil-alt"></i>
                                         <FontAwesomeIcon icon={faPencilAlt}></FontAwesomeIcon>

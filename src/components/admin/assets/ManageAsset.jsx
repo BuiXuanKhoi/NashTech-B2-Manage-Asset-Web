@@ -483,7 +483,7 @@ export default function ManageAsset() {
                             }
                             <div id="create-btn-section">
                                 <button className="btn-createUser" onClick={() => {
-                                    navigate("/createAsset")}}>
+                                    navigate("/asset/createAsset")}}>
                                     <p className="btn_create_text"> Create new asset</p>
                                 </button>
                             </div>
