@@ -531,7 +531,7 @@ export default function CreateAssignment() {
                                     name="note"
                                     rules={[
                                         {
-                                            pattern: new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"),
+                                            pattern: new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~\t ]+$"),
                                             message: "Don't allow Unicode UTF-8 characters for this filed"
                                         },
                                         {whitespace: true, message: 'Note must be required'},

@@ -64,16 +64,12 @@ export default function ManageUser() {
 
     function getListUserFilter( page,sort,nameSearch,checked) {
         let link ="";
-        // if(sort === "")
-        //     link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + name + "&page=" + page
-        // else
-        //     link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + name + "&page=" + page + "&sort=" + sort
         if(checked.length >1){
             link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + "&page=" + page + "&sort=" + sort +"&code=" + nameSearch
         }
         if(checked.length === 1){
             if(checked[0] === "All"){
-                link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + "&page=" + page + "&sort=" + sort +"&code=" + nameSearch +"&sort=" + sort
+                link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + "&page=" + page + "&sort=" + sort +"&code=" + nameSearch
             }
             else{
                 link = "https://asset-assignment-be.azurewebsites.net/api/account?filter=" + checked[0].toLowerCase() + "&page=" + page + "&sort=" + sort +"&code=" + nameSearch
@@ -98,6 +94,7 @@ export default function ManageUser() {
             })
             .catch((error) => {
                 setListUserFilter([])
+                setListUser([])
                 setTotalPage(0)
                 setIsLoading(false)
 
@@ -219,6 +216,7 @@ export default function ManageUser() {
         }
     }
     const handleCheck = (event) => {
+        setCheckFilter(true);
         setIsLoading(true)
         let updatedList = [...checked];
         if (event.target.checked) {
@@ -239,6 +237,7 @@ export default function ManageUser() {
 
     };
     const findListUserSearch = () => {
+
         setCheckNameSearch(true)
         setIsLoading(true)
         if (nameSearch.length > 20)
@@ -257,6 +256,7 @@ export default function ManageUser() {
 
     const handleChange = (page) => {
         setIsLoading(true)
+        setCheckFilter(true);
         setState({
             current: page,
         });

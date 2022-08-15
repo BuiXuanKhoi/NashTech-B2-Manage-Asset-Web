@@ -268,7 +268,7 @@ export default function CreateAsset(){
                                                 if ((value.trim())==='') {
                                                     return Promise.reject("Specification must be required")
                                                 }
-                                                else if(!value.match(new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
+                                                else if(!value.match(new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~\t ]+$"))){
                                                     console.log(value)
                                                     return Promise.reject("Don't allow Unicode UTF-8 characters for this filed")
                                                 }

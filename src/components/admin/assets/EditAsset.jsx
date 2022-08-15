@@ -265,7 +265,7 @@ export default function EditAsset(){
                                                 if ((value.trim())==='') {
                                                     return Promise.reject("Specification must be required")
                                                 }
-                                                else if(!value.match(new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~ ]+$"))){
+                                                else if(!value.match(new RegExp("^[a-zA-Z'\n\r\-|!*\"\\#$%&/()=?»«@£§€{}.;'<>_,^+~\t ]+$"))){
                                                     return Promise.reject("Don't allow Unicode UTF-8 characters for this filed")
                                                 }
                                                 else if ((value.length)>500) {
