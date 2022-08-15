@@ -65,7 +65,7 @@ function TableAssignment(props) {
 
     const createRequest =() =>{
         console.log(id)
-        axios.post(`http://localhost:8080/api/request/` + id + `?user=` + userId, null, config)
+        axios.post(`https://asset-assignment-be.azurewebsites.net/api/request/` + id + `?user=` + userId, null, config)
             .then(
                 (response) =>{
                     console.log(id);

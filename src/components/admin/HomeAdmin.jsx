@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {CheckOutlined, CloseOutlined, CloseSquareOutlined, ReloadOutlined} from "@ant-design/icons";
 import moment from "moment";
-import "./users/CreateUser.css"
+import "../admin/users/CreateUser.css"
 export default function Home() {
     const [data, setData] = useState([])
     const [modal, setModal] = useState({
@@ -14,7 +14,7 @@ export default function Home() {
     const [isModalCancelVisible, setIsModalCancelVisible] = useState(false);
     const [isModalReturnVisible, setIsModalReturnVisible] = useState(false);
     const [idCompleted, setIdCompleted] = useState();
-    const loginState = JSON.parse(localStorage.getItem("loginState"));
+   let loginState = JSON.parse(localStorage.getItem("loginState"));
     
 
     const showModal = () => {
@@ -25,7 +25,7 @@ export default function Home() {
         setIsModalVisible(false);
 
         axios
-            .put(``)  // api assignment accepted
+            .put(`https://asset-assignment-be.azurewebsites.net/api/assignment/{id}`)  // api assignment accepted
             .then((res) => {
 
 
@@ -56,7 +56,7 @@ export default function Home() {
     const handleDeleteOk = () => {
         setIsModalCancelVisible(false);
         axios
-            .put(``) // link api assignment declined
+            .put(`https://asset-assignment-be.azurewebsites.net/api/assignment/{id}`) // link api assignment declined
             .then((res) => {
                 setIdCompleted(null)
 
@@ -93,7 +93,10 @@ export default function Home() {
     };
 //===============================================
     useEffect(() => {
-        if(loginState===null) window.location.reload();
+        // if(loginState===null) window.location.reload();
+        loginState = JSON.parse(localStorage.getItem('loginState'));
+        if (loginState===null) return;
+
         axios
             .get(`https://asset-assignment-be.azurewebsites.net/api/assignment/user`, {
                 headers: { Authorization: `Bearer ${loginState.token}` }
