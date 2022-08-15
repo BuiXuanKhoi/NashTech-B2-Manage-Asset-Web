@@ -16,6 +16,10 @@ function TableRequest(props) {
         isOpen: false,
         isLoading: false,
     });
+    const [modalConfirmCancel, setModalConfirmCancel] = useState({
+        isOpen: false,
+        isLoading: false,
+    });
     const loginState = JSON.parse(localStorage.getItem("loginState"));
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
@@ -58,6 +62,25 @@ function TableRequest(props) {
                 else{
                     toast.error(error.response.data.message)
                     window.location.reload();
+                }
+            })
+    }
+    const handleCancel = () => {
+        axios.delete(`https://asset-assignment-be.azurewebsites.net/api/request/`+id,config)
+            .then(
+           (response) => {
+            setModalConfirmCancel({ ...modalConfirmCancel, isOpen: false })
+            toast.success("Cancel request successfully");
+            window.location.reload();
+            }).catch((error) => {
+                console.log(error)
+                setModalConfirmCancel({ ...modalConfirmCancel, isOpen: false })
+                if(error.response.data.statusCode === 404){
+                    toast.error("This request not found")
+                    window.location.reload();
+                }
+                else{
+                    toast.error(error.response.data.message)
                 }
             })
     }
@@ -558,7 +581,10 @@ function TableRequest(props) {
                                                                     <CheckOutlined style={{color: "red"}}/>
 
                                                                 </td>
-                                                                <td className="btn_col_assignment delete">
+                                                                <td className="btn_col_assignment delete" onClick={() => {
+                                                                        setId(item.requestId);
+                                                                        setModalConfirmCancel({...modalConfirmCancel, isOpen:true})
+                                                                    }}>
                                                                     {/* eslint-disable-next-line react/jsx-no-undef */}
                                                                     <CloseOutlined style={{color: "black"}}/>
                                                                 </td>
@@ -618,7 +644,7 @@ function TableRequest(props) {
 
             }
             <Modal
-        className = "modalConfirm"
+                className = "modalConfirm"
                 title="Are you sure?"
                 visible={modalConfirmComplete.isOpen}
                 width={400}
@@ -636,6 +662,27 @@ function TableRequest(props) {
                 
             >
                 <p>Do you want to mark this returning request as "Completed"?</p>
+                <br/>
+            </Modal>
+            <Modal
+                className = "modalCancel"
+                title="Are you sure?"
+                visible={modalConfirmCancel.isOpen}
+                width={400}
+                closable={false}
+                onOk={handleCancel}
+                onCancel = {()=> {setModalConfirmCancel({ ...modalConfirmCancel, isOpen: false })}}
+                footer={[
+                    <Button key="submit" className="buttonSave" onClick={handleCancel}>
+                    Yes
+                    </Button>,
+                    <Button key="cancel" className = "buttonCancel" onClick={()=> {setModalConfirmCancel({ ...modalConfirmCancel, isOpen: false })}}>
+                    No
+                    </Button>
+                  ]}
+                
+            >
+                <p>Do you want to cancel this returning request?</p>
                 <br/>
             </Modal>
         </>
