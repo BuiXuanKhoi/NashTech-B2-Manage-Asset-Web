@@ -60,6 +60,8 @@ function TableUser(props) {
         })
     }
 
+
+
     useEffect(() => {
         if (props.listFilter === null ) {
             setDisplayList([])
@@ -74,12 +76,6 @@ function TableUser(props) {
         } else
             setDisplayList([])
     }, [props.listFilter])
-    useEffect(() => {
-        if (props.listSort !== null) {
-            setDisplayList(props.listSort);
-        } else
-            setDisplayList([])
-    }, [props.listSort])
     return (
         <>
             {

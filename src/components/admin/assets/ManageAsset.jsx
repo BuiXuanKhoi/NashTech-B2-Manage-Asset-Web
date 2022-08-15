@@ -288,7 +288,6 @@ export default function ManageAsset() {
         }
         if(checkNameSearch){
             getListAssetFilterState(checked, checkpage, sort.name, nameSearch)
-
         }else{
             getListAssetFilterState(checked, checkpage, sort.name, "")
             setNameSearch("")
