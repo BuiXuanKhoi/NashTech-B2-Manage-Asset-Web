@@ -26,12 +26,18 @@ function TableAssignment(props) {
     const [dataUser, setDataUser] = useState(false)
     const assignment = JSON.parse(localStorage.getItem("assignment"));
     const loginState = JSON.parse(localStorage.getItem("loginState"));
+    const userId = loginState.id;
     const config = {
         headers: { Authorization: `Bearer ${loginState.token}` }
     };
     const [modalConfirmDelete, setModalConfirmDelete] = useState({
         isOpen: false,
         isLoading: false,
+    });
+
+    const[modalConfirmCreateRequest, setModalConfirmCreateRequest] = useState({
+        isOpen : false,
+        isLoading : false
     });
     const [id,setId] = useState(0);
     const handleDelete = () => {
@@ -54,6 +60,23 @@ function TableAssignment(props) {
                     toast.error(error.response.data.message)
                     window.location.reload();
                 }
+            })
+    }
+
+    const createRequest =() =>{
+        console.log(id)
+        axios.post(`http://localhost:8080/api/request/` + id + `?user=` + userId, null, config)
+            .then(
+                (response) =>{
+                    console.log(id);
+                    setModalConfirmCreateRequest({...modalConfirmCreateRequest,isOpen: false});
+                    toast.success("Create Returning Request Success !!!");
+                    window.location.reload();
+                }).catch(
+            (error) =>{
+                setModalConfirmCreateRequest({...modalConfirmCreateRequest,isOpen: false});
+                console.log(config)
+                console.log(error)
             })
     }
 
@@ -229,6 +252,27 @@ function TableAssignment(props) {
                                 </tr>
                                 </>
                             }
+
+                            <Modal
+                                className = "modalConfirm"
+                                title="Are you sure?"
+                                width={400}
+                                visible={modalConfirmCreateRequest.isOpen}
+                                closable={false}
+                                onOk={createRequest}
+                                footer={[
+                                    <Button key="submit" className="buttonSave" onClick={createRequest} style={{background:"red"}}>
+                                        Yes
+                                    </Button>,
+                                    <Button key="cancel" className = "buttonCancel" onClick={()=> {setModalConfirmCreateRequest({ ...modalConfirmCreateRequest, isOpen: false })}}>
+                                        No
+                                    </Button>
+                                ]}
+                            >
+                                <p>Do you want to create a returning request for this asset?</p>
+                                <br/>
+
+                            </Modal>
                         {
 
                             displayList.map((item, index) => (
@@ -366,7 +410,12 @@ function TableAssignment(props) {
                                                     </td>
                                                     
                                                     <td className="btn_col_assignment reload">
-                                                        <ReloadOutlined style={{color: "blue"}}/>
+                                                        <ReloadOutlined style={{color: "blue"}}
+                                                                        onClick={() => {
+                                                                            setId(item.assignmentId);
+                                                                            setModalConfirmCreateRequest({...modalConfirmCreateRequest, isOpen: true})
+                                                                        }}
+                                                        />
                                                     </td>
                                                    </>
                                                 }

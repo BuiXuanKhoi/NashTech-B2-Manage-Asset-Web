@@ -15,7 +15,14 @@ export default function Home() {
     const [isModalReturnVisible, setIsModalReturnVisible] = useState(false);
     const [idCompleted, setIdCompleted] = useState();
     const loginState = JSON.parse(localStorage.getItem("loginState"));
-    
+    const userId = loginState.id;
+
+    const[modalConfirmCreateRequest, setModalConfirmCreateRequest] = useState({
+        isOpen : false,
+        isLoading : false
+    });
+
+
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -91,6 +98,27 @@ export default function Home() {
     const handleCancelReturnModal = () => {
         setIsModalReturnVisible(false);
     };
+
+    const config = {
+        headers: { Authorization: `Bearer ${loginState.token}` }
+    };
+
+    const createRequest =() =>{
+        // console.log(id)
+        // axios.post(`http://localhost:8080/api/request/` + id + `?user=` + userId, null, config)
+        //     .then(
+        //         (response) =>{
+        //             console.log(id);
+        //             setModalConfirmCreateRequest({...modalConfirmCreateRequest,isOpen: false});
+        //             toast.success("Create Returning Request Success !!!");
+        //             window.location.reload();
+        //         }).catch(
+        //     (error) =>{
+        //         setModalConfirmCreateRequest({...modalConfirmCreateRequest,isOpen: false});
+        //         console.log(config)
+        //         console.log(error)
+        //     })
+    }
 //===============================================
     useEffect(() => {
         if(loginState===null) window.location.reload();
@@ -350,18 +378,26 @@ export default function Home() {
                 ]}>
                 <p>Do you want to decline this assignment?</p>
             </Modal>
-            
-            <Modal className = "modalConfirm"
+
+            <Modal
+                className = "modalConfirm"
+                title="Are you sure?"
+                width={400}
+                visible={modalConfirmCreateRequest.isOpen}
                 closable={false}
-                title="Are You Sure?" visible={isModalReturnVisible} okText="Yes" cancelText="No" onOk={handleReturnOk}
-                onCancel={handleCancelReturnModal}
+                onOk={createRequest}
                 footer={[
-                    <div>
-                        <Button className="buttonSave" key="Yes" onClick={handleReturnOk}>Yes</Button>
-                        <Button className="buttonCancel" key="No" onClick={handleCancelReturnModal}>No</Button>
-                    </div>
-                ]}>
+                    <Button key="submit" className="buttonSave" onClick={createRequest} style={{background:"red"}}>
+                        Yes
+                    </Button>,
+                    <Button key="cancel" className = "buttonCancel" onClick={()=> {setModalConfirmCreateRequest({ ...modalConfirmCreateRequest, isOpen: false })}}>
+                        No
+                    </Button>
+                ]}
+            >
                 <p>Do you want to create a returning request for this asset?</p>
+                <br/>
+
             </Modal>
 
 
