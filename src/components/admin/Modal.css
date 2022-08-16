@@ -3,6 +3,7 @@
 }
 .modalConfirm .ant-modal-body{
     text-align: center;
+    height: 60px;
 }
 .modalConfirm .ant-modal-footer{
     text-align: center;

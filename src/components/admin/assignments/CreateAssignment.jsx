@@ -324,7 +324,7 @@ export default function CreateAssignment() {
                                onClick={() => {
                                    setSearchText('');
                                    setUserModal({...userModal, isOpen: false});
-                                   navigate("/createAssignment");
+                                   navigate("/assignment/createAssignment");
                                }}>Cancel</Button>,
 
 
@@ -387,7 +387,7 @@ export default function CreateAssignment() {
                            disabled={userModal.isLoading === true} key="back" onClick={() => {
                            setSearchText('');
                            setAssetModal({...assetModal, isOpen: false});
-                           navigate("/createAssignment");
+                           navigate("/assignment/createAssignment");
                        }}>Cancel</Button>
                    ]}
                    closable={false}
