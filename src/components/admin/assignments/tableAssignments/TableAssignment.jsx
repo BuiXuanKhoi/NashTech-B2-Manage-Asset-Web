@@ -74,6 +74,7 @@ function TableAssignment(props) {
                 }).catch(
             (error) => {
                 setModalConfirmCreateRequest({...modalConfirmCreateRequest, isOpen: false});
+                toast.error(error.response.data.message);
                 console.log(config)
                 console.log(error)
             })

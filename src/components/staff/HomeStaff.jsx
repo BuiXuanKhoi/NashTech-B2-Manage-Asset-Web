@@ -96,6 +96,7 @@ export default function Home() {
                 }).catch(
             (error) =>{
                 setIsModalReturnVisible(false);
+                toast.error(error.response.data.message);
                 console.log(error)
             })
     }
