@@ -182,7 +182,7 @@ export default function CreateAsset(){
     return (<>
         <Row>
             <Col span={12} offset={6}>
-                <div className="content">
+                <div className="content" style={{height :"100vh"}}>
                     <Row className= "fontHeaderContent">
                         Create New Asset
                     </Row>
@@ -333,7 +333,7 @@ export default function CreateAsset(){
                                         <Radio value="Available" >Available</Radio>
                                         <br/>
                                         <br/>
-                                        <Radio value="UnAvailable" >Not Available</Radio>
+                                        <Radio value="Not_Available" >Not Available</Radio>
                                     </Radio.Group>
 
                                 </Form.Item>

@@ -6,7 +6,7 @@ import {faFilter, faPencilAlt, faSearch, faSortDown, faSortUp} from "@fortawesom
 import {Row, Col, Form, Input, Select, Button, DatePicker, Radio, Cascader} from "antd";
 import {Pagination} from "antd";
 import "antd/dist/antd.css";
-import {CalendarFilled, CloseCircleOutlined, ReloadOutlined} from "@ant-design/icons";
+import {CalendarFilled, CloseCircleOutlined, LoadingOutlined, ReloadOutlined} from "@ant-design/icons";
 import axios from "axios";
 import toast, {Toaster} from "react-hot-toast";
 import TableRequest  from "./tableRequest/TableRequest";
@@ -32,6 +32,8 @@ export default function RequestForReturning() {
     const [checked, setChecked] = useState([]);
     const [checkNameSearch, setCheckNameSearch] = useState(false);
     const [searchDay, setSearchDay] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
 
 
 
@@ -39,7 +41,7 @@ export default function RequestForReturning() {
         axios
             .get("https://asset-assignment-be.azurewebsites.net/api/request", config)
             .then(function (response) {
-                    setListRequest(response.data)
+                setListRequest(response.data)
             })
             .catch((error) => {
                 setTotalPage(0)
@@ -74,12 +76,15 @@ export default function RequestForReturning() {
             .then(function (response) {
                 setListRequestFilter(response.data)
                 console.log(response.data)
+                setIsLoading(false)
             })
             .catch((error) => {
                 setListRequestFilter([])
+                setIsLoading(false)
             });
     }
     function getListAssetToPage(page,nameSearch,searchDay) {
+        setIsLoading(true)
         if (checked.length !== 0) {
             if(checkNameSearch) {
                 getListRequestToPage(page,nameSearch,checked,searchDay)
@@ -112,6 +117,7 @@ export default function RequestForReturning() {
     };
 
     const findListRequest= () => {
+        setIsLoading(true)
         if (nameSearch.length > 20)
             toast.error("Invalid input ");
         else {
@@ -127,6 +133,7 @@ export default function RequestForReturning() {
 
     }
     const onChangeDay = (date, dateString) => {
+        setIsLoading(true)
         if (date === null) {
             setSearchDay("")
         }
@@ -171,7 +178,6 @@ export default function RequestForReturning() {
                                                        id={index}
                                                        style={{marginTop: "12px"}}
                                                        onChange={handleCheck}
-
                                                 /><label htmlFor={index}
                                                          style={{
                                                              paddingLeft: "10px",
@@ -200,7 +206,7 @@ export default function RequestForReturning() {
                             suffixIcon={<CalendarFilled
                                 style={{color: "black", background: " #d9363e !important"}}/>}
                             format="DD/MM/YYYY"
-                            placeholder={"Assigned Date"}
+                            placeholder={"Returned Date"}
                             className="assignedform"
                         />
 
@@ -229,10 +235,19 @@ export default function RequestForReturning() {
 
                 </div>
                 <div>
-                    <div>
-                                 <TableRequest listRequest = {listRequest} listRequestFilter={listRequestFilter} checkSearch={checkSearch} searchDay={searchDay}
-                                               listRequestFilterSearch={listRequestFilterSearch}/>
-                    </div>
+                    {
+                        !isLoading ?
+                            <div>
+                                <TableRequest listRequest = {listRequest} listRequestFilter={listRequestFilter} checkSearch={checkSearch} searchDay={searchDay}
+                                              listRequestFilterSearch={listRequestFilterSearch}/>
+                            </div>
+
+                            :
+                            <LoadingOutlined
+                                style={{fontSize: "60px", color: "red", textAlign: "center", marginTop: "70px"}}/>
+
+                    }
+
 
 
 

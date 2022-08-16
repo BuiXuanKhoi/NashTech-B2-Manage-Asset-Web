@@ -20,6 +20,15 @@ p.assetName_col, p.assignedTo_col, p.assignmentBy_col, p.assignmentDate_col, p.s
     margin-top: 4px;
     padding-bottom: 2px;
 }
+p.col_1.state_col{
+    border-bottom: 2.5px solid #8c8989;
+}
+p.col.state_col{
+    border-bottom: 2px solid #e4e4e4;
+}
+p.col_1.assigned_by_col{
+    border-bottom: 2.5px solid #8c8989;
+}
 /*ddededed*/
 .ant-pagination-options{
     display: none;

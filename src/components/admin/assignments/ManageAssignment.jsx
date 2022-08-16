@@ -40,6 +40,7 @@ export default function ManageAssignment() {
 
     const getListAssignment = () => {
         axios
+            // .get("http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED", config)
             .get("https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED", config)
             .then(function (response) {
                 setListAssignment(response.data.content)
@@ -65,24 +66,38 @@ export default function ManageAssignment() {
             if (checked.length === 1) {
                 if (checked[0] === "Accepted") {
                     link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
+                    // link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
                 } else if (checked[0] === "Decline") {
                     link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=DECLINE&fl2=DECLINE&fl3=DECLINE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
+                    // link = "http://localhost:8080/api/assignment/list?fl1=DECLINE&fl2=DECLINE&fl3=DECLINE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch;
                 } else if (checked[0] === "Waiting_for_acceptance") {
                     link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=WAITING_FOR_ACCEPTANCE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+
+                    // link = "http://localhost:8080/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=WAITING_FOR_ACCEPTANCE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 } else {
                     link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+
+                    // link = "http://localhost:8080/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 }
             } else if (checked.length === 2) {
-                if (checked[0] === "All" || checked[1] === "All")
+                if (checked[0] === "All" || checked[1] === "All") {
                     link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
-                else {
+
+                    // link = "http://localhost:8080/api/assignment/list?fl1=WAITING_FOR_ACCEPTANCE&fl2=DECLINE&fl3=ACCEPTED&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+
+                }else {
                     link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=" + checked[0].toUpperCase() + "&fl2=" + checked[0].toUpperCase() + "&fl3=" + checked[1].toUpperCase() + "&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+
+                    // link = "http://localhost:8080/api/assignment/list?fl1=" + checked[0].toUpperCase() + "&fl2=" + checked[0].toUpperCase() + "&fl3=" + checked[1].toUpperCase() + "&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
                 }
             } else {
                 link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=DECLINE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+
+                // link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=DECLINE&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
             }
         } else {
             link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
+            // link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=ACCEPTED&fl3=WAITING_FOR_ACCEPTANCE&page=" + page + "&sort=" + sort + "&d=" + searchDay + "&code=" + nameSearch
         }
 
         axios
@@ -105,13 +120,22 @@ export default function ManageAssignment() {
 
     function findListAssignmentToSort(page, sort, type1, type2, type3, day, namesearch, searchDay) {
         let link = "";
-        if (type1 === null && type2 === null && type3 === null && day === null && namesearch === null)
+        if (type1 === null && type2 === null && type3 === null && day === null && namesearch === null) {
+            // link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay;
+
             link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay;
-        else if (namesearch !== null && type1 === null && type2 === null && type3 === null && day === null)
+        }
+        else if (namesearch !== null && type1 === null && type2 === null && type3 === null && day === null) {
+            // link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&code=" + namesearch + "&d=" + searchDay
+
             link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&code=" + namesearch + "&d=" + searchDay
-        else
+
+        }else {
+            // link = "http://localhost:8080/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay
+
             link = "https://asset-assignment-be.azurewebsites.net/api/assignment/list?fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED&sort=" + sort + "&page=" + page + "&d=" + searchDay
-        axios
+        }
+            axios
             .get(link, config)
             .then(function (response) {
                 setListAssignmentSort(response.data.content)
@@ -217,6 +241,8 @@ export default function ManageAssignment() {
     function getListAssignmentPageNoFilter(page, sort, searchDay, nameSearch) {
         axios
             .get("https://asset-assignment-be.azurewebsites.net/api/assignment/list?page=" + page + "&sort=" + sort + "&fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED" + "&d=" + searchDay + "&code=" + nameSearch, config)
+
+            // .get("http://localhost:8080/api/assignment/list?page=" + page + "&sort=" + sort + "&fl1=ACCEPTED&fl2=WAITING_FOR_ACCEPTANCE&fl3=ACCEPTED" + "&d=" + searchDay + "&code=" + nameSearch, config)
             .then(function (response) {
                 setListAssignment(response.data.content)
                 setTotalPage(response.data.totalPages)

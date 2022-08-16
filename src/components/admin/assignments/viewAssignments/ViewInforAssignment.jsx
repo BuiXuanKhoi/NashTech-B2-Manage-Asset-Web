@@ -56,20 +56,32 @@ export default function ViewInformationAssignment(props) {
                        style={{paddingLeft: "55px"}}>{props.dataUser.assetName}</p>
                 </div>
                 {
-                    props.dataUser.specification.length > 45 ?
-                        <div className="specification" id="myDIV">
-                            <p className="text-view-information" style={{verticalAlign: "top"}}>Specification</p>
-                            <div className="ex2 text-view-information" id="data-specification"
-                                 style={{paddingLeft: "50px"}}>{props.dataUser.specification}
-                            </div>
-                        </div>
-                        :
+                    props.dataUser.specification === null ?
                         <div className="specification">
                             <p className="text-view-information">Specification</p>
                             <p className="text-view-information" id="data-specification"
                                style={{paddingLeft: "50px"}}>{props.dataUser.specification}</p>
                         </div>
+                        :
+                        <>
+                            {
+                                props.dataUser.specification.length > 45 ?
+                                    <div className="specification" id="myDIV">
+                                        <p className="text-view-information" style={{verticalAlign: "top"}}>Specification</p>
+                                        <div className="ex2 text-view-information" id="data-specification"
+                                             style={{paddingLeft: "50px"}}>{props.dataUser.specification}
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className="specification">
+                                        <p className="text-view-information">Specification</p>
+                                        <p className="text-view-information" id="data-specification"
+                                           style={{paddingLeft: "50px"}}>{props.dataUser.specification}</p>
+                                    </div>
+                            }
+                        </>
                 }
+
                 <div className="assigned-to">
                     <p className="text-view-information">Assigned to</p>
                     <p className="text-view-information" id="data-assigned-to"
@@ -91,19 +103,32 @@ export default function ViewInformationAssignment(props) {
                        style={{paddingLeft: "97px"}}>{props.dataUser.state}</p>
                 </div>
                 {
-                    props.dataUser.note.length > 50 ?
-                        <div className="note" style={{marginBottom: "15px", height: "70px"}} id="myDIV">
-                            <p className="text-view-information note-view" style={{verticalAlign: "top"}}>Note</p>
-                            <div className="ex1 text-view-information" id="data-note"
-                                 style={{paddingLeft: "97px"}}>{props.dataUser.note}
-                            </div>
-                        </div>
-                        :
+                    props.dataUser.note === null ?
                         <div className="note">
                             <p className="text-view-information">Note</p>
                             <p className="text-view-information" id="data-note"
                                style={{paddingLeft: "97px"}}>{props.dataUser.note}</p>
                         </div>
+                        :
+                        <>
+                            {
+                                props.dataUser.note.length > 50 ?
+                                    <div className="note" style={{marginBottom: "15px", height: "70px"}} id="myDIV">
+                                        <p className="text-view-information note-view" style={{verticalAlign: "top"}}>Note</p>
+                                        <div className="ex1 text-view-information" id="data-note"
+                                             style={{paddingLeft: "97px"}}>{props.dataUser.note}
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className="note">
+                                        <p className="text-view-information">Note</p>
+                                        <p className="text-view-information" id="data-note"
+                                           style={{paddingLeft: "97px"}}>{props.dataUser.note}</p>
+                                    </div>
+                            }
+                        </>
+
+
                 }
 
 

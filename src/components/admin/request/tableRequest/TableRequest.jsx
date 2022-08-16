@@ -30,20 +30,24 @@ function TableRequest(props) {
         name: "",
     });
     const [total , setTotal] = useState(0)
-    const[paginatedPosts, setPaginatedPosts] = useState();
+    const[paginatedPosts, setPaginatedPosts] = useState([]);
     const [state, setState] = useState({
         current: 0,
     });
     function  setTotalPage(s){
         let totalPage ;
-        if(Math.floor(s/20) ===0   && s%20 >0)
+        if(Math.floor(s/20) ===0   && s%20 >0){}
             totalPage = 1;
         if(Math.floor(s/20) > 0 && s%20 > 0)
-            totalPage = Math.floor(s/2) +1;
+            totalPage = Math.floor(s/20) +1;
         if(Math.floor(s/20) > 0 && s%20=== 0)
             totalPage = Math.floor(s/20);
         setTotal(totalPage)
+        console.log(totalPage + "page total" + Math.floor(s/20) +" / " + s%20)
+
     }
+
+    console.log(total + "page")
     const handleComplete = () => {
         axios.put(`https://asset-assignment-be.azurewebsites.net/api/request/`+id,{},config)
             .then(
@@ -104,11 +108,7 @@ function TableRequest(props) {
 
     }, [props.listRequestFilter ])
 
-    {
-        displayList.map(item =>(
-            console.log(item)
-        ))
-    }
+
     const getListAssignmentSort = (col , list) => {
         setState({
             current: 0,
@@ -294,7 +294,7 @@ function TableRequest(props) {
                 setPaginatedPosts(_(displayList).slice(checkpage).take(20).value())
             }
             else if(checkpage > 0){
-                setPaginatedPosts(_(displayList).slice(checkpage+1).take(20).value())
+                setPaginatedPosts(_(displayList).slice(checkpage *20 ).take(20).value())
 
             }
             console.log(checkpage)

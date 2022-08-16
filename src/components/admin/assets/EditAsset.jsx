@@ -328,9 +328,9 @@ export default function EditAsset(){
                                     <Radio.Group disabled={isLoading.isLoading === true}>
                                         <Radio value="AVAILABLE" >Available</Radio>
                                         <br/>
-                                        <Radio value="UNAVAILABLE" >Not Available</Radio>
+                                        <Radio value="NOT_AVAILABLE" >Not Available</Radio>
                                         <br/>
-                                        <Radio value="WAITING_FOR_RECYCLE" >Waiting for recycling</Radio>
+                                        <Radio value="WAITING_FOR_RECYCLING" >Waiting for recycling</Radio>
                                         <br/>
                                         <Radio value="RECYCLED" >Recycled</Radio>
                                     </Radio.Group>

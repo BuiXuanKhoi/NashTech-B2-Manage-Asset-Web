@@ -104,21 +104,34 @@ export default function ViewInformationAsset(props) {
                                    style={{paddingLeft: "75px"}}>{Information.location}</p>
                             </div>
                             {
-                                Information.specification.length > 60 ?
-                                    <div className="specification" id="myDIV" >
-                                        <p className="text-view-information"
-                                           style={{verticalAlign: "top"}}>Specification</p>
-                                        <div className="ex5 text-view-information" id="data-specification"
-                                             style={{paddingLeft: "49px"}}>{Information.specification}
-                                        </div>
-                                    </div>
-                                    :
+                                Information.specification === null ?
                                     <div className="specification">
                                         <p className="text-view-information">Specification</p>
                                         <p className="text-view-information" id="data-specification"
                                            style={{paddingLeft: "49px"}}>{Information.specification}</p>
                                     </div>
+                                    :
+                                    <>
+                                        {
+                                            Information.specification.length > 60 ?
+                                                <div className="specification" id="myDIV" >
+                                                    <p className="text-view-information"
+                                                       style={{verticalAlign: "top"}}>Specification</p>
+                                                    <div className="ex5 text-view-information" id="data-specification"
+                                                         style={{paddingLeft: "49px"}}>{Information.specification}
+                                                    </div>
+                                                </div>
+                                                :
+                                                <div className="specification">
+                                                    <p className="text-view-information">Specification</p>
+                                                    <p className="text-view-information" id="data-specification"
+                                                       style={{paddingLeft: "49px"}}>{Information.specification}</p>
+                                                </div>
+                                        }
+                                    </>
                             }
+
+
                             {
                                 listHistory.length === 0 ?
                                     <div className="specification" id="myDIV-asset">
