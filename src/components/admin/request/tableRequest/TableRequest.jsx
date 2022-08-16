@@ -647,7 +647,7 @@ function TableRequest(props) {
                 className = "modalConfirm"
                 title="Are you sure?"
                 visible={modalConfirmComplete.isOpen}
-                width={400}
+                width={500}
                 closable={false}
                 onOk={handleComplete}
                 onCancel = {()=> {setModalConfirmComplete({ ...modalConfirmComplete, isOpen: false })}}
@@ -665,7 +665,7 @@ function TableRequest(props) {
                 <br/>
             </Modal>
             <Modal
-                className = "modalCancel"
+                className = "modalConfirm"
                 title="Are you sure?"
                 visible={modalConfirmCancel.isOpen}
                 width={400}
