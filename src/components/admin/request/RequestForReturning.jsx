@@ -108,9 +108,11 @@ export default function RequestForReturning() {
             checked.splice(checked.indexOf(event.target.value), 1);
             updatedList = [...checked]
         }
+        setChecked(updatedList);
         setState({
             current: 0,
         });
+        console.log(checked)
         setNameSearch("")
         setCheckNameSearch(false)
         getListAssetToPage(0,"",searchDay);
