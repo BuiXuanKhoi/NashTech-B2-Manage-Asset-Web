@@ -218,8 +218,17 @@ function TableRequest(props) {
             }
             case 'dd': {
                 setSort({...sort, name: "dd"})
-                const sorted =[...displayList].sort((a,b)=>
-                    a["assignedDate"] > b["assignedDate"] ?1:-1
+                const sorted =[...displayList].sort((a,b)=>{
+                    const dateA = new Date();
+                    dateA.setDate(a["assignedDate"].split("/")[0]);
+                    dateA.setMonth(a["assignedDate"].split("/")[1]);
+                    dateA.setFullYear(a["assignedDate"].split("/")[2]);
+                    const dateB = new Date();
+                    dateB.setDate(b["assignedDate"].split("/")[0]);
+                    dateB.setMonth(b["assignedDate"].split("/")[1]);
+                    dateB.setFullYear(b["assignedDate"].split("/")[2]);
+                    return dateA > dateB ?1:-1
+                }
                 )
                 setDisplayList(sorted);
                 setPaginatedPosts(_(sorted).slice(0 ).take(20).value())
@@ -228,8 +237,17 @@ function TableRequest(props) {
             }
             case 'da': {
                 setSort({...sort, name: "da"})
-                const sorted =[...displayList].sort((a,b)=>
-                    a["assignedDate"] < b["assignedDate"] ?1:-1
+                const sorted =[...displayList].sort((a,b)=>{
+                    const dateA = new Date();
+                    dateA.setDate(a["assignedDate"].split("/")[0]);
+                    dateA.setMonth(a["assignedDate"].split("/")[1]);
+                    dateA.setFullYear(a["assignedDate"].split("/")[2]);
+                    const dateB = new Date();
+                    dateB.setDate(b["assignedDate"].split("/")[0]);
+                    dateB.setMonth(b["assignedDate"].split("/")[1]);
+                    dateB.setFullYear(b["assignedDate"].split("/")[2]);
+                    return dateA < dateB ?1:-1
+                }
                 )
                 setDisplayList(sorted);
                 setPaginatedPosts(_(sorted).slice(0 ).take(20).value())
@@ -238,9 +256,17 @@ function TableRequest(props) {
             }
             case 'rd': {
                 setSort({...sort, name: "rd"})
-                const sorted =[...displayList].sort((a,b)=>
-
-                    a["returnedDate"] > b["returnedDate"] ?1:-1
+                const sorted =[...displayList].sort((a,b)=>{
+                    const dateA = new Date();
+                    dateA.setDate(a["returnedDate"].split("/")[0]);
+                    dateA.setMonth(a["returnedDate"].split("/")[1]);
+                    dateA.setFullYear(a["returnedDate"].split("/")[2]);
+                    const dateB = new Date();
+                    dateB.setDate(b["returnedDate"].split("/")[0]);
+                    dateB.setMonth(b["returnedDate"].split("/")[1]);
+                    dateB.setFullYear(b["returnedDate"].split("/")[2]);
+                    return dateA > dateB ?1:-1
+                }
                 )
                 setDisplayList(sorted);
                 setPaginatedPosts(_(sorted).slice(0 ).take(20).value())
@@ -249,8 +275,17 @@ function TableRequest(props) {
             }
             case 'ra': {
                 setSort({...sort, name: "ra"})
-                const sorted =[...displayList].sort((a,b)=>
-                    a["returnedDate"] < b["returnedDate"] ?1:-1
+                const sorted =[...displayList].sort((a,b)=>{
+                    const dateA = new Date();
+                    dateA.setDate(a["returnedDate"].split("/")[0]);
+                    dateA.setMonth(a["returnedDate"].split("/")[1]);
+                    dateA.setFullYear(a["returnedDate"].split("/")[2]);
+                    const dateB = new Date();
+                    dateB.setDate(b["returnedDate"].split("/")[0]);
+                    dateB.setMonth(b["returnedDate"].split("/")[1]);
+                    dateB.setFullYear(b["returnedDate"].split("/")[2]);
+                    return dateA < dateB ?1:-1
+                }
                 )
                 setDisplayList(sorted);
                 setPaginatedPosts(_(sorted).slice(0 ).take(20).value())

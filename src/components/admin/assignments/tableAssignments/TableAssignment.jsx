@@ -256,7 +256,7 @@ function TableAssignment(props) {
                         <Modal
                             className="modalConfirm"
                             title="Are you sure?"
-                            width={400}
+                            width={"50vw"}
                             visible={modalConfirmCreateRequest.isOpen}
                             closable={false}
                             onOk={createRequest}
